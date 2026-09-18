@@ -1149,7 +1149,9 @@ async function syncTasks() {
 
             tasksData =
                 newTasks;
-
+tasksData.sort((a, b) => {
+    return new Date(b.updated || 0) - new Date(a.updated || 0);
+});
             renderTasks(
                 tasksData
             );
