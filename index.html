@@ -16,6 +16,7 @@
     <script src="https://accounts.google.com/gsi/client"></script>
 
     <style>
+
         * {
             box-sizing: border-box;
             user-select: none;
@@ -27,7 +28,8 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            min-height: 100%;
+            height: 100%;
+            overflow: hidden;
             background: #121212;
             color: #ffffff;
             font-family:
@@ -41,80 +43,187 @@
 
         body {
             min-height: 100vh;
-            overflow-x: hidden;
         }
+
+
+        /* =========================================
+           App
+        ========================================= */
 
         .app {
             width: 100%;
-            min-height: 100vh;
-            padding: 16px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #121212;
         }
 
-        /* =========================
-           Header
-        ========================= */
+
+        /* =========================================
+           固定 Header
+        ========================================= */
 
         .header {
+            flex: 0 0 auto;
+            width: 100%;
+            padding: 12px 16px 10px;
+            background: #121212;
+            border-bottom: 1px solid #252525;
+            z-index: 100;
+        }
+
+
+        .header-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 18px;
         }
+
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             min-width: 0;
         }
 
+
         .title {
-            font-size: 1.45rem;
+            font-size: 1.4rem;
             font-weight: 700;
             white-space: nowrap;
         }
 
+
         .clock {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: #bbbbbb;
             font-variant-numeric: tabular-nums;
+            white-space: nowrap;
         }
 
-        .header-right {
+
+        .header-buttons {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        button {
-            border: none;
-            outline: none;
-            cursor: pointer;
-            font: inherit;
-        }
 
         .header-button {
-            min-height: 40px;
-            padding: 0 13px;
-            border-radius: 10px;
-            background: #2a2a2a;
+            min-height: 36px;
+            padding: 0 10px;
+            border: 0;
+            border-radius: 9px;
+            background: #292929;
             color: #ffffff;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
+            cursor: pointer;
         }
+
 
         .header-button:active {
             background: #3a3a3a;
         }
 
+
         .logout-button {
             display: none;
         }
 
-        /* =========================
-           Tasks
-        ========================= */
+
+        /* =========================================
+           Weather Bar
+        ========================================= */
+
+        .weather-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 9px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+
+
+        .weather-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        .weather-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.92rem;
+            color: #cccccc;
+        }
+
+
+        .weather-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+
+        .weather-location {
+            color: #777777;
+            font-size: 0.75rem;
+        }
+
+
+        .aqhi-value {
+            font-weight: 700;
+        }
+
+
+        .aqhi-low {
+            color: #81c784;
+        }
+
+
+        .aqhi-moderate {
+            color: #ffca5c;
+        }
+
+
+        .aqhi-high {
+            color: #ff9b6b;
+        }
+
+
+        .aqhi-very-high {
+            color: #ff7373;
+        }
+
+
+        .aqhi-serious {
+            color: #ff4f81;
+        }
+
+
+        .weather-status {
+            color: #666666;
+            font-size: 0.72rem;
+        }
+
+
+        /* =========================================
+           Task Scroll Area
+        ========================================= */
+
+        .task-area {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 12px 16px 18px;
+            -webkit-overflow-scrolling: touch;
+        }
+
 
         #tasks {
             display: flex;
@@ -122,12 +231,17 @@
             gap: 10px;
         }
 
+
+        /* =========================================
+           Task Card
+        ========================================= */
+
         .task {
             display: flex;
             align-items: center;
             width: 100%;
-            min-height: 72px;
-            padding: 12px 14px;
+            min-height: 70px;
+            padding: 11px 14px;
             border-radius: 14px;
             background: #1e1e1e;
             transition:
@@ -135,10 +249,12 @@
                 transform 0.25s ease;
         }
 
+
         .task.fading {
             opacity: 0;
             transform: translateX(30px);
         }
+
 
         .task-checkbox {
             flex: 0 0 auto;
@@ -152,10 +268,12 @@
             cursor: pointer;
         }
 
+
         .task-checkbox.done {
             border-color: #777777;
             background: #777777;
         }
+
 
         .task-checkbox.done::after {
             content: "";
@@ -169,35 +287,42 @@
             transform: rotate(45deg);
         }
 
+
         .task-content {
             min-width: 0;
             flex: 1;
         }
 
+
         .task-title {
-            font-size: 1.3rem;
+            font-size: 1.28rem;
             line-height: 1.35;
             font-weight: 500;
             word-break: break-word;
         }
 
+
         .task-date {
             margin-top: 4px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: #999999;
         }
+
 
         .task-date.overdue {
             color: #ff7777;
         }
 
+
         .task-date.today {
             color: #ffb74d;
         }
 
+
         .task-date.tomorrow {
             color: #81c784;
         }
+
 
         .empty {
             padding: 50px 20px;
@@ -206,21 +331,23 @@
             font-size: 1.1rem;
         }
 
-        /* =========================
+
+        /* =========================================
            Status
-        ========================= */
+        ========================================= */
 
         .status {
-            margin-top: 14px;
+            padding-top: 8px;
             text-align: center;
-            font-size: 0.8rem;
             color: #666666;
-            min-height: 18px;
+            font-size: 0.72rem;
+            min-height: 22px;
         }
 
-        /* =========================
-           Login overlay
-        ========================= */
+
+        /* =========================================
+           Login Overlay
+        ========================================= */
 
         .overlay {
             position: fixed;
@@ -233,6 +360,7 @@
             background: #121212;
         }
 
+
         .login-box {
             width: min(420px, 100%);
             padding: 30px;
@@ -241,11 +369,13 @@
             text-align: center;
         }
 
+
         .login-title {
             margin-bottom: 10px;
             font-size: 1.5rem;
             font-weight: 700;
         }
+
 
         .login-description {
             margin-bottom: 24px;
@@ -253,106 +383,223 @@
             line-height: 1.6;
         }
 
+
         .login-button {
             width: 100%;
             min-height: 50px;
+            border: 0;
             border-radius: 12px;
             background: #ffffff;
             color: #111111;
             font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
         }
 
-        .login-button:active {
-            opacity: 0.8;
-        }
 
-        /* =========================
+        /* =========================================
            Desktop
-        ========================= */
+        ========================================= */
 
         @media (min-width: 700px) {
-            .app {
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 24px;
+
+            .header {
+                padding-left: 24px;
+                padding-right: 24px;
             }
 
-            .task {
-                min-height: 76px;
-                padding: 14px 18px;
+            .task-area {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+
+            #tasks {
+                max-width: 900px;
+                margin: 0 auto;
             }
 
             .task-title {
                 font-size: 1.35rem;
             }
         }
+
     </style>
 </head>
 
+
 <body>
 
-<div id="loginOverlay" class="overlay">
-    <div class="login-box">
-        <div class="login-title">Tasks Dashboard</div>
+    <!-- =========================================
+         Login
+    ========================================= -->
 
-        <div class="login-description">
-            登入 Google 帳戶後<br>
-            會自動同步你的 Google Tasks
-        </div>
+    <div id="loginOverlay" class="overlay">
 
-        <button id="overlayLoginButton" class="login-button">
-            使用 Google 登入
-        </button>
-    </div>
-</div>
+        <div class="login-box">
 
-<div class="app">
+            <div class="login-title">
+                Tasks Dashboard
+            </div>
 
-    <div class="header">
+            <div class="login-description">
+                登入 Google 帳戶後<br>
+                會自動同步你的 Google Tasks
+            </div>
 
-        <div class="header-left">
-            <div class="title">Tasks</div>
-            <div id="clock" class="clock">--:--</div>
-        </div>
-
-        <div class="header-right">
-
-            <button id="syncButton"
-                    class="header-button">
-                同步
-            </button>
-
-            <button id="fullscreenButton"
-                    class="header-button">
-                全螢幕
-            </button>
-
-            <button id="loginButton"
-                    class="header-button">
-                登入
-            </button>
-
-            <button id="logoutButton"
-                    class="header-button logout-button">
-                登出
+            <button
+                id="overlayLoginButton"
+                class="login-button">
+                使用 Google 登入
             </button>
 
         </div>
 
     </div>
 
-    <div id="tasks"></div>
 
-    <div id="status" class="status"></div>
+    <!-- =========================================
+         App
+    ========================================= -->
 
-</div>
+    <div class="app">
+
+
+        <!-- 固定 Header -->
+
+        <header class="header">
+
+            <div class="header-top">
+
+                <div class="header-left">
+
+                    <div class="title">
+                        Tasks
+                    </div>
+
+                    <div id="clock" class="clock">
+                        --:--
+                    </div>
+
+                </div>
+
+
+                <div class="header-buttons">
+
+                    <button
+                        id="syncButton"
+                        class="header-button">
+                        同步
+                    </button>
+
+                    <button
+                        id="fullscreenButton"
+                        class="header-button">
+                        全螢幕
+                    </button>
+
+                    <button
+                        id="loginButton"
+                        class="header-button">
+                        登入
+                    </button>
+
+                    <button
+                        id="logoutButton"
+                        class="header-button logout-button">
+                        登出
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- 天氣 -->
+
+            <div class="weather-bar">
+
+                <div class="weather-item">
+                    <span>🌡️</span>
+                    <span id="temperature" class="weather-value">
+                        --°C
+                    </span>
+                </div>
+
+
+                <div class="weather-item">
+                    <span id="weatherIcon">
+                        ☁️
+                    </span>
+
+                    <span id="weatherDescription"
+                          class="weather-value">
+                        載入中
+                    </span>
+                </div>
+
+
+                <div class="weather-item">
+                    <span>🌧️</span>
+
+                    <span id="rainProbability"
+                          class="weather-value">
+                        --
+                    </span>
+                </div>
+
+
+                <div class="weather-item">
+                    <span>🏭</span>
+
+                    <span>
+                        AQHI
+                    </span>
+
+                    <span id="aqhi"
+                          class="aqhi-value">
+                        --
+                    </span>
+                </div>
+
+
+                <div class="weather-location">
+                    北區
+                </div>
+
+            </div>
+
+
+            <div id="weatherStatus"
+                 class="weather-status">
+                天氣資料載入中
+            </div>
+
+        </header>
+
+
+        <!-- =====================================
+             Task 可獨立滑動
+        ====================================== -->
+
+        <main class="task-area">
+
+            <div id="tasks"></div>
+
+            <div id="status"
+                 class="status">
+            </div>
+
+        </main>
+
+    </div>
+
 
 <script>
 
-    /* =========================================================
-       Google 設定
-    ========================================================= */
+
+    /* =====================================================
+       GOOGLE TASKS
+    ===================================================== */
 
     const CLIENT_ID =
         "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
@@ -360,16 +607,40 @@
     const GOOGLE_SCOPE =
         "https://www.googleapis.com/auth/tasks";
 
-    const API_BASE =
+    const GOOGLE_API =
         "https://tasks.googleapis.com/tasks/v1";
 
-    const SYNC_INTERVAL =
+    const TASK_SYNC_INTERVAL =
         5000;
 
 
-    /* =========================================================
-       狀態
-    ========================================================= */
+    /* =====================================================
+       WEATHER
+    ===================================================== */
+
+    const HKO_API =
+        "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
+
+
+    const WEATHER_INTERVAL =
+        10 * 60 * 1000;
+
+
+    /* =====================================================
+       AQHI
+    ===================================================== */
+
+    const AQHI_API =
+        "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
+
+
+    const AQHI_INTERVAL =
+        10 * 60 * 1000;
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
 
     let googleTokenClient = null;
 
@@ -384,9 +655,9 @@
     let syncing = false;
 
 
-    /* =========================================================
+    /* =====================================================
        DOM
-    ========================================================= */
+    ===================================================== */
 
     const tasksElement =
         document.getElementById("tasks");
@@ -416,32 +687,57 @@
         document.getElementById("clock");
 
 
-    /* =========================================================
-       時鐘
-    ========================================================= */
+    const temperatureElement =
+        document.getElementById("temperature");
+
+    const weatherIconElement =
+        document.getElementById("weatherIcon");
+
+    const weatherDescriptionElement =
+        document.getElementById("weatherDescription");
+
+    const rainProbabilityElement =
+        document.getElementById("rainProbability");
+
+    const aqhiElement =
+        document.getElementById("aqhi");
+
+    const weatherStatusElement =
+        document.getElementById("weatherStatus");
+
+
+    /* =====================================================
+       CLOCK
+    ===================================================== */
 
     function updateClock() {
 
         const now = new Date();
 
-        const hours =
-            String(now.getHours()).padStart(2, "0");
+        const h =
+            String(now.getHours())
+                .padStart(2, "0");
 
-        const minutes =
-            String(now.getMinutes()).padStart(2, "0");
+        const m =
+            String(now.getMinutes())
+                .padStart(2, "0");
 
         clockElement.textContent =
-            `${hours}:${minutes}`;
+            `${h}:${m}`;
     }
+
 
     updateClock();
 
-    setInterval(updateClock, 1000);
+    setInterval(
+        updateClock,
+        1000
+    );
 
 
-    /* =========================================================
-       Google OAuth
-    ========================================================= */
+    /* =====================================================
+       GOOGLE LOGIN
+    ===================================================== */
 
     function initGoogle() {
 
@@ -450,11 +746,13 @@
             !google.accounts ||
             !google.accounts.oauth2
         ) {
+
             statusElement.textContent =
                 "Google 登入元件載入失敗";
 
             return;
         }
+
 
         googleTokenClient =
             google.accounts.oauth2.initTokenClient({
@@ -464,6 +762,7 @@
                 scope: GOOGLE_SCOPE,
 
                 callback: handleGoogleToken
+
             });
     }
 
@@ -478,6 +777,7 @@
             return;
         }
 
+
         googleTokenClient.requestAccessToken({
             prompt: "consent"
         });
@@ -486,7 +786,10 @@
 
     function handleGoogleToken(response) {
 
-        if (!response || !response.access_token) {
+        if (
+            !response ||
+            !response.access_token
+        ) {
 
             statusElement.textContent =
                 "Google 登入失敗";
@@ -494,12 +797,18 @@
             return;
         }
 
+
         accessToken =
             response.access_token;
 
+
         tokenExpiry =
             Date.now() +
-            ((response.expires_in || 3600) * 1000);
+            (
+                (response.expires_in || 3600)
+                * 1000
+            );
+
 
         loginOverlay.style.display =
             "none";
@@ -510,49 +819,67 @@
         logoutButton.style.display =
             "block";
 
+
         statusElement.textContent =
             "已登入";
 
-        startAutoSync();
+
+        startTaskAutoSync();
 
         syncTasks();
     }
 
 
-    /* =========================================================
-       API Request
-    ========================================================= */
+    /* =====================================================
+       GOOGLE FETCH
+    ===================================================== */
 
-    async function googleFetch(url, options = {}) {
+    async function googleFetch(
+        url,
+        options = {}
+    ) {
 
         if (!accessToken) {
-            throw new Error("NO_TOKEN");
+
+            throw new Error(
+                "NO_TOKEN"
+            );
         }
 
+
         const headers =
-            new Headers(options.headers || {});
+            new Headers(
+                options.headers || {}
+            );
+
 
         headers.set(
             "Authorization",
             `Bearer ${accessToken}`
         );
 
+
         headers.set(
             "Content-Type",
             "application/json"
         );
 
+
         const response =
-            await fetch(url, {
-                ...options,
-                headers
-            });
+            await fetch(
+                url,
+                {
+                    ...options,
+                    headers
+                }
+            );
+
 
         if (response.status === 401) {
 
             accessToken = null;
 
-            stopAutoSync();
+            stopTaskAutoSync();
 
             loginOverlay.style.display =
                 "flex";
@@ -563,8 +890,11 @@
             logoutButton.style.display =
                 "none";
 
-            throw new Error("TOKEN_EXPIRED");
+            throw new Error(
+                "TOKEN_EXPIRED"
+            );
         }
+
 
         if (!response.ok) {
 
@@ -576,13 +906,14 @@
             );
         }
 
+
         return response;
     }
 
 
-    /* =========================================================
-       取得 Google Tasks
-    ========================================================= */
+    /* =====================================================
+       GET TASKS
+    ===================================================== */
 
     async function getTasks() {
 
@@ -590,13 +921,15 @@
 
         let pageToken = "";
 
+
         do {
 
             let url =
-                `${API_BASE}/lists/@default/tasks` +
+                `${GOOGLE_API}/lists/@default/tasks` +
                 `?showCompleted=false` +
                 `&showDeleted=false` +
                 `&maxResults=100`;
+
 
             if (pageToken) {
 
@@ -604,30 +937,38 @@
                     `&pageToken=${encodeURIComponent(pageToken)}`;
             }
 
+
             const response =
                 await googleFetch(url);
+
 
             const data =
                 await response.json();
 
+
             if (Array.isArray(data.items)) {
 
                 allTasks =
-                    allTasks.concat(data.items);
+                    allTasks.concat(
+                        data.items
+                    );
             }
+
 
             pageToken =
                 data.nextPageToken || "";
 
+
         } while (pageToken);
+
 
         return allTasks;
     }
 
 
-    /* =========================================================
-       判斷 Task 有冇變化
-    ========================================================= */
+    /* =====================================================
+       TASK COMPARISON
+    ===================================================== */
 
     function sameTasks(a, b) {
 
@@ -635,11 +976,17 @@
             return false;
         }
 
-        for (let i = 0; i < a.length; i++) {
+
+        for (
+            let i = 0;
+            i < a.length;
+            i++
+        ) {
 
             const x = a[i];
 
             const y = b[i];
+
 
             if (
                 x.id !== y.id ||
@@ -650,36 +997,52 @@
                 x.due !== y.due ||
                 x.position !== y.position
             ) {
+
                 return false;
             }
         }
+
 
         return true;
     }
 
 
-    /* =========================================================
-       同步
-    ========================================================= */
+    /* =====================================================
+       SYNC TASKS
+    ===================================================== */
 
     async function syncTasks() {
 
-        if (!accessToken || syncing) {
+        if (
+            !accessToken ||
+            syncing
+        ) {
             return;
         }
 
-        if (Date.now() >= tokenExpiry) {
+
+        if (
+            Date.now() >= tokenExpiry
+        ) {
             return;
         }
+
 
         syncing = true;
+
 
         try {
 
             const newTasks =
                 await getTasks();
 
-            if (!sameTasks(tasksData, newTasks)) {
+
+            if (
+                !sameTasks(
+                    tasksData,
+                    newTasks
+                )
+            ) {
 
                 tasksData =
                     newTasks;
@@ -687,20 +1050,25 @@
                 renderTasks();
             }
 
+
             statusElement.textContent =
                 `最後同步 ${formatTime(new Date())}`;
+
 
         } catch (error) {
 
             console.error(error);
 
+
             if (
-                error.message !== "TOKEN_EXPIRED"
+                error.message !==
+                "TOKEN_EXPIRED"
             ) {
 
                 statusElement.textContent =
                     "同步失敗";
             }
+
 
         } finally {
 
@@ -709,177 +1077,211 @@
     }
 
 
-    /* =========================================================
-       ⭐ 排序
+    /* =====================================================
+       SORT TASKS
        
-       1. 過期
-       2. 今日
-       3. 明日
-       4. 其他日期，由近至遠
-       5. 沒有日期
-       
-       同一日期保持 Google Tasks 原本順序
-    ========================================================= */
+       過期
+       ↓
+       今日
+       ↓
+       明日
+       ↓
+       其他日期
+       ↓
+       無日期
+    ===================================================== */
 
     function sortTasks(tasks) {
 
-        return [...tasks].sort((a, b) => {
+        return [...tasks].sort(
+            (a, b) => {
 
-            /* 沒日期 */
+                if (
+                    !a.due &&
+                    !b.due
+                ) {
+                    return 0;
+                }
 
-            if (!a.due && !b.due) {
-                return 0;
+
+                if (!a.due) {
+                    return 1;
+                }
+
+
+                if (!b.due) {
+                    return -1;
+                }
+
+
+                return (
+                    new Date(a.due) -
+                    new Date(b.due)
+                );
             }
-
-            if (!a.due) {
-                return 1;
-            }
-
-            if (!b.due) {
-                return -1;
-            }
-
-
-            /* 有日期 */
-
-            const dateA =
-                new Date(a.due);
-
-            const dateB =
-                new Date(b.due);
-
-
-            /* 直接按時間由近至遠 */
-
-            return dateA - dateB;
-        });
+        );
     }
 
 
-    /* =========================================================
-       Render
-    ========================================================= */
+    /* =====================================================
+       RENDER TASKS
+    ===================================================== */
 
     function renderTasks() {
 
         tasksElement.innerHTML = "";
 
+
         const sortedTasks =
             sortTasks(tasksData);
 
 
-        if (sortedTasks.length === 0) {
+        if (
+            sortedTasks.length === 0
+        ) {
 
             const empty =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             empty.className =
                 "empty";
 
+
             empty.textContent =
                 "沒有未完成工作";
 
-            tasksElement.appendChild(empty);
+
+            tasksElement.appendChild(
+                empty
+            );
+
 
             return;
         }
 
 
-        sortedTasks.forEach(task => {
+        sortedTasks.forEach(
+            task => {
 
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "task";
-
-
-            /* Checkbox */
-
-            const checkbox =
-                document.createElement("div");
-
-            checkbox.className =
-                "task-checkbox";
+                const card =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            /* Task 內容 */
-
-            const content =
-                document.createElement("div");
-
-            content.className =
-                "task-content";
+                card.className =
+                    "task";
 
 
-            /* 標題 */
-
-            const title =
-                document.createElement("div");
-
-            title.className =
-                "task-title";
-
-            title.textContent =
-                task.title || "(沒有標題)";
+                const checkbox =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            /* 日期 */
-
-            const date =
-                document.createElement("div");
-
-            const dateInfo =
-                getTaskDate(task);
+                checkbox.className =
+                    "task-checkbox";
 
 
-            if (dateInfo) {
-
-                date.className =
-                    `task-date ${dateInfo.type}`;
-
-                date.textContent =
-                    dateInfo.text;
-
-            } else {
-
-                date.className =
-                    "task-date";
-
-                date.style.display =
-                    "none";
-            }
+                const content =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            content.appendChild(title);
-
-            content.appendChild(date);
-
-
-            card.appendChild(checkbox);
-
-            card.appendChild(content);
-
-            tasksElement.appendChild(card);
+                content.className =
+                    "task-content";
 
 
-            /* 點擊完成 */
+                const title =
+                    document.createElement(
+                        "div"
+                    );
 
-            checkbox.addEventListener(
-                "click",
-                () => completeTask(
-                    task,
-                    card,
+
+                title.className =
+                    "task-title";
+
+
+                title.textContent =
+                    task.title ||
+                    "(沒有標題)";
+
+
+                const date =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                const dateInfo =
+                    getTaskDate(task);
+
+
+                if (dateInfo) {
+
+                    date.className =
+                        `task-date ${dateInfo.type}`;
+
+                    date.textContent =
+                        dateInfo.text;
+
+                } else {
+
+                    date.className =
+                        "task-date";
+
+                    date.style.display =
+                        "none";
+                }
+
+
+                content.appendChild(
+                    title
+                );
+
+                content.appendChild(
+                    date
+                );
+
+
+                card.appendChild(
                     checkbox
-                )
-            );
-        });
+                );
+
+                card.appendChild(
+                    content
+                );
+
+
+                tasksElement.appendChild(
+                    card
+                );
+
+
+                checkbox.addEventListener(
+                    "click",
+                    () => {
+
+                        completeTask(
+                            task,
+                            card,
+                            checkbox
+                        );
+
+                    }
+                );
+            }
+        );
     }
 
 
-    /* =========================================================
-       日期顯示
-    ========================================================= */
+    /* =====================================================
+       TASK DATE
+    ===================================================== */
 
     function getTaskDate(task) {
 
@@ -887,14 +1289,14 @@
             return null;
         }
 
+
         const due =
             new Date(task.due);
+
 
         const now =
             new Date();
 
-
-        /* 清除時間，只比較日期 */
 
         const dueDay =
             new Date(
@@ -903,6 +1305,7 @@
                 due.getDate()
             );
 
+
         const today =
             new Date(
                 now.getFullYear(),
@@ -910,8 +1313,10 @@
                 now.getDate()
             );
 
+
         const tomorrow =
             new Date(today);
+
 
         tomorrow.setDate(
             tomorrow.getDate() + 1
@@ -920,8 +1325,10 @@
 
         const diff =
             Math.round(
-                (dueDay - today) /
-                86400000
+                (
+                    dueDay -
+                    today
+                ) / 86400000
             );
 
 
@@ -932,8 +1339,11 @@
         if (diff < 0) {
 
             return {
-                text: `已過期 · ${dateText}`,
-                type: "overdue"
+                text:
+                    `已過期 · ${dateText}`,
+
+                type:
+                    "overdue"
             };
         }
 
@@ -941,8 +1351,11 @@
         if (diff === 0) {
 
             return {
-                text: `今日 · ${dateText}`,
-                type: "today"
+                text:
+                    `今日 · ${dateText}`,
+
+                type:
+                    "today"
             };
         }
 
@@ -950,22 +1363,28 @@
         if (diff === 1) {
 
             return {
-                text: `明日 · ${dateText}`,
-                type: "tomorrow"
+                text:
+                    `明日 · ${dateText}`,
+
+                type:
+                    "tomorrow"
             };
         }
 
 
         return {
-            text: dateText,
-            type: "normal"
+            text:
+                dateText,
+
+            type:
+                "normal"
         };
     }
 
 
-    /* =========================================================
-       完成 Task
-    ========================================================= */
+    /* =====================================================
+       COMPLETE TASK
+    ===================================================== */
 
     async function completeTask(
         task,
@@ -974,16 +1393,17 @@
     ) {
 
         if (
-            card.className.includes("fading")
+            card.className.includes(
+                "fading"
+            )
         ) {
             return;
         }
 
 
-        /* 立即反映 UI */
-
         checkbox.className =
             "task-checkbox done";
+
 
         card.className =
             "task fading";
@@ -992,34 +1412,37 @@
         try {
 
             const url =
-                `${API_BASE}/lists/@default/tasks/${encodeURIComponent(task.id)}`;
+                `${GOOGLE_API}/lists/@default/tasks/${encodeURIComponent(task.id)}`;
 
 
             await googleFetch(
                 url,
                 {
-                    method: "PATCH",
+                    method:
+                        "PATCH",
 
-                    body: JSON.stringify({
-                        status: "completed"
-                    })
+                    body:
+                        JSON.stringify({
+                            status:
+                                "completed"
+                        })
                 }
             );
 
 
-            /* 本地立即移除 */
-
             tasksData =
                 tasksData.filter(
-                    item => item.id !== task.id
+                    item =>
+                        item.id !== task.id
                 );
 
 
-            setTimeout(() => {
-
-                renderTasks();
-
-            }, 250);
+            setTimeout(
+                () => {
+                    renderTasks();
+                },
+                250
+            );
 
 
         } catch (error) {
@@ -1027,10 +1450,9 @@
             console.error(error);
 
 
-            /* 失敗就還原 */
-
             checkbox.className =
                 "task-checkbox";
+
 
             card.className =
                 "task";
@@ -1042,76 +1464,681 @@
     }
 
 
-    /* =========================================================
-       自動同步
-    ========================================================= */
+    /* =====================================================
+       TASK AUTO SYNC
+    ===================================================== */
 
-    function startAutoSync() {
+    function startTaskAutoSync() {
 
-        stopAutoSync();
+        stopTaskAutoSync();
+
 
         syncTimer =
             setInterval(
                 syncTasks,
-                SYNC_INTERVAL
+                TASK_SYNC_INTERVAL
             );
     }
 
 
-    function stopAutoSync() {
+    function stopTaskAutoSync() {
 
         if (syncTimer) {
 
-            clearInterval(syncTimer);
+            clearInterval(
+                syncTimer
+            );
 
             syncTimer = null;
         }
     }
 
 
-    /* =========================================================
-       時間
-    ========================================================= */
+    /* =====================================================
+       HKO WEATHER
+    ===================================================== */
 
-    function formatTime(date) {
+    async function loadWeather() {
+
+        try {
+
+            const currentUrl =
+                `${HKO_API}?dataType=rhrread&lang=tc`;
+
+
+            const forecastUrl =
+                `${HKO_API}?dataType=fnd&lang=tc`;
+
+
+            const [
+                currentResponse,
+                forecastResponse
+            ] =
+                await Promise.all([
+                    fetch(currentUrl),
+                    fetch(forecastUrl)
+                ]);
+
+
+            if (
+                !currentResponse.ok ||
+                !forecastResponse.ok
+            ) {
+
+                throw new Error(
+                    "HKO API error"
+                );
+            }
+
+
+            const current =
+                await currentResponse.json();
+
+
+            const forecast =
+                await forecastResponse.json();
+
+
+            updateCurrentWeather(
+                current
+            );
+
+
+            updateRainProbability(
+                forecast
+            );
+
+
+            weatherStatusElement.textContent =
+                `天文台資料 · ${formatTime(new Date())}`;
+
+
+        } catch (error) {
+
+            console.error(
+                "Weather error:",
+                error
+            );
+
+
+            weatherStatusElement.textContent =
+                "天氣資料暫時無法取得";
+        }
+    }
+
+
+    /* =====================================================
+       CURRENT WEATHER
+    ===================================================== */
+
+    function updateCurrentWeather(data) {
+
+        if (
+            data.temperature &&
+            Array.isArray(
+                data.temperature.data
+            )
+        ) {
+
+            const fanling =
+                findWeatherStation(
+                    data.temperature.data,
+                    [
+                        "粉嶺",
+                        "Fanling"
+                    ]
+                );
+
+
+            const selected =
+                fanling ||
+                data.temperature.data[0];
+
+
+            if (selected) {
+
+                temperatureElement.textContent =
+                    `${selected.value}°C`;
+            }
+        }
+
+
+        if (
+            data.icon &&
+            Array.isArray(data.icon)
+        ) {
+
+            const iconNumber =
+                Number(
+                    data.icon[0]
+                );
+
+
+            weatherIconElement.textContent =
+                weatherIcon(
+                    iconNumber
+                );
+
+
+            weatherDescriptionElement.textContent =
+                weatherDescription(
+                    iconNumber
+                );
+        }
+    }
+
+
+    /* =====================================================
+       FIND WEATHER STATION
+    ===================================================== */
+
+    function findWeatherStation(
+        list,
+        names
+    ) {
+
+        return list.find(
+            item => {
+
+                const place =
+                    String(
+                        item.place || ""
+                    ).toLowerCase();
+
+
+                return names.some(
+                    name =>
+                        place.includes(
+                            String(name).toLowerCase()
+                        )
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       RAIN PROBABILITY
+       
+       HKO PSR:
+       High
+       Medium High
+       Medium
+       Medium Low
+       Low
+    ===================================================== */
+
+    function updateRainProbability(
+        data
+    ) {
+
+        if (
+            !data.weatherForecast ||
+            !Array.isArray(
+                data.weatherForecast
+            )
+        ) {
+
+            rainProbabilityElement.textContent =
+                "--";
+
+            return;
+        }
+
+
+        const today =
+            getTodayYYYYMMDD();
+
+
+        const todayForecast =
+            data.weatherForecast.find(
+                item =>
+                    String(
+                        item.forecastDate
+                    ) === today
+            );
+
+
+        if (
+            !todayForecast ||
+            !todayForecast.PSR
+        ) {
+
+            rainProbabilityElement.textContent =
+                "--";
+
+            return;
+        }
+
+
+        const psr =
+            String(
+                todayForecast.PSR
+            );
+
+
+        rainProbabilityElement.textContent =
+            rainProbabilityText(
+                psr
+            );
+    }
+
+
+    function rainProbabilityText(
+        psr
+    ) {
+
+        const value =
+            psr.toLowerCase();
+
+
+        if (
+            value.includes("high") &&
+            !value.includes("medium")
+        ) {
+            return "≥70%";
+        }
+
+
+        if (
+            value.includes("medium high")
+        ) {
+            return "55–69%";
+        }
+
+
+        if (
+            value === "medium"
+        ) {
+            return "45–54%";
+        }
+
+
+        if (
+            value.includes("medium low")
+        ) {
+            return "30–44%";
+        }
+
+
+        if (
+            value.includes("low")
+        ) {
+            return "<30%";
+        }
+
+
+        return psr;
+    }
+
+
+    /* =====================================================
+       AQHI
+       
+       使用北區官方監測站
+    ===================================================== */
+
+    async function loadAQHI() {
+
+        try {
+
+            const response =
+                await fetch(
+                    AQHI_API
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "AQHI API error"
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const station =
+                findNorthAQHI(
+                    data
+                );
+
+
+            if (!station) {
+
+                aqhiElement.textContent =
+                    "--";
+
+                return;
+            }
+
+
+            const value =
+                station.aqhi ??
+                station.AQHI ??
+                station.index ??
+                station.value;
+
+
+            if (
+                value === undefined ||
+                value === null ||
+                value === ""
+            ) {
+
+                aqhiElement.textContent =
+                    "--";
+
+                return;
+            }
+
+
+            displayAQHI(
+                String(value)
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "AQHI error:",
+                error
+            );
+
+
+            aqhiElement.textContent =
+                "--";
+        }
+    }
+
+
+    /* =====================================================
+       FIND NORTH AQHI
+    ===================================================== */
+
+    function findNorthAQHI(data) {
+
+        let list = data;
+
+
+        if (
+            data &&
+            Array.isArray(data.data)
+        ) {
+            list = data.data;
+        }
+
+
+        if (
+            data &&
+            Array.isArray(data.stations)
+        ) {
+            list = data.stations;
+        }
+
+
+        if (!Array.isArray(list)) {
+
+            return null;
+        }
+
+
+        return list.find(
+            item => {
+
+                const name =
+                    String(
+                        item.station ||
+                        item.stationName ||
+                        item.name ||
+                        item.englishName ||
+                        item.chineseName ||
+                        ""
+                    ).toLowerCase();
+
+
+                return (
+                    name === "north" ||
+                    name.includes("north") ||
+                    name.includes("北區") ||
+                    name.includes("北")
+                );
+            }
+        );
+    }
+
+
+    /* =====================================================
+       DISPLAY AQHI
+    ===================================================== */
+
+    function displayAQHI(
+        value
+    ) {
+
+        aqhiElement.className =
+            "aqhi-value";
+
+
+        const numeric =
+            parseFloat(value);
+
+
+        if (
+            Number.isNaN(numeric)
+        ) {
+
+            aqhiElement.textContent =
+                value;
+
+            return;
+        }
+
+
+        aqhiElement.textContent =
+            value;
+
+
+        if (numeric <= 3) {
+
+            aqhiElement.className =
+                "aqhi-value aqhi-low";
+
+        } else if (numeric <= 6) {
+
+            aqhiElement.className =
+                "aqhi-value aqhi-moderate";
+
+        } else if (numeric === 7) {
+
+            aqhiElement.className =
+                "aqhi-value aqhi-high";
+
+        } else if (numeric <= 10) {
+
+            aqhiElement.className =
+                "aqhi-value aqhi-very-high";
+
+        } else {
+
+            aqhiElement.className =
+                "aqhi-value aqhi-serious";
+        }
+    }
+
+
+    /* =====================================================
+       WEATHER ICON
+    ===================================================== */
+
+    function weatherIcon(
+        icon
+    ) {
+
+        const map = {
+
+            50: "🌙",
+            51: "🌙",
+            52: "🌙",
+            53: "🌙",
+            54: "🌙",
+            60: "🌧️",
+            61: "🌧️",
+            62: "🌧️",
+            63: "🌧️",
+            64: "🌧️",
+            65: "🌧️",
+            70: "🌦️",
+            71: "🌦️",
+            72: "🌦️",
+            73: "🌦️",
+            74: "🌦️",
+            75: "🌦️",
+            76: "🌦️",
+            77: "🌦️",
+            80: "🌧️",
+            81: "🌧️",
+            82: "🌧️",
+            83: "⛈️",
+            84: "⛈️",
+            85: "⛈️",
+            90: "☀️",
+            91: "🌤️",
+            92: "🌤️",
+            93: "☁️",
+            94: "☁️",
+            95: "☁️",
+            96: "☁️",
+            97: "🌫️",
+            98: "🌫️"
+        };
+
+
+        return map[icon] || "☁️";
+    }
+
+
+    /* =====================================================
+       WEATHER DESCRIPTION
+    ===================================================== */
+
+    function weatherDescription(
+        icon
+    ) {
+
+        const map = {
+
+            50: "天晴",
+            51: "天晴",
+            52: "天晴",
+            53: "天晴",
+            54: "天晴",
+            60: "有雨",
+            61: "有雨",
+            62: "有雨",
+            63: "有雨",
+            64: "有雨",
+            65: "有雨",
+            70: "驟雨",
+            71: "驟雨",
+            72: "驟雨",
+            73: "驟雨",
+            74: "驟雨",
+            75: "驟雨",
+            76: "驟雨",
+            80: "雨",
+            81: "雨",
+            82: "雨",
+            83: "雷雨",
+            84: "雷雨",
+            85: "雷雨",
+            90: "天晴",
+            91: "天晴",
+            92: "部分有雲",
+            93: "部分有雲",
+            94: "多雲",
+            95: "多雲",
+            96: "多雲",
+            97: "霧",
+            98: "霧"
+        };
+
+
+        return map[icon] || "天氣";
+    }
+
+
+    /* =====================================================
+       DATE
+    ===================================================== */
+
+    function getTodayYYYYMMDD() {
+
+        const now =
+            new Date();
+
+
+        const y =
+            now.getFullYear();
+
+
+        const m =
+            String(
+                now.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        const d =
+            String(
+                now.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+
+        return `${y}${m}${d}`;
+    }
+
+
+    /* =====================================================
+       TIME
+    ===================================================== */
+
+    function formatTime(
+        date
+    ) {
 
         const h =
             String(
                 date.getHours()
-            ).padStart(2, "0");
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         const m =
             String(
                 date.getMinutes()
-            ).padStart(2, "0");
+            ).padStart(
+                2,
+                "0"
+            );
+
 
         return `${h}:${m}`;
     }
 
 
-    /* =========================================================
-       手動同步
-    ========================================================= */
-
-    syncButton.addEventListener(
-        "click",
-        () => {
-
-            if (!accessToken) {
-
-                login();
-
-                return;
-            }
-
-            syncTasks();
-        }
-    );
-
-
-    /* =========================================================
-       Login
-    ========================================================= */
+    /* =====================================================
+       LOGIN / LOGOUT
+    ===================================================== */
 
     loginButton.addEventListener(
         "click",
@@ -1125,10 +2152,6 @@
     );
 
 
-    /* =========================================================
-       Logout
-    ========================================================= */
-
     logoutButton.addEventListener(
         "click",
         () => {
@@ -1139,18 +2162,24 @@
 
             tasksData = [];
 
-            stopAutoSync();
+            stopTaskAutoSync();
 
-            tasksElement.innerHTML = "";
+
+            tasksElement.innerHTML =
+                "";
+
 
             loginOverlay.style.display =
                 "flex";
 
+
             loginButton.style.display =
                 "block";
 
+
             logoutButton.style.display =
                 "none";
+
 
             statusElement.textContent =
                 "已登出";
@@ -1158,9 +2187,34 @@
     );
 
 
-    /* =========================================================
-       全螢幕
-    ========================================================= */
+    /* =====================================================
+       MANUAL SYNC
+    ===================================================== */
+
+    syncButton.addEventListener(
+        "click",
+        () => {
+
+            if (!accessToken) {
+
+                login();
+
+                return;
+            }
+
+
+            syncTasks();
+
+            loadWeather();
+
+            loadAQHI();
+        }
+    );
+
+
+    /* =====================================================
+       FULLSCREEN
+    ===================================================== */
 
     fullscreenButton.addEventListener(
         "click",
@@ -1168,13 +2222,18 @@
 
             try {
 
-                if (!document.fullscreenElement) {
+                if (
+                    !document.fullscreenElement
+                ) {
 
-                    await document.documentElement.requestFullscreen();
+                    await document
+                        .documentElement
+                        .requestFullscreen();
 
                 } else {
 
-                    await document.exitFullscreen();
+                    await document
+                        .exitFullscreen();
                 }
 
             } catch (error) {
@@ -1185,9 +2244,9 @@
     );
 
 
-    /* =========================================================
-       網絡恢復
-    ========================================================= */
+    /* =====================================================
+       NETWORK
+    ===================================================== */
 
     window.addEventListener(
         "online",
@@ -1196,33 +2255,64 @@
             if (accessToken) {
                 syncTasks();
             }
+
+            loadWeather();
+
+            loadAQHI();
         }
     );
 
 
-    /* =========================================================
-       App 回到前景
-    ========================================================= */
+    /* =====================================================
+       VISIBILITY
+    ===================================================== */
 
     document.addEventListener(
         "visibilitychange",
         () => {
 
             if (
-                document.visibilityState === "visible" &&
-                accessToken
+                document.visibilityState ===
+                "visible"
             ) {
-                syncTasks();
+
+                if (accessToken) {
+                    syncTasks();
+                }
+
+                loadWeather();
+
+                loadAQHI();
             }
         }
     );
 
 
-    /* =========================================================
-       初始化
-    ========================================================= */
+    /* =====================================================
+       INIT
+    ===================================================== */
 
     initGoogle();
+
+    loadWeather();
+
+    loadAQHI();
+
+
+    /* =====================================================
+       WEATHER AUTO UPDATE
+    ===================================================== */
+
+    setInterval(
+        loadWeather,
+        WEATHER_INTERVAL
+    );
+
+
+    setInterval(
+        loadAQHI,
+        AQHI_INTERVAL
+    );
 
 </script>
 
