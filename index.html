@@ -1,33 +1,21 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
-<meta name="theme-color"
-      content="#121212">
-
-<meta name="mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style"
-      content="black">
+<meta name="theme-color" content="#121212">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 <title>WTC Work Dashboard</title>
 
 <script src="https://accounts.google.com/gsi/client"></script>
-
 
 <style>
 
@@ -36,41 +24,39 @@
 ========================================================= */
 
 * {
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 html,
 body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 
-    width: 100%;
-    height: 100%;
+  overflow: hidden;
 
-    margin: 0;
-    padding: 0;
+  background: #121212;
+  color: #ffffff;
 
-    overflow: hidden;
-
-    background: #121212;
-    color: #ffffff;
-
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans TC",
-        Arial,
-        sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans TC",
+    Arial,
+    sans-serif;
 }
 
 body {
-    position: fixed;
-    inset: 0;
+  position: fixed;
+  inset: 0;
 }
 
 button {
-    font-family: inherit;
+  font-family: inherit;
 }
 
 
@@ -79,16 +65,16 @@ button {
 ========================================================= */
 
 .app {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
 
-    width: 100%;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
 
-    display: flex;
-    flex-direction: column;
+  overflow: hidden;
 
-    overflow: hidden;
-
-    background: #121212;
+  background: #121212;
 }
 
 
@@ -97,183 +83,148 @@ button {
 ========================================================= */
 
 .header {
+  flex: 0 0 78px;
 
-    flex: 0 0 78px;
+  height: 78px;
 
-    height: 78px;
+  padding: 8px 14px 7px;
 
-    padding:
-        8px
-        14px
-        7px;
+  background: #121212;
 
-    background: #121212;
+  border-bottom: 1px solid #292929;
 
-    border-bottom:
-        1px solid #292929;
-
-    overflow: hidden;
+  overflow: hidden;
 }
 
-
-/* Header first row */
-
 .header-top {
+  height: 34px;
 
-    height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 12px;
+  gap: 12px;
 }
 
 .header-left {
+  min-width: 0;
 
-    min-width: 0;
+  display: flex;
+  align-items: center;
 
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
+  gap: 14px;
 }
 
 .title {
+  font-size: 1.25rem;
+  font-weight: 700;
 
-    font-size: 1.25rem;
-
-    font-weight: 700;
-
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .clock {
+  font-size: 1.25rem;
+  font-weight: 600;
 
-    font-size: 1.25rem;
+  color: #bbbbbb;
 
-    font-weight: 600;
+  font-variant-numeric: tabular-nums;
 
-    color: #bbbbbb;
-
-    font-variant-numeric:
-        tabular-nums;
-
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
-
-/* Header buttons */
-
 .header-buttons {
+  display: flex;
+  align-items: center;
 
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
+  gap: 5px;
 }
 
 .header-button {
+  height: 32px;
 
-    height: 32px;
+  padding: 0 10px;
 
-    padding:
-        0 10px;
+  border: 0;
+  border-radius: 8px;
 
-    border: 0;
+  background: #292929;
+  color: #ffffff;
 
-    border-radius: 8px;
+  font-size: 0.76rem;
 
-    background: #292929;
-
-    color: #ffffff;
-
-    font-size: 0.76rem;
-
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .header-button:active {
-
-    background: #3a3a3a;
+  background: #3a3a3a;
 }
 
 .logout-button {
-
-    display: none;
+  display: none;
 }
 
 
 /* =========================================================
-   WEATHER TOP BAR
+   WEATHER BAR
 ========================================================= */
 
 .weather-bar {
+  height: 25px;
 
-    height: 25px;
+  margin-top: 5px;
 
-    margin-top: 5px;
+  display: flex;
+  align-items: center;
 
-    display: flex;
+  gap: 17px;
 
-    align-items: center;
+  overflow: hidden;
 
-    gap: 17px;
-
-    overflow: hidden;
-
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .weather-item {
+  display: flex;
+  align-items: center;
 
-    display: flex;
+  gap: 4px;
 
-    align-items: center;
+  color: #999999;
 
-    gap: 4px;
-
-    color: #999999;
-
-    font-size: 0.77rem;
+  font-size: 0.77rem;
 }
 
 .weather-value {
+  color: #ffffff;
 
-    color: #ffffff;
-
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .weather-status {
+  color: #555555;
 
-    color: #555555;
-
-    font-size: 0.65rem;
+  font-size: 0.65rem;
 }
 
 .aqhi-low {
-    color: #81c784;
+  color: #81c784;
 }
 
 .aqhi-moderate {
-    color: #ffca5c;
+  color: #ffca5c;
 }
 
 .aqhi-high {
-    color: #ff9b6b;
+  color: #ff9b6b;
 }
 
 .aqhi-very-high {
-    color: #ff7373;
+  color: #ff7373;
 }
 
 .aqhi-serious {
-    color: #ff4f81;
+  color: #ff4f81;
 }
 
 
@@ -282,28 +233,27 @@ button {
 ========================================================= */
 
 .dashboard {
+  flex: 1 1 auto;
 
-    flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
 
-    min-height: 0;
+  width: 100%;
 
-    height: 0;
+  padding: 10px 12px 12px;
 
-    padding:
-        10px
-        12px
-        12px;
+  display: grid;
 
-    display: grid;
+  /*
+    Tasks       45%
+    Schedule    35%
+    Email       20%
+  */
+  grid-template-columns: 45fr 35fr 20fr;
 
-    grid-template-columns:
-        48fr
-        24fr
-        28fr;
+  gap: 10px;
 
-    gap: 10px;
-
-    overflow: hidden;
+  overflow: hidden;
 }
 
 
@@ -312,770 +262,618 @@ button {
 ========================================================= */
 
 .panel {
+  min-width: 0;
+  min-height: 0;
 
-    min-width: 0;
-    min-height: 0;
+  height: 100%;
 
-    height: 100%;
+  display: flex;
+  flex-direction: column;
 
-    display: flex;
+  background: #181818;
 
-    flex-direction: column;
+  border: 1px solid #292929;
 
-    background: #181818;
+  border-radius: 12px;
 
-    border:
-        1px solid #292929;
-
-    border-radius: 12px;
-
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .panel-header {
+  flex: 0 0 42px;
 
-    flex: 0 0 42px;
+  height: 42px;
 
-    height: 42px;
+  padding: 0 12px;
 
-    padding:
-        0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    display: flex;
+  background: #1d1d1d;
 
-    align-items: center;
-
-    justify-content: space-between;
-
-    background: #1d1d1d;
-
-    border-bottom:
-        1px solid #292929;
+  border-bottom: 1px solid #292929;
 }
 
 .panel-title {
+  font-size: 0.95rem;
 
-    font-size: 0.92rem;
-
-    font-weight: 700;
+  font-weight: 700;
 }
 
-.panel-info {
+.panel-subtitle {
+  color: #777777;
 
-    color: #666666;
+  font-size: 0.68rem;
+}
 
-    font-size: 0.65rem;
+.panel-body {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow: hidden;
 }
 
 
 /* =========================================================
-   TASK PANEL
+   TASKS
 ========================================================= */
 
 .task-scroll {
+  height: 100%;
 
-    flex: 1 1 0;
+  padding: 7px;
 
-    min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    overflow-y: auto;
-
-    overflow-x: hidden;
-
-    padding: 8px;
-
-    -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
-#tasks {
+.task-card {
+  width: 100%;
 
-    display: flex;
+  min-height: 53px;
 
-    flex-direction: column;
+  margin-bottom: 6px;
 
-    gap: 7px;
+  padding: 8px 10px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  background: #202020;
+
+  border: 1px solid #2b2b2b;
+
+  border-radius: 9px;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
-
-/* Task */
-
-.task {
-
-    width: 100%;
-
-    min-height: 59px;
-
-    padding:
-        8px
-        10px;
-
-    display: flex;
-
-    align-items: center;
-
-    background: #222222;
-
-    border-radius: 10px;
-
-    transition:
-        opacity .25s ease,
-        transform .25s ease;
+.task-card:last-child {
+  margin-bottom: 0;
 }
 
-.task:active {
-
-    background: #2b2b2b;
+.task-card:hover {
+  background: #242424;
 }
 
-.task.fading {
-
-    opacity: 0;
-
-    transform:
-        translateX(25px);
+.task-card.fading {
+  opacity: 0;
+  transform: translateX(20px);
 }
-
-
-/* Task checkbox */
 
 .task-checkbox {
+  flex: 0 0 27px;
 
-    flex: 0 0 auto;
+  width: 27px;
+  height: 27px;
 
-    width: 27px;
-    height: 27px;
+  border: 2px solid #777777;
 
-    margin-right: 11px;
+  border-radius: 7px;
 
-    border:
-        2px solid #888888;
+  background: transparent;
 
-    border-radius: 50%;
-
-    position: relative;
-
-    background: transparent;
-
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .task-checkbox.done {
+  background: #777777;
 
-    border-color: #777777;
-
-    background: #777777;
+  border-color: #777777;
 }
-
-.task-checkbox.done::after {
-
-    content: "";
-
-    position: absolute;
-
-    left: 6px;
-    top: 3px;
-
-    width: 7px;
-    height: 12px;
-
-    border-right:
-        2px solid #ffffff;
-
-    border-bottom:
-        2px solid #ffffff;
-
-    transform:
-        rotate(45deg);
-}
-
-
-/* Task text */
 
 .task-content {
+  min-width: 0;
 
-    flex: 1;
-
-    min-width: 0;
+  flex: 1;
 }
 
 .task-title {
+  font-size: 0.92rem;
 
-    font-size: 1.02rem;
+  line-height: 1.3;
 
-    line-height: 1.3;
-
-    font-weight: 500;
-
-    word-break: break-word;
+  word-break: break-word;
 }
 
 .task-date {
+  margin-top: 3px;
 
-    margin-top: 3px;
+  font-size: 0.67rem;
 
-    font-size: 0.70rem;
-
-    color: #777777;
+  color: #777777;
 }
 
 .task-date.overdue {
-    color: #ff7777;
+  color: #ff7373;
 }
 
 .task-date.today {
-    color: #ffb74d;
+  color: #81c784;
 }
 
 .task-date.tomorrow {
-    color: #81c784;
+  color: #ffca5c;
 }
 
+.task-empty {
+  height: 100%;
 
-/* Task empty */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.empty {
+  color: #666666;
 
-    padding:
-        40px
-        15px;
-
-    text-align: center;
-
-    color: #666666;
-
-    font-size: 0.88rem;
-
-    line-height: 1.5;
+  font-size: 0.82rem;
 }
 
-.task-status {
+.task-error {
+  padding: 20px;
 
-    flex: 0 0 19px;
+  color: #ff7373;
 
-    height: 19px;
+  font-size: 0.78rem;
 
-    text-align: center;
-
-    color: #555555;
-
-    font-size: 0.60rem;
+  line-height: 1.5;
 }
 
 
 /* =========================================================
-   WEATHER PANEL
+   SCHEDULE
 ========================================================= */
 
-.weather-scroll {
+.schedule-scroll {
+  height: 100%;
 
-    flex: 1 1 0;
+  padding: 8px 9px;
 
-    min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    overflow-y: auto;
-
-    padding: 10px;
+  scrollbar-width: thin;
 }
 
+.schedule-day-label {
+  margin: 2px 4px 7px;
 
-/* Current */
+  color: #888888;
 
-.current-weather {
+  font-size: 0.7rem;
 
-    padding:
-        4px
-        0
-        10px;
-
-    text-align: center;
-
-    border-bottom:
-        1px solid #292929;
+  font-weight: 600;
 }
 
-.weather-icon-large {
+.schedule-item {
+  position: relative;
 
-    font-size: 2.5rem;
+  min-height: 49px;
 
-    line-height: 1;
+  margin-bottom: 5px;
 
-    margin-bottom: 5px;
+  display: grid;
+
+  grid-template-columns: 54px 10px 1fr;
+
+  align-items: stretch;
+
+  border-radius: 8px;
+
+  background: #202020;
+
+  border: 1px solid #292929;
+
+  overflow: hidden;
 }
 
-.temperature-large {
+.schedule-time {
+  padding: 10px 5px;
 
-    font-size: 2.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 
-    line-height: 1;
+  color: #999999;
 
-    font-weight: 700;
+  font-size: 0.72rem;
+
+  font-variant-numeric: tabular-nums;
 }
 
-.weather-description {
+.schedule-line {
+  position: relative;
 
-    margin-top: 5px;
+  display: flex;
 
-    color: #999999;
-
-    font-size: 0.75rem;
+  justify-content: center;
 }
 
+.schedule-line::before {
+  content: "";
 
-/* Stats */
+  width: 2px;
 
-.weather-stats {
+  height: 100%;
 
-    margin-top: 9px;
-
-    display: grid;
-
-    grid-template-columns:
-        1fr
-        1fr;
-
-    gap: 6px;
+  background: #3c3c3c;
 }
 
-.weather-stat {
+.schedule-dot {
+  position: absolute;
 
-    padding: 7px;
+  top: 12px;
 
-    background: #222222;
+  width: 7px;
+  height: 7px;
 
-    border-radius: 7px;
+  border-radius: 50%;
 
-    text-align: center;
+  background: #777777;
 }
 
-.weather-stat-label {
+.schedule-info {
+  min-width: 0;
 
-    color: #666666;
-
-    font-size: 0.59rem;
+  padding: 8px 9px 8px 4px;
 }
 
-.weather-stat-value {
+.schedule-title {
+  font-size: 0.82rem;
 
-    margin-top: 2px;
+  line-height: 1.3;
 
-    color: #ffffff;
-
-    font-size: 0.75rem;
-
-    font-weight: 600;
+  word-break: break-word;
 }
 
+.schedule-location {
+  margin-top: 3px;
 
-/* Forecast */
+  color: #666666;
 
-.forecast-heading {
+  font-size: 0.64rem;
 
-    margin-top: 11px;
+  white-space: nowrap;
 
-    margin-bottom: 5px;
+  overflow: hidden;
 
-    color: #666666;
-
-    font-size: 0.64rem;
-
-    font-weight: 600;
+  text-overflow: ellipsis;
 }
 
-.forecast-list {
+.schedule-item.now {
+  background: #252525;
 
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 4px;
+  border-color: #555555;
 }
 
-.forecast-row {
+.schedule-item.now .schedule-time {
+  color: #ffffff;
 
-    min-height: 34px;
-
-    padding:
-        5px
-        6px;
-
-    display: grid;
-
-    grid-template-columns:
-        45px
-        23px
-        minmax(0, 1fr)
-        55px;
-
-    align-items: center;
-
-    gap: 4px;
-
-    background: #222222;
-
-    border-radius: 6px;
+  font-weight: 700;
 }
 
-.forecast-day {
+.schedule-item.now .schedule-dot {
+  background: #ffffff;
 
-    color: #999999;
-
-    font-size: 0.60rem;
+  box-shadow: 0 0 0 3px #444444;
 }
 
-.forecast-icon {
-
-    font-size: 0.82rem;
-
-    text-align: center;
+.schedule-item.now .schedule-line::before {
+  background: #666666;
 }
 
-.forecast-weather {
-
-    min-width: 0;
-
-    color: #cccccc;
-
-    font-size: 0.61rem;
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+.schedule-item.past {
+  opacity: 0.48;
 }
 
-.forecast-temp {
+.schedule-all-day {
+  color: #aaaaaa;
 
-    color: #777777;
+  font-size: 0.7rem;
+}
 
-    font-size: 0.58rem;
+.schedule-empty {
+  height: 100%;
 
-    text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #666666;
+
+  font-size: 0.82rem;
+}
+
+.schedule-loading {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #666666;
+
+  font-size: 0.78rem;
+}
+
+.schedule-tomorrow {
+  margin-top: 12px;
 }
 
 
 /* =========================================================
-   MAIL PANEL
+   EMAIL
 ========================================================= */
 
 .mail-scroll {
+  height: 100%;
 
-    flex: 1 1 0;
+  padding: 7px;
 
-    min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    overflow-y: auto;
-
-    padding: 8px;
-
-    -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
-.mail-list {
+.mail-card {
+  width: 100%;
 
-    display: flex;
+  margin-bottom: 6px;
 
-    flex-direction: column;
+  padding: 9px 10px;
 
-    gap: 6px;
+  background: #202020;
+
+  border: 1px solid #2b2b2b;
+
+  border-radius: 8px;
+
+  cursor: pointer;
 }
 
-.mail-item {
-
-    width: 100%;
-
-    padding:
-        9px;
-
-    border: 0;
-
-    border-radius: 9px;
-
-    background: #222222;
-
-    color: #ffffff;
-
-    text-align: left;
-
-    cursor: pointer;
+.mail-card:last-child {
+  margin-bottom: 0;
 }
 
-.mail-item:active {
-
-    background: #2b2b2b;
+.mail-card:active {
+  background: #292929;
 }
 
-.mail-item.unread {
+.mail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    border-left:
-        3px solid #ffffff;
-
-    padding-left: 6px;
-}
-
-.mail-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 7px;
+  gap: 7px;
 }
 
 .mail-sender {
+  min-width: 0;
 
-    flex: 1;
+  flex: 1;
 
-    min-width: 0;
+  color: #ffffff;
 
-    font-size: 0.76rem;
+  font-size: 0.74rem;
 
-    font-weight: 600;
+  font-weight: 600;
 
-    white-space: nowrap;
+  white-space: nowrap;
 
-    overflow: hidden;
+  overflow: hidden;
 
-    text-overflow: ellipsis;
+  text-overflow: ellipsis;
 }
 
 .mail-time {
+  flex: 0 0 auto;
 
-    flex: 0 0 auto;
+  color: #666666;
 
-    color: #555555;
-
-    font-size: 0.59rem;
+  font-size: 0.6rem;
 }
 
 .mail-subject {
+  margin-top: 4px;
 
-    margin-top: 4px;
+  color: #dddddd;
 
-    color: #dddddd;
+  font-size: 0.76rem;
 
-    font-size: 0.73rem;
+  font-weight: 600;
 
-    line-height: 1.3;
+  line-height: 1.3;
 
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .mail-snippet {
+  margin-top: 4px;
 
-    margin-top: 3px;
+  color: #777777;
 
-    color: #707070;
+  font-size: 0.65rem;
 
-    font-size: 0.62rem;
+  line-height: 1.3;
 
-    line-height: 1.3;
+  display: -webkit-box;
 
-    white-space: nowrap;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 
-    overflow: hidden;
-
-    text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .mail-empty {
+  height: 100%;
 
-    padding:
-        40px
-        10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: #666666;
+  color: #666666;
 
-    text-align: center;
-
-    font-size: 0.78rem;
-
-    line-height: 1.5;
-}
-
-.mail-error {
-
-    padding:
-        30px
-        10px;
-
-    color: #777777;
-
-    text-align: center;
-
-    font-size: 0.70rem;
-
-    line-height: 1.6;
+  font-size: 0.78rem;
 }
 
 
 /* =========================================================
-   LOGIN
+   LOGIN OVERLAY
 ========================================================= */
 
 .login-overlay {
+  position: fixed;
 
-    position: fixed;
+  inset: 0;
 
-    inset: 0;
+  z-index: 999;
 
-    z-index: 1000;
+  display: flex;
 
-    display: flex;
+  align-items: center;
+  justify-content: center;
 
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
-
-    background: #121212;
+  background: #121212;
 }
 
 .login-box {
+  width: min(360px, 85vw);
 
-    width:
-        min(380px, 100%);
+  padding: 25px;
 
-    padding: 28px;
+  text-align: center;
 
-    background: #1e1e1e;
+  background: #1c1c1c;
 
-    border-radius: 17px;
+  border: 1px solid #303030;
 
-    text-align: center;
+  border-radius: 14px;
 }
 
 .login-title {
+  font-size: 1.15rem;
 
-    font-size: 1.4rem;
-
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .login-description {
+  margin-top: 8px;
 
-    margin:
-        10px
-        0
-        22px;
+  color: #888888;
 
-    color: #999999;
+  font-size: 0.76rem;
 
-    font-size: 0.82rem;
-
-    line-height: 1.6;
+  line-height: 1.5;
 }
 
 .login-button {
+  margin-top: 18px;
 
-    width: 100%;
+  width: 100%;
 
-    min-height: 48px;
+  height: 42px;
 
-    border: 0;
+  border: 0;
 
-    border-radius: 11px;
+  border-radius: 9px;
 
-    background: #ffffff;
+  background: #ffffff;
 
-    color: #111111;
+  color: #111111;
 
-    font-size: 0.95rem;
+  font-size: 0.85rem;
 
-    font-weight: 600;
+  font-weight: 700;
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 
 /* =========================================================
-   LANDSCAPE SAFETY
+   RESPONSIVE
 ========================================================= */
 
-@media (orientation: landscape) {
+@media (max-width: 800px) {
 
-    html,
-    body,
-    .app {
+  .title {
+    font-size: 1rem;
+  }
 
-        width: 100vw;
+  .clock {
+    font-size: 1rem;
+  }
 
-        height: 100vh;
+  .header-button {
+    padding: 0 7px;
+    font-size: 0.68rem;
+  }
 
-        max-height: 100vh;
+  .dashboard {
+    grid-template-columns: 44fr 36fr 20fr;
+  }
 
-        overflow: hidden;
-    }
-}
-
-
-/* =========================================================
-   VERY WIDE SCREEN
-========================================================= */
-
-@media (min-width: 1100px) {
-
-    .header {
-
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-    .dashboard {
-
-        padding-left: 14px;
-        padding-right: 14px;
-    }
-
-    .task-title {
-
-        font-size: 1.08rem;
-    }
 }
 
 </style>
-
 </head>
 
 
 <body>
 
-
 <!-- =======================================================
      LOGIN
 ======================================================= -->
 
-<div
-    id="loginOverlay"
-    class="login-overlay">
+<div id="loginOverlay" class="login-overlay">
 
-    <div class="login-box">
+  <div class="login-box">
 
-        <div class="login-title">
-            Work Dashboard
-        </div>
-
-        <div class="login-description">
-            登入 Google 後顯示 Tasks、
-            未讀 Email 及天氣資訊。
-        </div>
-
-        <button
-            id="loginButton"
-            class="login-button">
-
-            使用 Google 登入
-
-        </button>
-
+    <div class="login-title">
+      WTC Work Dashboard
     </div>
+
+    <div class="login-description">
+      登入 Google 後即可同步<br>
+      Tasks、Calendar 及未讀 Email
+    </div>
+
+    <button
+      id="loginButton"
+      class="login-button"
+      type="button"
+    >
+      登入 Google
+    </button>
+
+  </div>
 
 </div>
 
@@ -1086,346 +884,266 @@ button {
 
 <div class="app">
 
+  <!-- HEADER -->
 
-    <!-- ===================================================
-         HEADER
-    ==================================================== -->
+  <header class="header">
 
-    <header class="header">
+    <div class="header-top">
 
+      <div class="header-left">
 
-        <div class="header-top">
-
-
-            <div class="header-left">
-
-                <div class="title">
-                    Work Dashboard
-                </div>
-
-                <div
-                    id="clock"
-                    class="clock">
-                    --:--
-                </div>
-
-            </div>
-
-
-            <div class="header-buttons">
-
-                <button
-                    id="syncButton"
-                    class="header-button">
-                    ↻ 同步
-                </button>
-
-                <button
-                    id="fullscreenButton"
-                    class="header-button">
-                    ⛶
-                </button>
-
-                <button
-                    id="logoutButton"
-                    class="header-button logout-button">
-                    登出
-                </button>
-
-            </div>
-
-
+        <div class="title">
+          WTC Work Dashboard
         </div>
 
-
-        <!-- Weather summary -->
-
-        <div class="weather-bar">
-
-
-            <div class="weather-item">
-
-                <span>
-                    🌡️
-                </span>
-
-                <span
-                    id="topTemp"
-                    class="weather-value">
-                    --
-                </span>
-
-            </div>
-
-
-            <div class="weather-item">
-
-                <span id="topWeatherIcon">
-                    🌤️
-                </span>
-
-                <span
-                    id="topWeather"
-                    class="weather-value">
-                    載入中
-                </span>
-
-            </div>
-
-
-            <div class="weather-item">
-
-                <span>
-                    💧
-                </span>
-
-                <span
-                    id="topHumidity"
-                    class="weather-value">
-                    --
-                </span>
-
-            </div>
-
-
-            <div class="weather-item">
-
-                <span>
-                    🌧️
-                </span>
-
-                <span
-                    id="topRain"
-                    class="weather-value">
-                    --
-                </span>
-
-            </div>
-
-
-            <div class="weather-item">
-
-                <span>
-                    🏭
-                </span>
-
-                <span
-                    id="topAQHI"
-                    class="weather-value">
-                    AQHI --
-                </span>
-
-            </div>
-
-
-            <div
-                id="weatherStatus"
-                class="weather-status">
-                HKO
-            </div>
-
-
+        <div
+          id="clock"
+          class="clock"
+        >
+          --:--
         </div>
 
-    </header>
+      </div>
+
+
+      <div class="header-buttons">
+
+        <button
+          id="syncButton"
+          class="header-button"
+          type="button"
+        >
+          ↻ 同步
+        </button>
+
+        <button
+          id="fullscreenButton"
+          class="header-button"
+          type="button"
+        >
+          ⛶
+        </button>
+
+        <button
+          id="logoutButton"
+          class="header-button logout-button"
+          type="button"
+        >
+          登出
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- WEATHER -->
+
+    <div class="weather-bar">
+
+      <div class="weather-item">
+        <span>🌡</span>
+        <span
+          id="weatherTemp"
+          class="weather-value"
+        >
+          --
+        </span>
+      </div>
+
+      <div class="weather-item">
+
+        <span id="weatherIcon">
+          ☁
+        </span>
+
+        <span
+          id="weatherText"
+          class="weather-value"
+        >
+          天氣讀取中
+        </span>
+
+      </div>
+
+      <div class="weather-item">
+
+        <span>💧</span>
+
+        <span
+          id="humidity"
+          class="weather-value"
+        >
+          --
+        </span>
+
+      </div>
+
+      <div class="weather-item">
+
+        <span>☔</span>
+
+        <span
+          id="rainProbability"
+          class="weather-value"
+        >
+          --
+        </span>
+
+      </div>
+
+      <div class="weather-item">
+
+        <span>AQHI</span>
+
+        <span
+          id="aqhi"
+          class="weather-value"
+        >
+          --
+        </span>
+
+      </div>
+
+      <div
+        id="weatherStatus"
+        class="weather-status"
+      >
+        天文台資料
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =====================================================
+       DASHBOARD
+  ====================================================== -->
+
+  <main class="dashboard">
 
 
     <!-- ===================================================
-         DASHBOARD
+         TASKS
     ==================================================== -->
 
-    <main class="dashboard">
+    <section class="panel">
 
+      <div class="panel-header">
 
-        <!-- =================================================
-             TASKS
-        ================================================== -->
+        <div class="panel-title">
+          Tasks
+        </div>
 
-        <section class="panel">
+        <div
+          id="taskCount"
+          class="panel-subtitle"
+        >
+          --
+        </div>
 
+      </div>
 
-            <div class="panel-header">
+      <div class="panel-body">
 
-                <div class="panel-title">
-                    ✓ 待辦事項
-                </div>
+        <div
+          id="taskScroll"
+          class="task-scroll"
+        >
 
-                <div
-                    id="taskCount"
-                    class="panel-info">
-                    --
-                </div>
+          <div class="task-empty">
+            尚未登入
+          </div>
 
-            </div>
+        </div>
 
+      </div>
 
-            <div class="task-scroll">
+    </section>
 
-                <div id="tasks">
 
-                    <div class="empty">
-                        載入中……
-                    </div>
+    <!-- ===================================================
+         SCHEDULE
+    ==================================================== -->
 
-                </div>
+    <section class="panel">
 
+      <div class="panel-header">
 
-                <div
-                    id="taskStatus"
-                    class="task-status">
-                </div>
+        <div class="panel-title">
+          今日 Schedule
+        </div>
 
-            </div>
+        <div
+          id="scheduleDate"
+          class="panel-subtitle"
+        >
+          --
+        </div>
 
+      </div>
 
-        </section>
+      <div class="panel-body">
 
+        <div
+          id="scheduleScroll"
+          class="schedule-scroll"
+        >
 
-        <!-- =================================================
-             WEATHER
-        ================================================== -->
+          <div class="schedule-loading">
+            尚未登入
+          </div>
 
-        <section class="panel">
+        </div>
 
+      </div>
 
-            <div class="panel-header">
+    </section>
 
-                <div class="panel-title">
-                    🌤️ 天氣
-                </div>
 
-                <div
-                    id="weatherUpdate"
-                    class="panel-info">
-                    --
-                </div>
+    <!-- ===================================================
+         EMAIL
+    ==================================================== -->
 
-            </div>
+    <section class="panel">
 
+      <div class="panel-header">
 
-            <div class="weather-scroll">
+        <div class="panel-title">
+          Email
+        </div>
 
+        <div
+          id="mailCount"
+          class="panel-subtitle"
+        >
+          未讀
+        </div>
 
-                <div class="current-weather">
+      </div>
 
-                    <div
-                        id="currentWeatherIcon"
-                        class="weather-icon-large">
-                        🌤️
-                    </div>
+      <div class="panel-body">
 
-                    <div
-                        id="currentTemperature"
-                        class="temperature-large">
-                        --
-                    </div>
+        <div
+          id="mailScroll"
+          class="mail-scroll"
+        >
 
-                    <div
-                        id="currentDescription"
-                        class="weather-description">
-                        載入中……
-                    </div>
+          <div class="mail-empty">
+            尚未登入
+          </div>
 
-                </div>
+        </div>
 
+      </div>
 
-                <div class="weather-stats">
+    </section>
 
 
-                    <div class="weather-stat">
-
-                        <div class="weather-stat-label">
-                            濕度
-                        </div>
-
-                        <div
-                            id="humidity"
-                            class="weather-stat-value">
-                            --
-                        </div>
-
-                    </div>
-
-
-                    <div class="weather-stat">
-
-                        <div class="weather-stat-label">
-                            降雨機會
-                        </div>
-
-                        <div
-                            id="rainProbability"
-                            class="weather-stat-value">
-                            --
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-
-                <div class="forecast-heading">
-                    未來天氣
-                </div>
-
-
-                <div
-                    id="forecastList"
-                    class="forecast-list">
-                </div>
-
-
-            </div>
-
-
-        </section>
-
-
-        <!-- =================================================
-             EMAIL
-        ================================================== -->
-
-        <section class="panel">
-
-
-            <div class="panel-header">
-
-                <div class="panel-title">
-                    ✉️ 未讀 Email
-                </div>
-
-                <div
-                    id="mailCount"
-                    class="panel-info">
-                    --
-                </div>
-
-            </div>
-
-
-            <div class="mail-scroll">
-
-                <div
-                    id="mailList"
-                    class="mail-list">
-
-                    <div class="mail-empty">
-                        載入中……
-                    </div>
-
-                </div>
-
-            </div>
-
-
-        </section>
-
-
-    </main>
+  </main>
 
 </div>
-
 
 
 <script>
@@ -1435,40 +1153,42 @@ button {
 ========================================================= */
 
 const CLIENT_ID =
-    "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
+  "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
 
 
 const GOOGLE_SCOPE =
-    "https://www.googleapis.com/auth/tasks " +
-    "https://www.googleapis.com/auth/gmail.readonly";
+  "https://www.googleapis.com/auth/tasks " +
+  "https://www.googleapis.com/auth/calendar.readonly " +
+  "https://www.googleapis.com/auth/gmail.readonly";
 
 
 const TASKS_API =
-    "https://tasks.googleapis.com/tasks/v1";
+  "https://tasks.googleapis.com/tasks/v1";
+
+
+const CALENDAR_API =
+  "https://www.googleapis.com/calendar/v3";
 
 
 const GMAIL_API =
-    "https://gmail.googleapis.com/gmail/v1";
+  "https://gmail.googleapis.com/gmail/v1";
 
 
 const HKO_API =
-    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
+  "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 
 
 const AQHI_API =
-    "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
+  "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
 
-const TASK_INTERVAL =
-    5000;
+const TASK_INTERVAL = 5000;
 
+const CALENDAR_INTERVAL = 60000;
 
-const MAIL_INTERVAL =
-    60000;
+const MAIL_INTERVAL = 60000;
 
-
-const WEATHER_INTERVAL =
-    600000;
+const WEATHER_INTERVAL = 600000;
 
 
 /* =========================================================
@@ -1481,13 +1201,11 @@ let tokenClient = null;
 
 let taskListId = null;
 
-let tasks = [];
+let tasksLoaded = false;
 
-let mails = [];
+let calendarLoaded = false;
 
-let currentWeather = null;
-
-let forecast = null;
+let mailLoaded = false;
 
 
 /* =========================================================
@@ -1495,29 +1213,40 @@ let forecast = null;
 ========================================================= */
 
 const loginOverlay =
-    document.getElementById(
-        "loginOverlay"
-    );
+  document.getElementById("loginOverlay");
 
 const loginButton =
-    document.getElementById(
-        "loginButton"
-    );
+  document.getElementById("loginButton");
 
 const logoutButton =
-    document.getElementById(
-        "logoutButton"
-    );
+  document.getElementById("logoutButton");
 
 const syncButton =
-    document.getElementById(
-        "syncButton"
-    );
+  document.getElementById("syncButton");
 
 const fullscreenButton =
-    document.getElementById(
-        "fullscreenButton"
-    );
+  document.getElementById("fullscreenButton");
+
+const clock =
+  document.getElementById("clock");
+
+const taskScroll =
+  document.getElementById("taskScroll");
+
+const taskCount =
+  document.getElementById("taskCount");
+
+const scheduleScroll =
+  document.getElementById("scheduleScroll");
+
+const scheduleDate =
+  document.getElementById("scheduleDate");
+
+const mailScroll =
+  document.getElementById("mailScroll");
+
+const mailCount =
+  document.getElementById("mailCount");
 
 
 /* =========================================================
@@ -1526,604 +1255,1204 @@ const fullscreenButton =
 
 function updateClock() {
 
-    const now =
-        new Date();
+  const now = new Date();
 
+  const hh =
+    String(now.getHours()).padStart(2, "0");
 
-    const h =
-        String(
-            now.getHours()
-        ).padStart(2, "0");
+  const mm =
+    String(now.getMinutes()).padStart(2, "0");
 
+  clock.textContent =
+    `${hh}:${mm}`;
 
-    const m =
-        String(
-            now.getMinutes()
-        ).padStart(2, "0");
-
-
-    document.getElementById(
-        "clock"
-    ).textContent =
-        `${h}:${m}`;
 }
-
 
 updateClock();
 
+setInterval(updateClock, 1000);
 
-setInterval(
-    updateClock,
-    1000
+
+/* =========================================================
+   DATE HELPERS
+========================================================= */
+
+function startOfToday() {
+
+  const d = new Date();
+
+  d.setHours(0, 0, 0, 0);
+
+  return d;
+
+}
+
+
+function startOfTomorrow() {
+
+  const d = startOfToday();
+
+  d.setDate(d.getDate() + 1);
+
+  return d;
+
+}
+
+
+function endOfToday() {
+
+  const d = startOfTomorrow();
+
+  d.setMilliseconds(-1);
+
+  return d;
+
+}
+
+
+function formatDateMD(date) {
+
+  return `${date.getMonth() + 1}/${date.getDate()}`;
+
+}
+
+
+function formatScheduleDate(date) {
+
+  const weekdays = [
+    "日",
+    "一",
+    "二",
+    "三",
+    "四",
+    "五",
+    "六"
+  ];
+
+  return `${date.getMonth() + 1}/${date.getDate()}（${weekdays[date.getDay()]}）`;
+
+}
+
+
+/* =========================================================
+   GOOGLE AUTH
+========================================================= */
+
+function initGoogleAuth() {
+
+  if (
+    !window.google ||
+    !google.accounts ||
+    !google.accounts.oauth2
+  ) {
+
+    console.error(
+      "Google Identity Services 尚未載入"
+    );
+
+    return;
+
+  }
+
+
+  tokenClient =
+    google.accounts.oauth2.initTokenClient({
+
+      client_id: CLIENT_ID,
+
+      scope: GOOGLE_SCOPE,
+
+      callback: async (response) => {
+
+        if (response.error) {
+
+          console.error(response);
+
+          alert(
+            "Google 登入失敗：" +
+            response.error
+          );
+
+          return;
+
+        }
+
+        accessToken =
+          response.access_token;
+
+        loginOverlay.style.display =
+          "none";
+
+        logoutButton.style.display =
+          "block";
+
+        await syncAll();
+
+      }
+
+    });
+
+}
+
+
+window.addEventListener(
+  "load",
+  initGoogleAuth
 );
 
 
 /* =========================================================
-   TIME
+   LOGIN
 ========================================================= */
 
-function timeString(date) {
+loginButton.addEventListener(
+  "click",
+  () => {
 
-    return (
-        String(
-            date.getHours()
-        ).padStart(2, "0")
-        +
-        ":"
-        +
-        String(
-            date.getMinutes()
-        ).padStart(2, "0")
-    );
-}
+    if (!tokenClient) {
+
+      alert(
+        "Google 登入元件仍在載入，請稍候。"
+      );
+
+      return;
+
+    }
+
+
+    tokenClient.requestAccessToken({
+      prompt: "consent"
+    });
+
+  }
+);
 
 
 /* =========================================================
-   DATE
+   LOGOUT
 ========================================================= */
 
-function dateOnly(date) {
-
-    return new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-    );
-}
-
-
-/* =========================================================
-   TASK DATE INFO
-========================================================= */
-
-function taskDateInfo(value) {
-
-    if (!value) {
-        return null;
-    }
-
-
-    const date =
-        new Date(value);
-
-
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-        return null;
-    }
-
-
-    const today =
-        dateOnly(
-            new Date()
-        );
-
-
-    const tomorrow =
-        new Date(today);
-
-
-    tomorrow.setDate(
-        tomorrow.getDate() + 1
-    );
-
-
-    const d =
-        dateOnly(date);
-
-
-    if (
-        d.getTime() <
-        today.getTime()
-    ) {
-
-        return {
-            text:
-                `逾期 · ${d.getMonth() + 1}/${d.getDate()}`,
-
-            type:
-                "overdue"
-        };
-
-    }
-
-
-    if (
-        d.getTime() ===
-        today.getTime()
-    ) {
-
-        return {
-            text:
-                "今日",
-
-            type:
-                "today"
-        };
-
-    }
-
-
-    if (
-        d.getTime() ===
-        tomorrow.getTime()
-    ) {
-
-        return {
-            text:
-                "明日",
-
-            type:
-                "tomorrow"
-        };
-
-    }
-
-
-    return {
-
-        text:
-            `${d.getMonth() + 1}/${d.getDate()}`,
-
-        type:
-            ""
-
-    };
-}
-
-
-/* =========================================================
-   TASK LIST
-========================================================= */
-
-async function getTaskList() {
-
-    const response =
-        await fetch(
-            `${TASKS_API}/users/@me/lists`,
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${accessToken}`
-                }
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "Task list error"
-        );
-
-    }
-
-
-    const data =
-        await response.json();
-
-
-    const defaultList =
-        data.items?.find(
-            item =>
-                item.id === "@default"
-        );
-
-
-    if (defaultList) {
-
-        return defaultList.id;
-
-    }
-
-
-    if (
-        data.items &&
-        data.items.length
-    ) {
-
-        return data.items[0].id;
-
-    }
-
-
-    throw new Error(
-        "No task list"
-    );
-}
-
-
-/* =========================================================
-   LOAD TASKS
-========================================================= */
-
-async function loadTasks() {
+logoutButton.addEventListener(
+  "click",
+  () => {
 
     if (!accessToken) {
-        return;
+      return;
     }
 
 
-    try {
+    google.accounts.oauth2.revoke(
+      accessToken,
+      () => {
 
-        if (!taskListId) {
+        accessToken = null;
 
-            taskListId =
-                await getTaskList();
+        loginOverlay.style.display =
+          "flex";
 
-        }
+        logoutButton.style.display =
+          "none";
 
+        taskScroll.innerHTML =
+          `<div class="task-empty">
+             已登出
+           </div>`;
 
-        const url =
-            `${TASKS_API}/lists/` +
-            `${encodeURIComponent(taskListId)}` +
-            `/tasks` +
-            `?showCompleted=false` +
-            `&showDeleted=false` +
-            `&maxResults=100`;
+        scheduleScroll.innerHTML =
+          `<div class="schedule-empty">
+             已登出
+           </div>`;
 
+        mailScroll.innerHTML =
+          `<div class="mail-empty">
+             已登出
+           </div>`;
 
-        const response =
-            await fetch(
-                url,
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${accessToken}`
-                    }
-                }
-            );
+        taskCount.textContent =
+          "--";
 
+        mailCount.textContent =
+          "未讀";
 
-        if (!response.ok) {
-
-            throw new Error(
-                "Tasks error"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        tasks =
-            data.items || [];
-
-
-        renderTasks();
-
-
-        document.getElementById(
-            "taskStatus"
-        ).textContent =
-            `更新 ${timeString(new Date())}`;
-
-    }
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-
-        document.getElementById(
-            "taskStatus"
-        ).textContent =
-            "同步失敗";
-
-    }
-}
-
-
-/* =========================================================
-   SORT TASKS
-========================================================= */
-
-function sortedTasks() {
-
-    return [...tasks].sort(
-        (a, b) => {
-
-            if (!a.due && !b.due) {
-                return 0;
-            }
-
-            if (!a.due) {
-                return 1;
-            }
-
-            if (!b.due) {
-                return -1;
-            }
-
-            return (
-                new Date(a.due) -
-                new Date(b.due)
-            );
-
-        }
+      }
     );
-}
+
+  }
+);
 
 
 /* =========================================================
-   RENDER TASKS
+   GOOGLE API FETCH
 ========================================================= */
 
-function renderTasks() {
-
-    const container =
-        document.getElementById(
-            "tasks"
-        );
-
-
-    container.innerHTML = "";
-
-
-    const list =
-        sortedTasks();
-
-
-    document.getElementById(
-        "taskCount"
-    ).textContent =
-        `${list.length} 項`;
-
-
-    if (!list.length) {
-
-        container.innerHTML =
-            `<div class="empty">
-                🎉<br><br>
-                暫時沒有待辦事項
-             </div>`;
-
-        return;
-    }
-
-
-    list.forEach(
-        task => {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "task";
-
-
-            const checkbox =
-                document.createElement(
-                    "div"
-                );
-
-            checkbox.className =
-                "task-checkbox";
-
-
-            const content =
-                document.createElement(
-                    "div"
-                );
-
-            content.className =
-                "task-content";
-
-
-            const title =
-                document.createElement(
-                    "div"
-                );
-
-            title.className =
-                "task-title";
-
-            title.textContent =
-                task.title ||
-                "(無標題)";
-
-
-            const date =
-                document.createElement(
-                    "div"
-                );
-
-
-            const info =
-                taskDateInfo(
-                    task.due
-                );
-
-
-            if (info) {
-
-                date.className =
-                    `task-date ${info.type}`;
-
-                date.textContent =
-                    info.text;
-
-            }
-            else {
-
-                date.className =
-                    "task-date";
-
-                date.style.display =
-                    "none";
-
-            }
-
-
-            content.appendChild(
-                title
-            );
-
-            content.appendChild(
-                date
-            );
-
-
-            checkbox.addEventListener(
-                "click",
-                () => {
-
-                    completeTask(
-                        task,
-                        card,
-                        checkbox
-                    );
-
-                }
-            );
-
-
-            card.appendChild(
-                checkbox
-            );
-
-            card.appendChild(
-                content
-            );
-
-
-            container.appendChild(
-                card
-            );
-
-        }
-    );
-}
-
-
-/* =========================================================
-   COMPLETE TASK
-========================================================= */
-
-async function completeTask(
-    task,
-    card,
-    checkbox
+async function googleFetch(
+  url,
+  options = {}
 ) {
 
-    if (
-        !accessToken ||
-        !taskListId
-    ) {
-        return;
-    }
+  if (!accessToken) {
+
+    throw new Error(
+      "尚未登入 Google"
+    );
+
+  }
 
 
-    checkbox.className =
-        "task-checkbox done";
+  const response =
+    await fetch(
+      url,
+      {
+        ...options,
 
-
-    card.className =
-        "task fading";
-
-
-    try {
-
-        const response =
-            await fetch(
-                `${TASKS_API}/lists/` +
-                `${encodeURIComponent(taskListId)}` +
-                `/tasks/` +
-                `${encodeURIComponent(task.id)}`,
-                {
-
-                    method:
-                        "PATCH",
-
-                    headers: {
-
-                        Authorization:
-                            `Bearer ${accessToken}`,
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body:
-                        JSON.stringify({
-                            status:
-                                "completed"
-                        })
-
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Complete failed"
-            );
-
+        headers: {
+          ...(options.headers || {}),
+          Authorization:
+            `Bearer ${accessToken}`,
+          "Content-Type":
+            "application/json"
         }
+      }
+    );
 
 
-        setTimeout(
+  if (
+    response.status === 401
+  ) {
+
+    accessToken = null;
+
+    loginOverlay.style.display =
+      "flex";
+
+    throw new Error(
+      "Google 授權已過期"
+    );
+
+  }
+
+
+  if (!response.ok) {
+
+    const text =
+      await response.text();
+
+    throw new Error(
+      `${response.status}: ${text}`
+    );
+
+  }
+
+
+  return response.json();
+
+}
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+async function getDefaultTaskList() {
+
+  if (taskListId) {
+    return taskListId;
+  }
+
+
+  const data =
+    await googleFetch(
+      `${TASKS_API}/users/@me/lists?maxResults=100`
+    );
+
+
+  const lists =
+    data.items || [];
+
+
+  const defaultList =
+    lists.find(
+      item => item.id === "@default"
+    );
+
+
+  if (defaultList) {
+
+    taskListId =
+      defaultList.id;
+
+  } else if (lists.length > 0) {
+
+    taskListId =
+      lists[0].id;
+
+  } else {
+
+    throw new Error(
+      "找不到 Google Tasks 清單"
+    );
+
+  }
+
+
+  return taskListId;
+
+}
+
+
+function taskDateInfo(due) {
+
+  if (!due) {
+    return null;
+  }
+
+
+  const date =
+    new Date(due);
+
+  const today =
+    startOfToday();
+
+  const tomorrow =
+    startOfTomorrow();
+
+  const dateOnly =
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+
+  if (dateOnly < today) {
+
+    return {
+      text: "逾期",
+      className: "overdue"
+    };
+
+  }
+
+
+  if (
+    dateOnly.getTime() ===
+    today.getTime()
+  ) {
+
+    return {
+      text: "今日",
+      className: "today"
+    };
+
+  }
+
+
+  if (
+    dateOnly.getTime() ===
+    tomorrow.getTime()
+  ) {
+
+    return {
+      text: "明日",
+      className: "tomorrow"
+    };
+
+  }
+
+
+  return {
+    text: formatDateMD(date),
+    className: ""
+  };
+
+}
+
+
+function sortTasks(tasks) {
+
+  return [...tasks].sort(
+    (a, b) => {
+
+      if (!a.due && !b.due) {
+        return 0;
+      }
+
+      if (!a.due) {
+        return 1;
+      }
+
+      if (!b.due) {
+        return -1;
+      }
+
+      return (
+        new Date(a.due) -
+        new Date(b.due)
+      );
+
+    }
+  );
+
+}
+
+
+function renderTasks(tasks) {
+
+  taskScroll.innerHTML = "";
+
+  taskCount.textContent =
+    `${tasks.length} 項`;
+
+
+  if (!tasks.length) {
+
+    taskScroll.innerHTML =
+      `<div class="task-empty">
+         🎉 沒有未完成 Tasks
+       </div>`;
+
+    return;
+
+  }
+
+
+  const sorted =
+    sortTasks(tasks);
+
+
+  sorted.forEach(
+    task => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "task-card";
+
+
+      const checkbox =
+        document.createElement("button");
+
+      checkbox.type =
+        "button";
+
+      checkbox.className =
+        "task-checkbox";
+
+
+      checkbox.addEventListener(
+        "click",
+        async () => {
+
+          checkbox.className =
+            "task-checkbox done";
+
+          card.className =
+            "task-card fading";
+
+
+          setTimeout(
             () => {
 
-                tasks =
-                    tasks.filter(
-                        item =>
-                            item.id !== task.id
-                    );
+              if (
+                card.parentNode
+              ) {
 
+                card.parentNode.removeChild(
+                  card
+                );
 
-                renderTasks();
+              }
 
             },
             250
+          );
+
+
+          try {
+
+            await googleFetch(
+              `${TASKS_API}/lists/${encodeURIComponent(taskListId)}/tasks/${encodeURIComponent(task.id)}`,
+              {
+                method: "PATCH",
+                body: JSON.stringify({
+                  status: "completed"
+                })
+              }
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Task 完成失敗",
+              error
+            );
+
+            await syncTasks();
+
+          }
+
+        }
+      );
+
+
+      const content =
+        document.createElement("div");
+
+      content.className =
+        "task-content";
+
+
+      const title =
+        document.createElement("div");
+
+      title.className =
+        "task-title";
+
+      title.textContent =
+        task.title || "(無標題)";
+
+
+      const date =
+        document.createElement("div");
+
+      date.className =
+        "task-date";
+
+
+      const info =
+        taskDateInfo(task.due);
+
+
+      if (info) {
+
+        date.textContent =
+          info.text;
+
+        if (info.className) {
+
+          date.className =
+            `task-date ${info.className}`;
+
+        }
+
+      }
+
+
+      content.appendChild(
+        title
+      );
+
+      if (info) {
+
+        content.appendChild(
+          date
         );
 
-    }
-    catch (error) {
+      }
 
-        console.error(
-            error
+
+      card.appendChild(
+        checkbox
+      );
+
+      card.appendChild(
+        content
+      );
+
+
+      taskScroll.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+async function syncTasks() {
+
+  try {
+
+    const listId =
+      await getDefaultTaskList();
+
+
+    const data =
+      await googleFetch(
+        `${TASKS_API}/lists/${encodeURIComponent(listId)}/tasks?showCompleted=false&showDeleted=false&maxResults=100`
+      );
+
+
+    const tasks =
+      data.items || [];
+
+
+    renderTasks(tasks);
+
+    tasksLoaded = true;
+
+
+  } catch (error) {
+
+    console.error(
+      "Tasks error:",
+      error
+    );
+
+
+    taskScroll.innerHTML =
+      `<div class="task-error">
+         Tasks 讀取失敗<br><br>
+         ${escapeHtml(error.message)}
+       </div>`;
+
+  }
+
+}
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+async function syncCalendar() {
+
+  try {
+
+    const now =
+      new Date();
+
+    const todayStart =
+      startOfToday();
+
+    const tomorrowEnd =
+      new Date(
+        startOfTomorrow()
+      );
+
+    tomorrowEnd.setDate(
+      tomorrowEnd.getDate() + 1
+    );
+
+
+    const params =
+      new URLSearchParams({
+
+        calendarId:
+          "primary",
+
+        timeMin:
+          todayStart.toISOString(),
+
+        timeMax:
+          tomorrowEnd.toISOString(),
+
+        showDeleted:
+          "false",
+
+        singleEvents:
+          "true",
+
+        orderBy:
+          "startTime",
+
+        maxResults:
+          "50"
+
+      });
+
+
+    const data =
+      await googleFetch(
+        `${CALENDAR_API}/calendars/primary/events?${params.toString()}`
+      );
+
+
+    const events =
+      data.items || [];
+
+
+    renderSchedule(events);
+
+    calendarLoaded = true;
+
+
+  } catch (error) {
+
+    console.error(
+      "Calendar error:",
+      error
+    );
+
+
+    scheduleScroll.innerHTML =
+      `<div class="schedule-empty">
+         Calendar 讀取失敗<br><br>
+         ${escapeHtml(error.message)}
+       </div>`;
+
+  }
+
+}
+
+
+/* =========================================================
+   CALENDAR EVENT HELPERS
+========================================================= */
+
+function eventStart(event) {
+
+  if (
+    event.start &&
+    event.start.dateTime
+  ) {
+
+    return new Date(
+      event.start.dateTime
+    );
+
+  }
+
+
+  if (
+    event.start &&
+    event.start.date
+  ) {
+
+    const parts =
+      event.start.date.split("-");
+
+    return new Date(
+      Number(parts[0]),
+      Number(parts[1]) - 1,
+      Number(parts[2])
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+function eventEnd(event) {
+
+  if (
+    event.end &&
+    event.end.dateTime
+  ) {
+
+    return new Date(
+      event.end.dateTime
+    );
+
+  }
+
+
+  if (
+    event.end &&
+    event.end.date
+  ) {
+
+    const parts =
+      event.end.date.split("-");
+
+    return new Date(
+      Number(parts[0]),
+      Number(parts[1]) - 1,
+      Number(parts[2])
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+function formatTime(date) {
+
+  if (!date) {
+    return "";
+  }
+
+
+  return (
+    String(
+      date.getHours()
+    ).padStart(2, "0")
+    +
+    ":" +
+    String(
+      date.getMinutes()
+    ).padStart(2, "0")
+  );
+
+}
+
+
+function isAllDayEvent(event) {
+
+  return Boolean(
+    event.start &&
+    event.start.date
+  );
+
+}
+
+
+function isEventNow(event) {
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    return false;
+
+  }
+
+
+  const start =
+    eventStart(event);
+
+  const end =
+    eventEnd(event);
+
+  if (!start || !end) {
+    return false;
+  }
+
+
+  const now =
+    new Date();
+
+
+  return (
+    now >= start &&
+    now < end
+  );
+
+}
+
+
+function isEventPast(event) {
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    return false;
+
+  }
+
+
+  const end =
+    eventEnd(event);
+
+  if (!end) {
+    return false;
+  }
+
+
+  return new Date() >= end;
+
+}
+
+
+/* =========================================================
+   RENDER SCHEDULE
+========================================================= */
+
+function renderSchedule(events) {
+
+  scheduleScroll.innerHTML = "";
+
+
+  const today =
+    startOfToday();
+
+
+  const tomorrow =
+    startOfTomorrow();
+
+
+  scheduleDate.textContent =
+    formatScheduleDate(today);
+
+
+  const todayEvents =
+    events.filter(
+      event => {
+
+        const start =
+          eventStart(event);
+
+        if (!start) {
+          return false;
+        }
+
+        return (
+          start >= today &&
+          start < tomorrow
         );
 
+      }
+    );
 
-        checkbox.className =
-            "task-checkbox";
+
+  const tomorrowStart =
+    tomorrow;
 
 
-        card.className =
-            "task";
+  const tomorrowEnd =
+    new Date(
+      tomorrowStart
+    );
 
-    }
+  tomorrowEnd.setDate(
+    tomorrowEnd.getDate() + 1
+  );
+
+
+  const tomorrowEvents =
+    events.filter(
+      event => {
+
+        const start =
+          eventStart(event);
+
+        if (!start) {
+          return false;
+        }
+
+        return (
+          start >= tomorrowStart &&
+          start < tomorrowEnd
+        );
+
+      }
+    );
+
+
+  if (
+    todayEvents.length === 0 &&
+    tomorrowEvents.length === 0
+  ) {
+
+    scheduleScroll.innerHTML =
+      `<div class="schedule-empty">
+         今日沒有 Calendar 行程
+       </div>`;
+
+    return;
+
+  }
+
+
+  if (
+    todayEvents.length > 0
+  ) {
+
+    const todayLabel =
+      document.createElement("div");
+
+    todayLabel.className =
+      "schedule-day-label";
+
+    todayLabel.textContent =
+      `今日 · ${formatScheduleDate(today)}`;
+
+    scheduleScroll.appendChild(
+      todayLabel
+    );
+
+
+    todayEvents.forEach(
+      event => {
+
+        scheduleScroll.appendChild(
+          createScheduleItem(event)
+        );
+
+      }
+    );
+
+  }
+
+
+  if (
+    tomorrowEvents.length > 0
+  ) {
+
+    const tomorrowLabel =
+      document.createElement("div");
+
+    tomorrowLabel.className =
+      "schedule-day-label schedule-tomorrow";
+
+    tomorrowLabel.textContent =
+      `明日 · ${formatScheduleDate(tomorrow)}`;
+
+    scheduleScroll.appendChild(
+      tomorrowLabel
+    );
+
+
+    tomorrowEvents.forEach(
+      event => {
+
+        scheduleScroll.appendChild(
+          createScheduleItem(event)
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+function createScheduleItem(event) {
+
+  const item =
+    document.createElement("div");
+
+
+  let className =
+    "schedule-item";
+
+
+  if (
+    isEventNow(event)
+  ) {
+
+    className +=
+      " now";
+
+  } else if (
+    isEventPast(event)
+  ) {
+
+    className +=
+      " past";
+
+  }
+
+
+  item.className =
+    className;
+
+
+  const time =
+    document.createElement("div");
+
+  time.className =
+    "schedule-time";
+
+
+  const info =
+    document.createElement("div");
+
+
+  info.className =
+    "schedule-info";
+
+
+  const line =
+    document.createElement("div");
+
+  line.className =
+    "schedule-line";
+
+
+  const dot =
+    document.createElement("div");
+
+  dot.className =
+    "schedule-dot";
+
+
+  line.appendChild(
+    dot
+  );
+
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    time.innerHTML =
+      `<span class="schedule-all-day">
+         全天
+       </span>`;
+
+  } else {
+
+    const start =
+      eventStart(event);
+
+    time.textContent =
+      formatTime(start);
+
+  }
+
+
+  const title =
+    document.createElement("div");
+
+  title.className =
+    "schedule-title";
+
+  title.textContent =
+    event.summary ||
+    "(無標題)";
+
+
+  info.appendChild(
+    title
+  );
+
+
+  if (
+    event.location
+  ) {
+
+    const location =
+      document.createElement("div");
+
+    location.className =
+      "schedule-location";
+
+    location.textContent =
+      event.location;
+
+    info.appendChild(
+      location
+    );
+
+  }
+
+
+  item.appendChild(
+    time
+  );
+
+  item.appendChild(
+    line
+  );
+
+  item.appendChild(
+    info
+  );
+
+
+  return item;
+
 }
 
 
@@ -2131,1034 +2460,618 @@ async function completeTask(
    GMAIL
 ========================================================= */
 
-async function loadMail() {
+async function syncMail() {
 
-    if (!accessToken) {
-        return;
-    }
+  try {
 
+    const params =
+      new URLSearchParams({
 
-    try {
+        maxResults:
+          "8",
 
-        const url =
-            `${GMAIL_API}/users/me/messages` +
-            `?maxResults=8` +
-            `&q=${encodeURIComponent(
-                "in:inbox is:unread"
-            )}`;
+        q:
+          "in:inbox is:unread"
 
-
-        const response =
-            await fetch(
-                url,
-                {
-                    headers: {
-                        Authorization:
-                            `Bearer ${accessToken}`
-                    }
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Gmail list error"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const ids =
-            data.messages || [];
-
-
-        if (!ids.length) {
-
-            mails = [];
-
-            renderMail();
-
-            return;
-        }
-
-
-        const result =
-            await Promise.all(
-                ids.map(
-                    item =>
-                        getMail(
-                            item.id
-                        )
-                )
-            );
-
-
-        mails =
-            result.filter(
-                item =>
-                    item !== null
-            );
-
-
-        renderMail();
-
-    }
-    catch (error) {
-
-        console.error(
-            "Gmail:",
-            error
-        );
-
-
-        document.getElementById(
-            "mailList"
-        ).innerHTML =
-            `<div class="mail-error">
-                Gmail 暫時無法讀取。<br><br>
-                如第一次使用，請重新登入並授權 Gmail。
-             </div>`;
-
-    }
-}
-
-
-/* =========================================================
-   GET MAIL
-========================================================= */
-
-async function getMail(id) {
-
-    const url =
-        `${GMAIL_API}/users/me/messages/` +
-        `${encodeURIComponent(id)}` +
-        `?format=metadata` +
-        `&metadataHeaders=From` +
-        `&metadataHeaders=Subject`;
-
-
-    const response =
-        await fetch(
-            url,
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${accessToken}`
-                }
-            }
-        );
-
-
-    if (!response.ok) {
-        return null;
-    }
+      });
 
 
     const data =
-        await response.json();
+      await googleFetch(
+        `${GMAIL_API}/users/me/messages?${params.toString()}`
+      );
 
 
-    const headers =
-        data.payload?.headers || [];
+    const messages =
+      data.messages || [];
 
 
-    const from =
-        headers.find(
-            item =>
-                item.name.toLowerCase() ===
-                "from"
-        );
-
-
-    const subject =
-        headers.find(
-            item =>
-                item.name.toLowerCase() ===
-                "subject"
-        );
-
-
-    return {
-
-        id:
-            data.id,
-
-        threadId:
-            data.threadId,
-
-        sender:
-            cleanSender(
-                from?.value ||
-                "未知寄件人"
-            ),
-
-        subject:
-            subject?.value ||
-            "(沒有主旨)",
-
-        snippet:
-            data.snippet ||
-            "",
-
-        time:
-            Number(
-                data.internalDate ||
-                Date.now()
-            )
-
-    };
-}
-
-
-/* =========================================================
-   CLEAN SENDER
-========================================================= */
-
-function cleanSender(value) {
-
-    const match =
-        value.match(
-            /^(.+?)\s*<[^>]+>$/
-        );
-
-
-    if (match) {
-
-        return match[1]
-            .replace(
-                /^["']|["']$/g,
-                ""
-            )
-            .trim();
-
-    }
-
-
-    return value;
-}
-
-
-/* =========================================================
-   RENDER MAIL
-========================================================= */
-
-function renderMail() {
-
-    const container =
-        document.getElementById(
-            "mailList"
-        );
-
-
-    container.innerHTML = "";
-
-
-    document.getElementById(
-        "mailCount"
-    ).textContent =
-        `${mails.length} 封`;
-
-
-    if (!mails.length) {
-
-        container.innerHTML =
-            `<div class="mail-empty">
-                ✉️<br><br>
-                沒有未讀郵件
-             </div>`;
-
-        return;
-    }
-
-
-    mails.forEach(
-        mail => {
-
-            const item =
-                document.createElement(
-                    "button"
-                );
-
-
-            item.className =
-                "mail-item unread";
-
-
-            const header =
-                document.createElement(
-                    "div"
-                );
-
-
-            header.className =
-                "mail-header";
-
-
-            const sender =
-                document.createElement(
-                    "div"
-                );
-
-
-            sender.className =
-                "mail-sender";
-
-
-            sender.textContent =
-                mail.sender;
-
-
-            const time =
-                document.createElement(
-                    "div"
-                );
-
-
-            time.className =
-                "mail-time";
-
-
-            time.textContent =
-                mailTime(
-                    new Date(
-                        mail.time
-                    )
-                );
-
-
-            header.appendChild(
-                sender
-            );
-
-            header.appendChild(
-                time
-            );
-
-
-            const subject =
-                document.createElement(
-                    "div"
-                );
-
-
-            subject.className =
-                "mail-subject";
-
-
-            subject.textContent =
-                mail.subject;
-
-
-            const snippet =
-                document.createElement(
-                    "div"
-                );
-
-
-            snippet.className =
-                "mail-snippet";
-
-
-            snippet.textContent =
-                mail.snippet;
-
-
-            item.appendChild(
-                header
-            );
-
-            item.appendChild(
-                subject
-            );
-
-            item.appendChild(
-                snippet
-            );
-
-
-            item.addEventListener(
-                "click",
-                () => {
-
-                    window.open(
-                        "https://mail.google.com/mail/u/0/#inbox/" +
-                        mail.threadId,
-                        "_blank"
-                    );
-
-                }
-            );
-
-
-            container.appendChild(
-                item
-            );
-
-        }
-    );
-}
-
-
-/* =========================================================
-   MAIL TIME
-========================================================= */
-
-function mailTime(date) {
-
-    const now =
-        new Date();
+    mailCount.textContent =
+      `${messages.length} 封`;
 
 
     if (
-        date.toDateString() ===
-        now.toDateString()
+      messages.length === 0
     ) {
 
-        return timeString(date);
+      mailScroll.innerHTML =
+        `<div class="mail-empty">
+           🎉 沒有未讀 Email
+         </div>`;
+
+      return;
 
     }
 
 
-    return (
-        `${date.getMonth() + 1}/` +
-        `${date.getDate()}`
+    const details =
+      await Promise.all(
+        messages.map(
+          message =>
+            getMailDetail(
+              message.id
+            )
+        )
+      );
+
+
+    renderMail(details);
+
+    mailLoaded = true;
+
+
+  } catch (error) {
+
+    console.error(
+      "Gmail error:",
+      error
     );
+
+
+    mailScroll.innerHTML =
+      `<div class="mail-empty">
+         Email 讀取失敗<br><br>
+         ${escapeHtml(error.message)}
+       </div>`;
+
+  }
+
+}
+
+
+async function getMailDetail(id) {
+
+  const params =
+    new URLSearchParams({
+
+      format:
+        "metadata",
+
+      metadataHeaders:
+        "From",
+
+      metadataHeaders:
+        "Subject"
+
+    });
+
+
+  const data =
+    await googleFetch(
+      `${GMAIL_API}/users/me/messages/${encodeURIComponent(id)}?format=metadata&metadataHeaders=From&metadataHeaders=Subject`
+    );
+
+
+  const headers =
+    data.payload &&
+    data.payload.headers
+      ? data.payload.headers
+      : [];
+
+
+  const from =
+    headers.find(
+      h =>
+        h.name.toLowerCase() ===
+        "from"
+    );
+
+
+  const subject =
+    headers.find(
+      h =>
+        h.name.toLowerCase() ===
+        "subject"
+    );
+
+
+  return {
+
+    id: id,
+
+    threadId:
+      data.threadId,
+
+    from:
+      from
+        ? from.value
+        : "",
+
+    subject:
+      subject
+        ? subject.value
+        : "(無主旨)",
+
+    snippet:
+      data.snippet || "",
+
+    internalDate:
+      data.internalDate
+        ? Number(data.internalDate)
+        : 0
+
+  };
+
+}
+
+
+function formatMailTime(timestamp) {
+
+  if (!timestamp) {
+    return "";
+  }
+
+
+  const date =
+    new Date(timestamp);
+
+  const now =
+    new Date();
+
+
+  if (
+    date.toDateString() ===
+    now.toDateString()
+  ) {
+
+    return formatTime(date);
+
+  }
+
+
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}`
+  );
+
+}
+
+
+function renderMail(messages) {
+
+  mailScroll.innerHTML = "";
+
+
+  messages.forEach(
+    message => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "mail-card";
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const threadId =
+            message.threadId ||
+            message.id;
+
+
+          window.open(
+            `https://mail.google.com/mail/u/0/#inbox/${threadId}`,
+            "_blank"
+          );
+
+        }
+      );
+
+
+      const top =
+        document.createElement("div");
+
+      top.className =
+        "mail-top";
+
+
+      const sender =
+        document.createElement("div");
+
+      sender.className =
+        "mail-sender";
+
+      sender.textContent =
+        cleanSender(
+          message.from
+        );
+
+
+      const time =
+        document.createElement("div");
+
+      time.className =
+        "mail-time";
+
+      time.textContent =
+        formatMailTime(
+          message.internalDate
+        );
+
+
+      top.appendChild(
+        sender
+      );
+
+      top.appendChild(
+        time
+      );
+
+
+      const subject =
+        document.createElement("div");
+
+      subject.className =
+        "mail-subject";
+
+      subject.textContent =
+        message.subject;
+
+
+      const snippet =
+        document.createElement("div");
+
+      snippet.className =
+        "mail-snippet";
+
+      snippet.textContent =
+        message.snippet;
+
+
+      card.appendChild(
+        top
+      );
+
+      card.appendChild(
+        subject
+      );
+
+      card.appendChild(
+        snippet
+      );
+
+
+      mailScroll.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+function cleanSender(sender) {
+
+  if (!sender) {
+    return "";
+  }
+
+
+  const match =
+    sender.match(
+      /^(.+?)\s*<.*>$/
+    );
+
+
+  if (match) {
+
+    return match[1]
+      .replace(/^"|"$/g, "")
+      .trim();
+
+  }
+
+
+  return sender;
+
 }
 
 
 /* =========================================================
-   HKO WEATHER
+   WEATHER
 ========================================================= */
 
 async function loadWeather() {
 
-    try {
+  try {
 
-        const results =
-            await Promise.all([
+    const [
+      currentResponse,
+      forecastResponse
+    ] =
+      await Promise.all([
 
-                fetch(
-                    `${HKO_API}?dataType=rhrread&lang=tc`
-                ),
+        fetch(
+          `${HKO_API}?dataType=rhrread&lang=tc`
+        ),
 
-                fetch(
-                    `${HKO_API}?dataType=fnd&lang=tc`
-                )
+        fetch(
+          `${HKO_API}?dataType=fnd&lang=tc`
+        )
 
-            ]);
-
-
-        if (
-            !results[0].ok ||
-            !results[1].ok
-        ) {
-
-            throw new Error(
-                "HKO error"
-            );
-
-        }
+      ]);
 
 
-        currentWeather =
-            await results[0].json();
+    const current =
+      await currentResponse.json();
+
+    const forecast =
+      await forecastResponse.json();
 
 
-        forecast =
-            await results[1].json();
-
-
-        renderWeather();
-
-    }
-    catch (error) {
-
-        console.error(
-            "Weather:",
-            error
-        );
-
-
-        document.getElementById(
-            "weatherStatus"
-        ).textContent =
-            "天氣更新失敗";
-
-    }
-}
-
-
-/* =========================================================
-   WEATHER ICON
-========================================================= */
-
-function weatherIcon(
-    text,
-    code
-) {
-
-    const description =
-        String(
-            text || ""
-        );
-
-
-    if (
-        description.includes("雷")
-    ) {
-        return "⛈️";
-    }
-
-
-    if (
-        description.includes("雨") ||
-        description.includes("驟雨")
-    ) {
-        return "🌧️";
-    }
-
-
-    if (
-        description.includes("陰")
-    ) {
-        return "☁️";
-    }
-
-
-    if (
-        description.includes("多雲")
-    ) {
-        return "⛅";
-    }
-
-
-    if (
-        description.includes("晴")
-    ) {
-        return "☀️";
-    }
-
-
-    const n =
-        Number(code);
-
-
-    if (
-        [50,51,52,53,54].includes(n)
-    ) {
-        return "⛅";
-    }
-
-
-    if (
-        [60,61,62,63,64,65].includes(n)
-    ) {
-        return "🌧️";
-    }
-
-
-    return "🌤️";
-}
-
-
-/* =========================================================
-   WEATHER DESCRIPTION
-========================================================= */
-
-function weatherDescription(data) {
-
-    const code =
-        Number(
-            data?.icon
-        );
-
-
-    const map = {
-
-        50: "天色良好",
-        51: "間有陽光",
-        52: "大致多雲",
-        53: "多雲",
-        54: "陰天",
-
-        60: "有雨",
-        61: "有驟雨",
-        62: "雷雨",
-        63: "有雨",
-        64: "有驟雨",
-        65: "雷雨"
-
-    };
-
-
-    return (
-        map[code] ||
-        "香港天氣"
+    renderCurrentWeather(
+      current
     );
+
+
+    renderRainProbability(
+      forecast
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Weather error:",
+      error
+    );
+
+  }
+
 }
 
 
-/* =========================================================
-   RENDER WEATHER
-========================================================= */
+function renderCurrentWeather(data) {
 
-function renderWeather() {
+  try {
 
-    if (!currentWeather) {
-        return;
+    const temperatureData =
+      data.temperature &&
+      data.temperature.data
+        ? data.temperature.data
+        : [];
+
+
+    const hkoTemp =
+      temperatureData.find(
+        item =>
+          item.place ===
+          "香港天文台"
+      ) ||
+      temperatureData[0];
+
+
+    if (hkoTemp) {
+
+      document.getElementById(
+        "weatherTemp"
+      ).textContent =
+        `${hkoTemp.value}°C`;
+
     }
-
-
-    const tempData =
-        currentWeather.temperature?.data;
 
 
     const humidityData =
-        currentWeather.humidity?.data;
+      data.humidity &&
+      data.humidity.data
+        ? data.humidity.data
+        : [];
 
 
-    let temp =
-        "--";
+    const humidity =
+      humidityData[0];
 
 
-    if (
-        Array.isArray(tempData) &&
-        tempData.length
-    ) {
+    if (humidity) {
 
-        const item =
-            tempData.find(
-                x =>
-                    x.place ===
-                    "香港天文台"
-            ) ||
-            tempData[0];
+      document.getElementById(
+        "humidity"
+      ).textContent =
+        `${humidity.value}%`;
 
-
-        temp =
-            `${item.value}°C`;
     }
-
-
-    let humidity =
-        "--";
-
-
-    if (
-        Array.isArray(humidityData) &&
-        humidityData.length
-    ) {
-
-        humidity =
-            `${humidityData[0].value}%`;
-    }
-
-
-    const description =
-        weatherDescription(
-            currentWeather
-        );
 
 
     const icon =
-        weatherIcon(
-            description,
-            currentWeather.icon
-        );
+      data.icon &&
+      data.icon.length
+        ? data.icon[0]
+        : null;
+
+
+    const weatherText =
+      getWeatherText(
+        data
+      );
 
 
     document.getElementById(
-        "topTemp"
+      "weatherIcon"
     ).textContent =
-        temp;
+      weatherIcon(
+        icon
+      );
 
 
     document.getElementById(
-        "topHumidity"
+      "weatherText"
     ).textContent =
-        humidity;
+      weatherText;
 
 
-    document.getElementById(
-        "topWeather"
-    ).textContent =
-        description;
+  } catch (error) {
 
-
-    document.getElementById(
-        "topWeatherIcon"
-    ).textContent =
-        icon;
-
-
-    document.getElementById(
-        "currentTemperature"
-    ).textContent =
-        temp;
-
-
-    document.getElementById(
-        "currentWeatherIcon"
-    ).textContent =
-        icon;
-
-
-    document.getElementById(
-        "currentDescription"
-    ).textContent =
-        description;
-
-
-    document.getElementById(
-        "humidity"
-    ).textContent =
-        humidity;
-
-
-    const rain =
-        getRainProbability();
-
-
-    document.getElementById(
-        "rainProbability"
-    ).textContent =
-        rain;
-
-
-    document.getElementById(
-        "topRain"
-    ).textContent =
-        rain;
-
-
-    renderForecast();
-
-
-    document.getElementById(
-        "weatherUpdate"
-    ).textContent =
-        "HKO";
-
-
-    document.getElementById(
-        "weatherStatus"
-    ).textContent =
-        "HKO";
-}
-
-
-/* =========================================================
-   RAIN
-========================================================= */
-
-function getRainProbability() {
-
-    const list =
-        forecast?.weatherForecast;
-
-
-    if (
-        !Array.isArray(list) ||
-        !list.length
-    ) {
-
-        return "--";
-    }
-
-
-    const item =
-        list[0];
-
-
-    const value =
-        item?.PSR ||
-        item?.psr ||
-        "";
-
-
-    const text =
-        String(value);
-
-
-    if (
-        text.includes("High") ||
-        text.includes("高")
-    ) {
-
-        return "較高";
-    }
-
-
-    if (
-        text.includes("Medium") ||
-        text.includes("中")
-    ) {
-
-        return "中等";
-    }
-
-
-    if (
-        text.includes("Low") ||
-        text.includes("低")
-    ) {
-
-        return "較低";
-    }
-
-
-    return text || "--";
-}
-
-
-/* =========================================================
-   FORECAST
-========================================================= */
-
-function renderForecast() {
-
-    const container =
-        document.getElementById(
-            "forecastList"
-        );
-
-
-    container.innerHTML = "";
-
-
-    const list =
-        forecast?.weatherForecast;
-
-
-    if (
-        !Array.isArray(list)
-    ) {
-
-        return;
-    }
-
-
-    list
-        .slice(0, 5)
-        .forEach(
-            item => {
-
-                const row =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                row.className =
-                    "forecast-row";
-
-
-                const day =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                day.className =
-                    "forecast-day";
-
-
-                day.textContent =
-                    forecastDay(
-                        item.forecastDate
-                    );
-
-
-                const icon =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                icon.className =
-                    "forecast-icon";
-
-
-                icon.textContent =
-                    weatherIcon(
-                        item.forecastWeather,
-                        item.ForecastIcon
-                    );
-
-
-                const weather =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                weather.className =
-                    "forecast-weather";
-
-
-                weather.textContent =
-                    item.forecastWeather ||
-                    "--";
-
-
-                const temp =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                temp.className =
-                    "forecast-temp";
-
-
-                temp.textContent =
-                    forecastTemp(
-                        item
-                    );
-
-
-                row.appendChild(day);
-
-                row.appendChild(icon);
-
-                row.appendChild(weather);
-
-                row.appendChild(temp);
-
-
-                container.appendChild(row);
-
-            }
-        );
-}
-
-
-/* =========================================================
-   FORECAST DAY
-========================================================= */
-
-function forecastDay(value) {
-
-    if (!value) {
-        return "--";
-    }
-
-
-    const text =
-        String(value);
-
-
-    const year =
-        Number(
-            text.substring(0, 4)
-        );
-
-
-    const month =
-        Number(
-            text.substring(4, 6)
-        );
-
-
-    const day =
-        Number(
-            text.substring(6, 8)
-        );
-
-
-    const date =
-        new Date(
-            year,
-            month - 1,
-            day
-        );
-
-
-    const today =
-        dateOnly(
-            new Date()
-        );
-
-
-    const tomorrow =
-        new Date(today);
-
-
-    tomorrow.setDate(
-        tomorrow.getDate() + 1
+    console.error(
+      "Current weather parse error",
+      error
     );
 
+  }
 
-    if (
-        date.getTime() ===
-        today.getTime()
-    ) {
-
-        return "今日";
-    }
-
-
-    if (
-        date.getTime() ===
-        tomorrow.getTime()
-    ) {
-
-        return "明日";
-    }
-
-
-    const week =
-        [
-            "日",
-            "一",
-            "二",
-            "三",
-            "四",
-            "五",
-            "六"
-        ][
-            date.getDay()
-        ];
-
-
-    return (
-        `${month}/${day} ${week}`
-    );
 }
 
 
-/* =========================================================
-   FORECAST TEMP
-========================================================= */
+function getWeatherText(data) {
 
-function forecastTemp(item) {
+  if (
+    data.weatherDesc &&
+    data.weatherDesc.length
+  ) {
 
-    const min =
-        item.forecastMintemp?.value;
+    return data.weatherDesc[0];
 
-
-    const max =
-        item.forecastMaxtemp?.value;
+  }
 
 
-    if (
-        min !== undefined &&
-        max !== undefined
-    ) {
+  if (
+    data.generalSituation
+  ) {
 
-        return (
-            `${min}°-${max}°`
-        );
+    return data.generalSituation
+      .slice(0, 18);
 
-    }
+  }
 
 
-    return "--";
+  return "天氣";
+
+}
+
+
+function weatherIcon(icon) {
+
+  const n =
+    Number(icon);
+
+
+  if (
+    Number.isNaN(n)
+  ) {
+
+    return "☁";
+
+  }
+
+
+  if (
+    n === 50
+  ) {
+
+    return "☀";
+
+  }
+
+
+  if (
+    n >= 60 &&
+    n <= 69
+  ) {
+
+    return "🌧";
+
+  }
+
+
+  if (
+    n >= 70 &&
+    n <= 79
+  ) {
+
+    return "🌦";
+
+  }
+
+
+  if (
+    n >= 80 &&
+    n <= 89
+  ) {
+
+    return "⛈";
+
+  }
+
+
+  return "☁";
+
+}
+
+
+function renderRainProbability(data) {
+
+  let probability =
+    null;
+
+
+  const forecast =
+    data &&
+    data.weatherForecast
+      ? data.weatherForecast
+      : [];
+
+
+  if (
+    forecast.length
+  ) {
+
+    const first =
+      forecast[0];
+
+
+    probability =
+      first.PSR ||
+      first.psr ||
+      first.rainProbability ||
+      first.rainProb ||
+      null;
+
+  }
+
+
+  if (
+    probability !== null
+  ) {
+
+    document.getElementById(
+      "rainProbability"
+    ).textContent =
+      String(probability)
+        .includes("%")
+        ? String(probability)
+        : `${probability}%`;
+
+  } else {
+
+    document.getElementById(
+      "rainProbability"
+    ).textContent =
+      "--";
+
+  }
+
 }
 
 
@@ -3168,347 +3081,224 @@ function forecastTemp(item) {
 
 async function loadAQHI() {
 
-    try {
+  try {
 
-        const response =
-            await fetch(
-                AQHI_API
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "AQHI error"
-            );
-
-        }
+    const response =
+      await fetch(
+        AQHI_API
+      );
 
 
-        const data =
-            await response.json();
+    const data =
+      await response.json();
 
 
-        const value =
-            findAQHI(data);
+    const value =
+      findAQHIValue(
+        data
+      );
 
-
-        showAQHI(value);
-
-    }
-    catch (error) {
-
-        console.error(
-            "AQHI:",
-            error
-        );
-
-
-        document.getElementById(
-            "topAQHI"
-        ).textContent =
-            "AQHI --";
-    }
-}
-
-
-/* =========================================================
-   FIND AQHI
-========================================================= */
-
-function findAQHI(data) {
-
-    let list = [];
-
-
-    if (Array.isArray(data)) {
-
-        list =
-            data;
-
-    }
-    else {
-
-        list =
-            data?.data ||
-            data?.records ||
-            data?.results ||
-            [];
-    }
-
-
-    if (!Array.isArray(list)) {
-        return null;
-    }
-
-
-    const north =
-        list.find(
-            item => {
-
-                const text =
-                    JSON.stringify(
-                        item
-                    ).toLowerCase();
-
-
-                return (
-                    text.includes("北區") ||
-                    text.includes("north")
-                );
-            }
-        );
-
-
-    const item =
-        north ||
-        list[0];
-
-
-    if (!item) {
-        return null;
-    }
-
-
-    return (
-        item.aqhi ??
-        item.AQHI ??
-        item.value ??
-        item.index ??
-        null
-    );
-}
-
-
-/* =========================================================
-   SHOW AQHI
-========================================================= */
-
-function showAQHI(value) {
 
     const element =
-        document.getElementById(
-            "topAQHI"
-        );
+      document.getElementById(
+        "aqhi"
+      );
 
 
     if (
-        value === null ||
-        value === undefined ||
-        value === ""
+      value !== null
     ) {
 
-        element.textContent =
-            "AQHI --";
+      element.textContent =
+        String(value);
 
-        element.className =
-            "weather-value";
+      element.className =
+        "weather-value " +
+        aqhiClass(value);
 
-        return;
-    }
+    } else {
 
+      element.textContent =
+        "--";
 
-    const number =
-        Number(value);
-
-
-    element.textContent =
-        `AQHI ${value}`;
-
-
-    let className =
+      element.className =
         "weather-value";
 
-
-    if (number <= 3) {
-
-        className +=
-            " aqhi-low";
-
-    }
-    else if (number <= 6) {
-
-        className +=
-            " aqhi-moderate";
-
-    }
-    else if (number <= 7) {
-
-        className +=
-            " aqhi-high";
-
-    }
-    else if (number <= 10) {
-
-        className +=
-            " aqhi-very-high";
-
-    }
-    else {
-
-        className +=
-            " aqhi-serious";
-
     }
 
+  } catch (error) {
 
-    element.className =
-        className;
+    console.error(
+      "AQHI error:",
+      error
+    );
+
+  }
+
 }
 
 
-/* =========================================================
-   GOOGLE AUTH
-========================================================= */
+function findAQHIValue(data) {
 
-function initGoogle() {
+  let list = [];
 
-    if (
-        typeof google === "undefined" ||
-        !google.accounts ||
-        !google.accounts.oauth2
-    ) {
 
-        console.error(
-            "Google Identity Services not ready"
+  if (
+    Array.isArray(data)
+  ) {
+
+    list =
+      data;
+
+  } else if (
+    data &&
+    Array.isArray(data.data)
+  ) {
+
+    list =
+      data.data;
+
+  } else if (
+    data &&
+    Array.isArray(data.records)
+  ) {
+
+    list =
+      data.records;
+
+  } else if (
+    data &&
+    Array.isArray(data.results)
+  ) {
+
+    list =
+      data.results;
+
+  }
+
+
+  let north =
+    list.find(
+      item => {
+
+        const text =
+          JSON.stringify(
+            item
+          ).toLowerCase();
+
+        return (
+          text.includes("北區") ||
+          text.includes("north")
         );
 
-        return;
+      }
+    );
+
+
+  const target =
+    north ||
+    list[0];
+
+
+  if (!target) {
+    return null;
+  }
+
+
+  const possibleKeys = [
+    "aqhi",
+    "AQHI",
+    "value",
+    "index"
+  ];
+
+
+  for (
+    const key of possibleKeys
+  ) {
+
+    if (
+      target[key] !== undefined &&
+      target[key] !== null
+    ) {
+
+      return target[key];
+
     }
 
-
-    tokenClient =
-        google.accounts.oauth2
-        .initTokenClient({
-
-            client_id:
-                CLIENT_ID,
-
-            scope:
-                GOOGLE_SCOPE,
-
-            callback:
-                async response => {
-
-                    if (
-                        response.error
-                    ) {
-
-                        console.error(
-                            "OAuth:",
-                            response
-                        );
-
-                        return;
-                    }
+  }
 
 
-                    accessToken =
-                        response.access_token;
+  return null;
+
+}
 
 
-                    taskListId =
-                        null;
+function aqhiClass(value) {
+
+  const n =
+    Number(
+      String(value)
+        .replace(/[^\d.]/g, "")
+    );
 
 
-                    loginOverlay.style.display =
-                        "none";
+  if (Number.isNaN(n)) {
+    return "";
+  }
 
 
-                    logoutButton.style.display =
-                        "block";
+  if (n <= 3) {
+    return "aqhi-low";
+  }
 
+  if (n <= 6) {
+    return "aqhi-moderate";
+  }
 
-                    await initialLoad();
+  if (n <= 9) {
+    return "aqhi-high";
+  }
 
-                }
+  if (n <= 12) {
+    return "aqhi-very-high";
+  }
 
-        });
+  return "aqhi-serious";
+
 }
 
 
 /* =========================================================
-   LOGIN
+   SYNC ALL
 ========================================================= */
 
-loginButton.addEventListener(
-    "click",
-    () => {
+async function syncAll() {
 
-        if (!tokenClient) {
-
-            alert(
-                "Google 登入元件仍在載入，請稍候。"
-            );
-
-            return;
-        }
+  if (!accessToken) {
+    return;
+  }
 
 
-        tokenClient
-            .requestAccessToken({
-                prompt: "consent"
-            });
-
-    }
-);
+  syncButton.textContent =
+    "同步中…";
 
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+  await Promise.allSettled([
 
-logoutButton.addEventListener(
-    "click",
-    () => {
+    syncTasks(),
 
-        if (
-            accessToken &&
-            google?.accounts?.oauth2
-        ) {
+    syncCalendar(),
 
-            google.accounts.oauth2.revoke(
-                accessToken,
-                () => {}
-            );
+    syncMail()
 
-        }
+  ]);
 
 
-        accessToken = null;
+  syncButton.textContent =
+    "↻ 同步";
 
-        taskListId = null;
-
-        tasks = [];
-
-        mails = [];
-
-
-        logoutButton.style.display =
-            "none";
-
-
-        loginOverlay.style.display =
-            "flex";
-
-
-        document.getElementById(
-            "tasks"
-        ).innerHTML =
-            `<div class="empty">
-                請重新登入
-             </div>`;
-
-
-        document.getElementById(
-            "mailList"
-        ).innerHTML =
-            `<div class="mail-empty">
-                請重新登入
-             </div>`;
-
-    }
-);
+}
 
 
 /* =========================================================
@@ -3516,35 +3306,20 @@ logoutButton.addEventListener(
 ========================================================= */
 
 syncButton.addEventListener(
-    "click",
-    async () => {
+  "click",
+  async () => {
 
-        if (!accessToken) {
-            return;
-        }
+    await Promise.allSettled([
 
+      syncAll(),
 
-        syncButton.textContent =
-            "同步中…";
+      loadWeather(),
 
+      loadAQHI()
 
-        await Promise.all([
+    ]);
 
-            loadTasks(),
-
-            loadMail(),
-
-            loadWeather(),
-
-            loadAQHI()
-
-        ]);
-
-
-        syncButton.textContent =
-            "↻ 同步";
-
-    }
+  }
 );
 
 
@@ -3553,57 +3328,49 @@ syncButton.addEventListener(
 ========================================================= */
 
 fullscreenButton.addEventListener(
-    "click",
-    async () => {
+  "click",
+  async () => {
 
-        try {
+    try {
 
-            if (
-                !document.fullscreenElement
-            ) {
+      if (
+        !document.fullscreenElement
+      ) {
 
-                await document
-                    .documentElement
-                    .requestFullscreen();
+        await document.documentElement
+          .requestFullscreen();
 
-            }
-            else {
+      } else {
 
-                await document
-                    .exitFullscreen();
+        await document.exitFullscreen();
 
-            }
+      }
 
-        }
-        catch (error) {
+    } catch (error) {
 
-            console.error(
-                error
-            );
-
-        }
+      console.error(
+        "Fullscreen error:",
+        error
+      );
 
     }
+
+  }
 );
 
 
 /* =========================================================
-   INITIAL LOAD
+   ESCAPE HTML
 ========================================================= */
 
-async function initialLoad() {
+function escapeHtml(value) {
 
-    await Promise.all([
-
-        loadTasks(),
-
-        loadMail(),
-
-        loadWeather(),
-
-        loadAQHI()
-
-    ]);
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
@@ -3612,91 +3379,82 @@ async function initialLoad() {
    AUTO REFRESH
 ========================================================= */
 
+/*
+  Tasks：
+  每 5 秒
 
-/* Tasks：5 秒 */
+  Calendar：
+  每 60 秒
+
+  Email：
+  每 60 秒
+
+  Weather：
+  每 10 分鐘
+
+  AQHI：
+  每 10 分鐘
+*/
+
 
 setInterval(
-    () => {
+  () => {
 
-        if (accessToken) {
+    if (accessToken) {
+      syncTasks();
+    }
 
-            loadTasks();
-
-        }
-
-    },
-    TASK_INTERVAL
+  },
+  TASK_INTERVAL
 );
 
 
-/* Gmail：60 秒 */
-
 setInterval(
-    () => {
+  () => {
 
-        if (accessToken) {
+    if (accessToken) {
+      syncCalendar();
+    }
 
-            loadMail();
-
-        }
-
-    },
-    MAIL_INTERVAL
+  },
+  CALENDAR_INTERVAL
 );
 
 
-/* Weather + AQHI：10 分鐘 */
+setInterval(
+  () => {
+
+    if (accessToken) {
+      syncMail();
+    }
+
+  },
+  MAIL_INTERVAL
+);
+
 
 setInterval(
-    () => {
+  () => {
 
-        loadWeather();
+    loadWeather();
 
-        loadAQHI();
+    loadAQHI();
 
-    },
-    WEATHER_INTERVAL
+  },
+  WEATHER_INTERVAL
 );
 
 
 /* =========================================================
-   START
+   INITIAL WEATHER
 ========================================================= */
-
-
-/*
- * 天氣唔需要登入，
- * 開頁面立即讀取。
- */
 
 loadWeather();
 
 loadAQHI();
 
 
-/*
- * Google Identity Services
- */
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        initGoogle
-    );
-
-}
-else {
-
-    initGoogle();
-
-}
-
 </script>
 
 </body>
 </html>
-```
