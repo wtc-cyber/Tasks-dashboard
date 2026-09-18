@@ -214,15 +214,9 @@ button {
   font-weight: 600;
 }
 
-.weather-status {
-  color: #555555;
-
-  font-size: 0.64rem;
-}
-
 
 /* =========================================================
-   WEATHER WARNINGS
+   WEATHER WARNING
 ========================================================= */
 
 .warning-bar {
@@ -267,9 +261,6 @@ button {
   text-overflow: ellipsis;
 }
 
-
-/* warning levels */
-
 .warning-normal {
   color: #ffca5c;
 }
@@ -280,23 +271,6 @@ button {
 
 .warning-extreme {
   color: #ff5f6d;
-}
-
-
-/* =========================================================
-   LAST SYNC
-========================================================= */
-
-.sync-status {
-  flex: 0 0 auto;
-
-  margin-left: 10px;
-
-  color: #555555;
-
-  font-size: 0.62rem;
-
-  white-space: nowrap;
 }
 
 
@@ -363,18 +337,41 @@ button {
   background: #1d1d1d;
 
   border-bottom: 1px solid #292929;
+
+  gap: 10px;
 }
 
 .panel-title {
   font-size: 0.95rem;
 
   font-weight: 700;
+
+  white-space: nowrap;
 }
 
-.panel-subtitle {
+.panel-meta {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+.panel-count {
   color: #777777;
 
   font-size: 0.67rem;
+}
+
+.panel-updated {
+  color: #666666;
+
+  font-size: 0.63rem;
+
+  font-variant-numeric: tabular-nums;
 }
 
 .panel-body {
@@ -804,29 +801,22 @@ button {
 
 
 /* =========================================================
-   AFTER WORK MODE
+   WORK OFF
 ========================================================= */
 
 .work-off {
   display: none;
 
-  flex: 1;
+  flex: 1 1 auto;
 
-  min-width: 0;
+  min-height: 0;
 
   align-items: center;
-
   justify-content: center;
-
-  padding: 10px;
-
-  color: #aaaaaa;
-
-  font-size: 0.78rem;
 
   text-align: center;
 
-  white-space: nowrap;
+  padding: 30px;
 }
 
 .work-off.active {
@@ -834,9 +824,22 @@ button {
 }
 
 .work-off-message {
-  overflow: hidden;
+  color: #dddddd;
 
-  text-overflow: ellipsis;
+  /*
+    收工後大字
+  */
+  font-size: clamp(
+    1.8rem,
+    4vw,
+    3.2rem
+  );
+
+  line-height: 1.5;
+
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
 }
 
 .continue-button {
@@ -945,6 +948,10 @@ button {
       44fr
       36fr
       20fr;
+  }
+
+  .panel-updated {
+    font-size: 0.58rem;
   }
 
 }
@@ -1170,16 +1177,6 @@ button {
 
       </div>
 
-
-      <!-- SYNC -->
-
-      <div
-        id="syncStatus"
-        class="sync-status"
-      >
-        未同步
-      </div>
-
     </div>
 
   </header>
@@ -1223,11 +1220,22 @@ button {
           Tasks
         </div>
 
-        <div
-          id="taskCount"
-          class="panel-subtitle"
-        >
-          --
+        <div class="panel-meta">
+
+          <div
+            id="taskCount"
+            class="panel-count"
+          >
+            --
+          </div>
+
+          <div
+            id="taskUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
+
         </div>
 
       </div>
@@ -1263,11 +1271,22 @@ button {
           今日 Schedule
         </div>
 
-        <div
-          id="scheduleDate"
-          class="panel-subtitle"
-        >
-          --
+        <div class="panel-meta">
+
+          <div
+            id="scheduleDate"
+            class="panel-count"
+          >
+            --
+          </div>
+
+          <div
+            id="scheduleUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
+
         </div>
 
       </div>
@@ -1303,11 +1322,22 @@ button {
           Email
         </div>
 
-        <div
-          id="mailCount"
-          class="panel-subtitle"
-        >
-          未讀
+        <div class="panel-meta">
+
+          <div
+            id="mailCount"
+            class="panel-count"
+          >
+            未讀
+          </div>
+
+          <div
+            id="mailUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
+
         </div>
 
       </div>
@@ -1455,6 +1485,7 @@ const clock =
     "clock"
   );
 
+
 const taskScroll =
   document.getElementById(
     "taskScroll"
@@ -1464,6 +1495,12 @@ const taskCount =
   document.getElementById(
     "taskCount"
   );
+
+const taskUpdated =
+  document.getElementById(
+    "taskUpdated"
+  );
+
 
 const scheduleScroll =
   document.getElementById(
@@ -1475,6 +1512,12 @@ const scheduleDate =
     "scheduleDate"
   );
 
+const scheduleUpdated =
+  document.getElementById(
+    "scheduleUpdated"
+  );
+
+
 const mailScroll =
   document.getElementById(
     "mailScroll"
@@ -1484,6 +1527,12 @@ const mailCount =
   document.getElementById(
     "mailCount"
   );
+
+const mailUpdated =
+  document.getElementById(
+    "mailUpdated"
+  );
+
 
 const warningBar =
   document.getElementById(
@@ -1500,42 +1549,34 @@ const warningIcon =
     "warningIcon"
   );
 
-const syncStatus =
-  document.getElementById(
-    "syncStatus"
-  );
-
 
 /* =========================================================
    CLOCK
 ========================================================= */
 
+function formatTime(date) {
+
+  return (
+    String(
+      date.getHours()
+    ).padStart(2, "0")
+    +
+    ":"
+    +
+    String(
+      date.getMinutes()
+    ).padStart(2, "0")
+  );
+
+}
+
+
 function updateClock() {
 
-  const now =
-    new Date();
-
-
-  const hh =
-    String(
-      now.getHours()
-    ).padStart(
-      2,
-      "0"
-    );
-
-
-  const mm =
-    String(
-      now.getMinutes()
-    ).padStart(
-      2,
-      "0"
-    );
-
-
   clock.textContent =
-    `${hh}:${mm}`;
+    formatTime(
+      new Date()
+    );
 
 }
 
@@ -1546,6 +1587,20 @@ setInterval(
   updateClock,
   1000
 );
+
+
+/* =========================================================
+   PANEL UPDATE TIME
+========================================================= */
+
+function setPanelUpdated(
+  element
+) {
+
+  element.textContent =
+    `更新 ${formatTime(new Date())}`;
+
+}
 
 
 /* =========================================================
@@ -1583,7 +1638,9 @@ function startOfTomorrow() {
 }
 
 
-function formatDateMD(date) {
+function formatDateMD(
+  date
+) {
 
   return (
     `${date.getMonth() + 1}/` +
@@ -1593,7 +1650,9 @@ function formatDateMD(date) {
 }
 
 
-function formatScheduleDate(date) {
+function formatScheduleDate(
+  date
+) {
 
   const weekdays = [
     "日",
@@ -1775,8 +1834,15 @@ logoutButton.addEventListener(
         mailCount.textContent =
           "未讀";
 
-        syncStatus.textContent =
-          "未同步";
+
+        taskUpdated.textContent =
+          "更新 --";
+
+        scheduleUpdated.textContent =
+          "更新 --";
+
+        mailUpdated.textContent =
+          "更新 --";
 
       }
     );
@@ -1914,7 +1980,9 @@ async function getDefaultTaskList() {
 }
 
 
-function taskDateInfo(due) {
+function taskDateInfo(
+  due
+) {
 
   if (!due) {
     return null;
@@ -1990,7 +2058,9 @@ function taskDateInfo(due) {
 }
 
 
-function sortTasks(tasks) {
+function sortTasks(
+  tasks
+) {
 
   return [
     ...tasks
@@ -2028,7 +2098,9 @@ function sortTasks(tasks) {
 }
 
 
-function renderTasks(tasks) {
+function renderTasks(
+  tasks
+) {
 
   taskScroll.innerHTML =
     "";
@@ -2084,28 +2156,8 @@ function renderTasks(tasks) {
             checkbox.className =
               "task-checkbox done";
 
-
             card.className =
               "task-card fading";
-
-
-            setTimeout(
-              () => {
-
-                if (
-                  card.parentNode
-                ) {
-
-                  card.parentNode
-                    .removeChild(
-                      card
-                    );
-
-                }
-
-              },
-              250
-            );
 
 
             try {
@@ -2135,7 +2187,28 @@ function renderTasks(tasks) {
 
               await syncTasks();
 
+              return;
+
             }
+
+
+            setTimeout(
+              () => {
+
+                if (
+                  card.parentNode
+                ) {
+
+                  card.parentNode
+                    .removeChild(
+                      card
+                    );
+
+                }
+
+              },
+              250
+            );
 
           }
         );
@@ -2169,6 +2242,11 @@ function renderTasks(tasks) {
           );
 
 
+        content.appendChild(
+          title
+        );
+
+
         if (info) {
 
           const date =
@@ -2185,17 +2263,7 @@ function renderTasks(tasks) {
             info.text;
 
           content.appendChild(
-            title
-          );
-
-          content.appendChild(
             date
-          );
-
-        } else {
-
-          content.appendChild(
-            title
           );
 
         }
@@ -2236,6 +2304,15 @@ async function syncTasks() {
 
     renderTasks(
       data.items || []
+    );
+
+
+    /*
+      只有成功讀到資料先更新時間
+    */
+
+    setPanelUpdated(
+      taskUpdated
     );
 
 
@@ -2340,6 +2417,11 @@ async function syncCalendar() {
     );
 
 
+    setPanelUpdated(
+      scheduleUpdated
+    );
+
+
   } catch (
     error
   ) {
@@ -2367,7 +2449,9 @@ async function syncCalendar() {
    CALENDAR HELPERS
 ========================================================= */
 
-function eventStart(event) {
+function eventStart(
+  event
+) {
 
   if (
     event.start &&
@@ -2387,8 +2471,7 @@ function eventStart(event) {
   ) {
 
     const p =
-      event.start.date
-        .split("-");
+      event.start.date.split("-");
 
 
     return new Date(
@@ -2405,7 +2488,9 @@ function eventStart(event) {
 }
 
 
-function eventEnd(event) {
+function eventEnd(
+  event
+) {
 
   if (
     event.end &&
@@ -2425,8 +2510,7 @@ function eventEnd(event) {
   ) {
 
     const p =
-      event.end.date
-        .split("-");
+      event.end.date.split("-");
 
 
     return new Date(
@@ -2443,7 +2527,9 @@ function eventEnd(event) {
 }
 
 
-function isAllDayEvent(event) {
+function isAllDayEvent(
+  event
+) {
 
   return Boolean(
     event.start &&
@@ -2453,35 +2539,9 @@ function isAllDayEvent(event) {
 }
 
 
-function formatTime(date) {
-
-  if (!date) {
-    return "";
-  }
-
-
-  return (
-    String(
-      date.getHours()
-    ).padStart(
-      2,
-      "0"
-    )
-    +
-    ":"
-    +
-    String(
-      date.getMinutes()
-    ).padStart(
-      2,
-      "0"
-    )
-  );
-
-}
-
-
-function isEventNow(event) {
+function isEventNow(
+  event
+) {
 
   if (
     isAllDayEvent(event)
@@ -2494,7 +2554,6 @@ function isEventNow(event) {
 
   const start =
     eventStart(event);
-
 
   const end =
     eventEnd(event);
@@ -2517,7 +2576,9 @@ function isEventNow(event) {
 }
 
 
-function isEventPast(event) {
+function isEventPast(
+  event
+) {
 
   if (
     isAllDayEvent(event)
@@ -2544,23 +2605,23 @@ function isEventPast(event) {
 }
 
 
-function minutesUntil(date) {
+function minutesUntil(
+  date
+) {
 
-  const diff =
-    Math.round(
-      (
-        date.getTime() -
-        Date.now()
-      ) / 60000
-    );
-
-
-  return diff;
+  return Math.round(
+    (
+      date.getTime() -
+      Date.now()
+    ) / 60000
+  );
 
 }
 
 
-function countdownText(minutes) {
+function countdownText(
+  minutes
+) {
 
   if (
     minutes <= 0
@@ -2608,7 +2669,9 @@ function countdownText(minutes) {
    RENDER SCHEDULE
 ========================================================= */
 
-function renderSchedule(events) {
+function renderSchedule(
+  events
+) {
 
   scheduleScroll.innerHTML =
     "";
@@ -2799,10 +2862,6 @@ function createScheduleItem(
     isEventPast(event);
 
 
-  /*
-    找下一個未開始的行程
-  */
-
   let isNext =
     false;
 
@@ -2957,10 +3016,6 @@ function createScheduleItem(
   }
 
 
-  /*
-    NOW
-  */
-
   if (now) {
 
     const nowText =
@@ -2982,23 +3037,15 @@ function createScheduleItem(
   }
 
 
-  /*
-    NEXT
-  */
-
   if (
     isNext &&
     !now &&
     !isAllDayEvent(event)
   ) {
 
-    const start =
-      eventStart(event);
-
-
     const minutes =
       minutesUntil(
-        start
+        eventStart(event)
       );
 
 
@@ -3096,6 +3143,10 @@ async function syncMail() {
            🎉 沒有未讀 Email
          </div>`;
 
+      setPanelUpdated(
+        mailUpdated
+      );
+
       return;
 
     }
@@ -3114,6 +3165,11 @@ async function syncMail() {
 
     renderMail(
       details
+    );
+
+
+    setPanelUpdated(
+      mailUpdated
     );
 
 
@@ -3140,7 +3196,9 @@ async function syncMail() {
 }
 
 
-async function getMailDetail(id) {
+async function getMailDetail(
+  id
+) {
 
   const url =
     `${GMAIL_API}/users/me/messages/` +
@@ -3211,7 +3269,9 @@ async function getMailDetail(id) {
 }
 
 
-function cleanSender(sender) {
+function cleanSender(
+  sender
+) {
 
   if (!sender) {
     return "";
@@ -3482,10 +3542,6 @@ async function loadWeather() {
 }
 
 
-/* =========================================================
-   CURRENT WEATHER
-========================================================= */
-
 function renderCurrentWeather(
   data
 ) {
@@ -3705,20 +3761,12 @@ function renderRainProbability(
 
 
 /* =========================================================
-   WARNINGS
+   WEATHER WARNINGS
 ========================================================= */
 
 function renderWarnings(
   data
 ) {
-
-  /*
-    HKO warnsum 的每個 key
-    代表一種現時警告。
-
-    CANCEL 不視為現行警告。
-  */
-
 
   const warnings = [];
 
@@ -3785,13 +3833,7 @@ function renderWarnings(
   }
 
 
-  /*
-    去除重複
-  */
-
-  const unique =
-    [];
-
+  const unique = [];
 
   const seen =
     new Set();
@@ -3836,33 +3878,20 @@ function renderWarnings(
   }
 
 
-  /*
-    排序：
-    熱帶氣旋／暴雨／雷暴等較重要的先。
-  */
-
   unique.sort(
     (a, b) =>
-      warningPriority(
-        b
-      ) -
-      warningPriority(
-        a
-      )
+      warningPriority(b) -
+      warningPriority(a)
   );
 
 
-  const names =
-    unique.map(
-      item =>
-        item.name
-    );
-
-
   warningText.textContent =
-    names.join(
-      "　"
-    );
+    unique
+      .map(
+        item =>
+          item.name
+      )
+      .join("　");
 
 
   warningBar.className =
@@ -3873,9 +3902,7 @@ function renderWarnings(
     Math.max(
       ...unique.map(
         item =>
-          warningPriority(
-            item
-          )
+          warningPriority(item)
       )
     );
 
@@ -3921,12 +3948,6 @@ function warningPriority(
     String(
       item.code || ""
     ).toUpperCase();
-
-
-  /*
-    只用於 Dashboard 顯示次序，
-    不是 HKO 官方嚴重程度評級。
-  */
 
 
   if (
@@ -4045,20 +4066,10 @@ async function loadAQHI() {
       element.textContent =
         String(value);
 
-
-      element.className =
-        "weather-value " +
-        aqhiClass(
-          value
-        );
-
     } else {
 
       element.textContent =
         "--";
-
-      element.className =
-        "weather-value";
 
     }
 
@@ -4128,12 +4139,8 @@ function findAQHIValue(
 
 
         return (
-          text.includes(
-            "北區"
-          ) ||
-          text.includes(
-            "north"
-          )
+          text.includes("北區") ||
+          text.includes("north")
         );
 
       }
@@ -4181,85 +4188,9 @@ function findAQHIValue(
 }
 
 
-function aqhiClass(
-  value
-) {
-
-  const n =
-    Number(
-      String(value)
-        .replace(
-          /[^\d.]/g,
-          ""
-        )
-    );
-
-
-  if (
-    Number.isNaN(n)
-  ) {
-
-    return "";
-
-  }
-
-
-  if (
-    n <= 3
-  ) {
-
-    return "aqhi-low";
-
-  }
-
-
-  if (
-    n <= 6
-  ) {
-
-    return "aqhi-moderate";
-
-  }
-
-
-  if (
-    n <= 9
-  ) {
-
-    return "aqhi-high";
-
-  }
-
-
-  if (
-    n <= 12
-  ) {
-
-    return "aqhi-very-high";
-
-  }
-
-
-  return "aqhi-serious";
-
-}
-
-
 /* =========================================================
-   SYNC
+   SYNC ALL
 ========================================================= */
-
-function updateSyncTime() {
-
-  const now =
-    new Date();
-
-
-  syncStatus.textContent =
-    `● ${formatTime(now)} 更新`;
-
-}
-
 
 async function syncAll() {
 
@@ -4278,12 +4209,13 @@ async function syncAll() {
 
     syncCalendar(),
 
-    syncMail()
+    syncMail(),
+
+    loadWeather(),
+
+    loadAQHI()
 
   ]);
-
-
-  updateSyncTime();
 
 
   syncButton.textContent =
@@ -4292,26 +4224,22 @@ async function syncAll() {
 }
 
 
+/* =========================================================
+   MANUAL SYNC
+========================================================= */
+
 syncButton.addEventListener(
   "click",
   async () => {
 
-    await Promise.allSettled([
-
-      syncAll(),
-
-      loadWeather(),
-
-      loadAQHI()
-
-    ]);
+    await syncAll();
 
   }
 );
 
 
 /* =========================================================
-   WORK OFF MODE
+   WORK OFF
 ========================================================= */
 
 workButton.addEventListener(
@@ -4445,6 +4373,12 @@ function escapeHtml(
    AUTO REFRESH
 ========================================================= */
 
+
+/*
+   Tasks
+   每 5 秒
+*/
+
 setInterval(
   () => {
 
@@ -4460,6 +4394,11 @@ setInterval(
   TASK_INTERVAL
 );
 
+
+/*
+   Calendar
+   每 60 秒
+*/
 
 setInterval(
   () => {
@@ -4477,6 +4416,11 @@ setInterval(
 );
 
 
+/*
+   Email
+   每 60 秒
+*/
+
 setInterval(
   () => {
 
@@ -4493,6 +4437,11 @@ setInterval(
 );
 
 
+/*
+   Weather
+   每 5 分鐘
+*/
+
 setInterval(
   () => {
 
@@ -4506,7 +4455,7 @@ setInterval(
 
 
 /* =========================================================
-   INITIAL WEATHER
+   INITIAL
 ========================================================= */
 
 loadWeather();
