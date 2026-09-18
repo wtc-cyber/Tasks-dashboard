@@ -1,2010 +1,1228 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
->
-
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="theme-color" content="#121212">
-
-<title>Task Dashboard</title>
-
-<script
-    src="https://accounts.google.com/gsi/client"
-    async
-    defer>
-</script>
-
-<style>
-
-/* ================================
-   BASIC
-================================ */
-
-* {
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html,
-body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100%;
-    background: #121212;
-}
-
-body {
-    color: #ffffff;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans TC",
-        "Microsoft JhengHei",
-        sans-serif;
-}
-
-
-/* ================================
-   APP
-================================ */
-
-#app {
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-}
-
-
-/* ================================
-   HEADER
-================================ */
-
-#header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding:
-        12px
-        16px;
-
-    background: #181818;
-    border-bottom: 1px solid #2c2c2c;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-#title {
-    font-size: 1.45rem;
-    font-weight: 700;
-}
-
-#clock {
-    color: #aaaaaa;
-    font-size: 1.25rem;
-    font-weight: 600;
-}
-
-.header-right {
-    display: flex;
-    gap: 6px;
-}
-
-.header-button {
-    border: 0;
-    border-radius: 8px;
-
-    background: #292929;
-    color: white;
-
-    padding: 9px 12px;
-
-    font-size: 0.95rem;
-
-    cursor: pointer;
-}
-
-.header-button:active {
-    transform: scale(0.95);
-}
-
-#loginButton {
-    background: white;
-    color: #121212;
-    font-weight: 600;
-}
-
-
-/* ================================
-   STATUS
-================================ */
-
-#status {
-    min-height: 32px;
-
-    display: flex;
-    align-items: center;
-
-    padding: 6px 16px;
-
-    background: #151515;
-
-    border-bottom: 1px solid #242424;
-
-    color: #777777;
-
-    font-size: 0.82rem;
-}
-
-
-/* ================================
-   MAIN
-================================ */
-
-#main {
-    flex: 1;
-
-    width: 100%;
-
-    padding:
-        14px
-        16px
-        30px;
-
-    overflow-y: auto;
-}
-
-#tasks {
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 10px;
-}
-
-
-/* ================================
-   TASK
-================================ */
-
-.task {
-    min-height: 76px;
-
-    display: flex;
-    align-items: center;
-
-    gap: 14px;
-
-    padding: 12px 15px;
-
-    background: #1e1e1e;
-
-    border: 1px solid #2a2a2a;
-
-    border-radius: 12px;
-
-    transition:
-        opacity 0.25s ease,
-        transform 0.25s ease;
-}
-
-.task.fading {
-    opacity: 0;
-    transform: translateX(25px);
-}
-
-
-/* ================================
-   CHECKBOX
-================================ */
-
-.task-checkbox {
-    flex-shrink: 0;
-
-    width: 30px;
-    height: 30px;
-
-    border: 2px solid #888888;
-    border-radius: 7px;
-
-    background: transparent;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: 0;
-
-    cursor: pointer;
-}
-
-.task-checkbox.done {
-    background: white;
-    border-color: white;
-}
-
-.task-checkbox.done::after {
-    content: "✓";
-
-    color: #121212;
-
-    font-size: 21px;
-    font-weight: bold;
-}
-
-
-/* ================================
-   TASK CONTENT
-================================ */
-
-.task-content {
-    flex: 1;
-    min-width: 0;
-}
-
-.task-title {
-    font-size: 1.3rem;
-    line-height: 1.35;
-
-    word-break: break-word;
-}
-
-.task-date {
-    margin-top: 4px;
-
-    font-size: 0.88rem;
-
-    color: #888888;
-}
-
-.task-date.today {
-    color: white;
-    font-weight: 600;
-}
-
-.task-date.tomorrow {
-    color: #bbbbbb;
-}
-
-.task-date.overdue {
-    color: #ff7777;
-    font-weight: 600;
-}
-
-
-/* ================================
-   EMPTY
-================================ */
-
-.empty {
-    padding: 50px 20px;
-
-    text-align: center;
-
-    color: #777777;
-
-    font-size: 1.1rem;
-}
-
-
-/* ================================
-   LOGIN
-================================ */
-
-#loginOverlay {
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 100;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 20px;
-
-    background: #121212;
-}
-
-.login-box {
-    width: min(420px, 100%);
-
-    padding: 30px;
-
-    border-radius: 16px;
-
-    background: #1e1e1e;
-
-    border: 1px solid #303030;
-
-    text-align: center;
-}
-
-.login-box h1 {
-    margin:
-        0
-        0
-        10px;
-
-    font-size: 1.7rem;
-}
-
-.login-box p {
-    margin:
-        0
-        0
-        25px;
-
-    color: #999999;
-
-    line-height: 1.6;
-}
-
-#overlayLoginButton {
-    width: 100%;
-
-    min-height: 52px;
-
-    border: 0;
-    border-radius: 9px;
-
-    background: white;
-    color: #121212;
-
-    font-size: 1.05rem;
-    font-weight: 600;
-}
-
-
-/* ================================
-   MOBILE
-================================ */
-
-@media (max-width: 600px) {
-
-    #header {
-        padding:
-            10px;
-    }
-
-    .header-left {
-        gap: 8px;
-    }
-
-    #title {
-        font-size: 1.15rem;
-    }
-
-    #clock {
-        font-size: 1.05rem;
-    }
-
-    .header-right {
-        gap: 3px;
-    }
-
-    .header-button {
-        padding:
-            8px
-            9px;
-
-        font-size: 0.8rem;
-    }
-
-    #main {
-        padding:
-            10px
-            9px
-            25px;
-    }
-
-    .task {
-        min-height: 76px;
-        padding: 12px;
-        gap: 12px;
-    }
-
-    .task-title {
-        font-size: 1.2rem;
-    }
-
-    .task-checkbox {
-        width: 29px;
-        height: 29px;
-    }
-}
-
-</style>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#121212">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <title>Tasks Dashboard</title>
+
+    <script src="https://accounts.google.com/gsi/client"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: #121212;
+            color: #ffffff;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                "Noto Sans TC",
+                Arial,
+                sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app {
+            width: 100%;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        .title {
+            font-size: 1.45rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .clock {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #bbbbbb;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .header-button {
+            min-height: 40px;
+            padding: 0 13px;
+            border-radius: 10px;
+            background: #2a2a2a;
+            color: #ffffff;
+            font-size: 0.9rem;
+        }
+
+        .header-button:active {
+            background: #3a3a3a;
+        }
+
+        .logout-button {
+            display: none;
+        }
+
+        /* =========================
+           Tasks
+        ========================= */
+
+        #tasks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-height: 72px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #1e1e1e;
+            transition:
+                opacity 0.25s ease,
+                transform 0.25s ease;
+        }
+
+        .task.fading {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        .task-checkbox {
+            flex: 0 0 auto;
+            width: 28px;
+            height: 28px;
+            margin-right: 14px;
+            border: 2px solid #888888;
+            border-radius: 50%;
+            background: transparent;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .task-checkbox.done {
+            border-color: #777777;
+            background: #777777;
+        }
+
+        .task-checkbox.done::after {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 3px;
+            width: 7px;
+            height: 13px;
+            border-right: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
+            transform: rotate(45deg);
+        }
+
+        .task-content {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .task-title {
+            font-size: 1.3rem;
+            line-height: 1.35;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .task-date {
+            margin-top: 4px;
+            font-size: 0.9rem;
+            color: #999999;
+        }
+
+        .task-date.overdue {
+            color: #ff7777;
+        }
+
+        .task-date.today {
+            color: #ffb74d;
+        }
+
+        .task-date.tomorrow {
+            color: #81c784;
+        }
+
+        .empty {
+            padding: 50px 20px;
+            text-align: center;
+            color: #777777;
+            font-size: 1.1rem;
+        }
+
+        /* =========================
+           Status
+        ========================= */
+
+        .status {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #666666;
+            min-height: 18px;
+        }
+
+        /* =========================
+           Login overlay
+        ========================= */
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #121212;
+        }
+
+        .login-box {
+            width: min(420px, 100%);
+            padding: 30px;
+            border-radius: 18px;
+            background: #1e1e1e;
+            text-align: center;
+        }
+
+        .login-title {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .login-description {
+            margin-bottom: 24px;
+            color: #999999;
+            line-height: 1.6;
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 50px;
+            border-radius: 12px;
+            background: #ffffff;
+            color: #111111;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .login-button:active {
+            opacity: 0.8;
+        }
+
+        /* =========================
+           Desktop
+        ========================= */
+
+        @media (min-width: 700px) {
+            .app {
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 24px;
+            }
+
+            .task {
+                min-height: 76px;
+                padding: 14px 18px;
+            }
+
+            .task-title {
+                font-size: 1.35rem;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
-<div id="app">
+<div id="loginOverlay" class="overlay">
+    <div class="login-box">
+        <div class="login-title">Tasks Dashboard</div>
 
-
-    <!-- ============================
-         HEADER
-    ============================= -->
-
-    <header id="header">
-
-        <div class="header-left">
-
-            <div id="title">
-                Task Dashboard
-            </div>
-
-            <div id="clock">
-                --:--
-            </div>
-
+        <div class="login-description">
+            登入 Google 帳戶後<br>
+            會自動同步你的 Google Tasks
         </div>
 
+        <button id="overlayLoginButton" class="login-button">
+            使用 Google 登入
+        </button>
+    </div>
+</div>
+
+<div class="app">
+
+    <div class="header">
+
+        <div class="header-left">
+            <div class="title">Tasks</div>
+            <div id="clock" class="clock">--:--</div>
+        </div>
 
         <div class="header-right">
 
-            <button
-                id="syncButton"
-                class="header-button"
-                type="button">
-                ↻
+            <button id="syncButton"
+                    class="header-button">
+                同步
             </button>
 
-            <button
-                id="fullscreenButton"
-                class="header-button"
-                type="button">
-                ⛶
+            <button id="fullscreenButton"
+                    class="header-button">
+                全螢幕
             </button>
 
-            <button
-                id="loginButton"
-                class="header-button"
-                type="button">
+            <button id="loginButton"
+                    class="header-button">
                 登入
             </button>
 
-            <button
-                id="logoutButton"
-                class="header-button"
-                type="button"
-                style="display:none;">
+            <button id="logoutButton"
+                    class="header-button logout-button">
                 登出
             </button>
 
         </div>
 
-    </header>
-
-
-    <!-- ============================
-         STATUS
-    ============================= -->
-
-    <div id="status">
-        尚未登入
     </div>
 
+    <div id="tasks"></div>
 
-    <!-- ============================
-         TASKS
-    ============================= -->
-
-    <main id="main">
-
-        <div id="tasks">
-
-            <div class="empty">
-                請先登入 Google
-            </div>
-
-        </div>
-
-    </main>
+    <div id="status" class="status"></div>
 
 </div>
-
-
-<!-- ================================
-     LOGIN OVERLAY
-================================= -->
-
-<div id="loginOverlay">
-
-    <div class="login-box">
-
-        <h1>
-            Task Dashboard
-        </h1>
-
-        <p>
-            登入 Google 後<br>
-            顯示你的 Google Tasks
-        </p>
-
-        <button
-            id="overlayLoginButton"
-            type="button">
-            使用 Google 登入
-        </button>
-
-    </div>
-
-</div>
-
 
 <script>
 
-/* =========================================================
-   CONFIG
-========================================================= */
+    /* =========================================================
+       Google 設定
+    ========================================================= */
 
-const CLIENT_ID =
-    "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
+    const CLIENT_ID =
+        "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
 
-const GOOGLE_SCOPE =
-    "https://www.googleapis.com/auth/tasks";
+    const GOOGLE_SCOPE =
+        "https://www.googleapis.com/auth/tasks";
 
-const API_BASE =
-    "https://tasks.googleapis.com/tasks/v1";
+    const API_BASE =
+        "https://tasks.googleapis.com/tasks/v1";
 
-const SYNC_INTERVAL =
-    5000;
-
-
-/* =========================================================
-   STATE
-========================================================= */
-
-let googleTokenClient = null;
-
-let accessToken = "";
-
-let tokenExpiry = 0;
-
-let tasksData = [];
-
-let syncTimer = null;
-
-let syncing = false;
+    const SYNC_INTERVAL =
+        5000;
 
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
+    /* =========================================================
+       狀態
+    ========================================================= */
 
-const tasksElement =
-    document.getElementById("tasks");
+    let googleTokenClient = null;
 
-const statusElement =
-    document.getElementById("status");
+    let accessToken = null;
 
-const loginButton =
-    document.getElementById("loginButton");
+    let tokenExpiry = 0;
 
-const logoutButton =
-    document.getElementById("logoutButton");
+    let tasksData = [];
 
-const syncButton =
-    document.getElementById("syncButton");
+    let syncTimer = null;
 
-const fullscreenButton =
-    document.getElementById("fullscreenButton");
-
-const loginOverlay =
-    document.getElementById("loginOverlay");
-
-const overlayLoginButton =
-    document.getElementById(
-        "overlayLoginButton"
-    );
-
-const clockElement =
-    document.getElementById("clock");
+    let syncing = false;
 
 
-/* =========================================================
-   CLOCK
-========================================================= */
+    /* =========================================================
+       DOM
+    ========================================================= */
 
-function updateClock() {
+    const tasksElement =
+        document.getElementById("tasks");
 
-    const now = new Date();
+    const statusElement =
+        document.getElementById("status");
 
-    const hour =
-        String(
-            now.getHours()
-        ).padStart(2, "0");
+    const loginButton =
+        document.getElementById("loginButton");
 
-    const minute =
-        String(
-            now.getMinutes()
-        ).padStart(2, "0");
+    const logoutButton =
+        document.getElementById("logoutButton");
 
-    clockElement.textContent =
-        hour + ":" + minute;
-}
+    const syncButton =
+        document.getElementById("syncButton");
 
-updateClock();
+    const fullscreenButton =
+        document.getElementById("fullscreenButton");
 
-setInterval(
-    updateClock,
-    1000
-);
+    const loginOverlay =
+        document.getElementById("loginOverlay");
 
+    const overlayLoginButton =
+        document.getElementById("overlayLoginButton");
 
-/* =========================================================
-   STATUS
-========================================================= */
-
-function setStatus(message) {
-
-    statusElement.textContent =
-        message;
-}
+    const clockElement =
+        document.getElementById("clock");
 
 
-/* =========================================================
-   GOOGLE INITIALIZATION
-========================================================= */
+    /* =========================================================
+       時鐘
+    ========================================================= */
 
-function initializeGoogle() {
+    function updateClock() {
 
-    if (
-        typeof google === "undefined" ||
-        !google.accounts ||
-        !google.accounts.oauth2
-    ) {
+        const now = new Date();
 
-        setTimeout(
-            initializeGoogle,
-            500
-        );
+        const hours =
+            String(now.getHours()).padStart(2, "0");
 
-        return;
+        const minutes =
+            String(now.getMinutes()).padStart(2, "0");
+
+        clockElement.textContent =
+            `${hours}:${minutes}`;
+    }
+
+    updateClock();
+
+    setInterval(updateClock, 1000);
+
+
+    /* =========================================================
+       Google OAuth
+    ========================================================= */
+
+    function initGoogle() {
+
+        if (
+            typeof google === "undefined" ||
+            !google.accounts ||
+            !google.accounts.oauth2
+        ) {
+            statusElement.textContent =
+                "Google 登入元件載入失敗";
+
+            return;
+        }
+
+        googleTokenClient =
+            google.accounts.oauth2.initTokenClient({
+
+                client_id: CLIENT_ID,
+
+                scope: GOOGLE_SCOPE,
+
+                callback: handleGoogleToken
+            });
     }
 
 
-    googleTokenClient =
-        google.accounts.oauth2.initTokenClient({
+    function login() {
 
-            client_id:
-                CLIENT_ID,
+        if (!googleTokenClient) {
 
-            scope:
-                GOOGLE_SCOPE,
+            statusElement.textContent =
+                "Google 登入尚未準備好";
 
-            callback:
-                handleGoogleToken
+            return;
+        }
 
+        googleTokenClient.requestAccessToken({
+            prompt: "consent"
         });
-}
-
-
-window.addEventListener(
-    "load",
-    initializeGoogle
-);
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-function login() {
-
-    if (!googleTokenClient) {
-
-        setStatus(
-            "Google 登入元件尚未準備好，請稍候。"
-        );
-
-        return;
     }
 
 
-    googleTokenClient.requestAccessToken({
+    function handleGoogleToken(response) {
 
-        prompt:
-            "consent"
+        if (!response || !response.access_token) {
 
-    });
-}
+            statusElement.textContent =
+                "Google 登入失敗";
 
+            return;
+        }
 
-loginButton.addEventListener(
-    "click",
-    login
-);
+        accessToken =
+            response.access_token;
 
+        tokenExpiry =
+            Date.now() +
+            ((response.expires_in || 3600) * 1000);
 
-overlayLoginButton.addEventListener(
-    "click",
-    login
-);
+        loginOverlay.style.display =
+            "none";
 
+        loginButton.style.display =
+            "none";
 
-/* =========================================================
-   GOOGLE TOKEN
-========================================================= */
+        logoutButton.style.display =
+            "block";
 
-function handleGoogleToken(response) {
+        statusElement.textContent =
+            "已登入";
 
-    if (
-        !response ||
-        response.error
-    ) {
+        startAutoSync();
 
-        console.error(
-            "Google OAuth Error:",
-            response
-        );
-
-        setStatus(
-            "Google 登入失敗：" +
-            (
-                response.error_description ||
-                response.error ||
-                "未知錯誤"
-            )
-        );
-
-        return;
+        syncTasks();
     }
 
 
-    accessToken =
-        response.access_token;
+    /* =========================================================
+       API Request
+    ========================================================= */
 
+    async function googleFetch(url, options = {}) {
 
-    const seconds =
-        Number(
-            response.expires_in || 3600
+        if (!accessToken) {
+            throw new Error("NO_TOKEN");
+        }
+
+        const headers =
+            new Headers(options.headers || {});
+
+        headers.set(
+            "Authorization",
+            `Bearer ${accessToken}`
         );
 
+        headers.set(
+            "Content-Type",
+            "application/json"
+        );
 
-    tokenExpiry =
-        Date.now() +
-        seconds * 1000;
+        const response =
+            await fetch(url, {
+                ...options,
+                headers
+            });
+
+        if (response.status === 401) {
+
+            accessToken = null;
+
+            stopAutoSync();
+
+            loginOverlay.style.display =
+                "flex";
+
+            loginButton.style.display =
+                "block";
+
+            logoutButton.style.display =
+                "none";
+
+            throw new Error("TOKEN_EXPIRED");
+        }
+
+        if (!response.ok) {
+
+            const text =
+                await response.text();
+
+            throw new Error(
+                `HTTP ${response.status}: ${text}`
+            );
+        }
+
+        return response;
+    }
 
 
-    loginOverlay.style.display =
-        "none";
+    /* =========================================================
+       取得 Google Tasks
+    ========================================================= */
+
+    async function getTasks() {
+
+        let allTasks = [];
+
+        let pageToken = "";
+
+        do {
+
+            let url =
+                `${API_BASE}/lists/@default/tasks` +
+                `?showCompleted=false` +
+                `&showDeleted=false` +
+                `&maxResults=100`;
+
+            if (pageToken) {
+
+                url +=
+                    `&pageToken=${encodeURIComponent(pageToken)}`;
+            }
+
+            const response =
+                await googleFetch(url);
+
+            const data =
+                await response.json();
+
+            if (Array.isArray(data.items)) {
+
+                allTasks =
+                    allTasks.concat(data.items);
+            }
+
+            pageToken =
+                data.nextPageToken || "";
+
+        } while (pageToken);
+
+        return allTasks;
+    }
 
 
-    loginButton.style.display =
-        "none";
+    /* =========================================================
+       判斷 Task 有冇變化
+    ========================================================= */
 
+    function sameTasks(a, b) {
 
-    logoutButton.style.display =
-        "block";
+        if (a.length !== b.length) {
+            return false;
+        }
 
+        for (let i = 0; i < a.length; i++) {
 
-    setStatus(
-        "已登入，正在同步…"
-    );
+            const x = a[i];
 
+            const y = b[i];
 
-    startAutoSync();
-}
+            if (
+                x.id !== y.id ||
+                x.title !== y.title ||
+                x.notes !== y.notes ||
+                x.status !== y.status ||
+                x.updated !== y.updated ||
+                x.due !== y.due ||
+                x.position !== y.position
+            ) {
+                return false;
+            }
+        }
 
-
-/* =========================================================
-   TOKEN CHECK
-========================================================= */
-
-function tokenExpired() {
-
-    if (!accessToken) {
         return true;
     }
 
 
-    /*
-     * 提早 60 秒視為即將過期
-     */
+    /* =========================================================
+       同步
+    ========================================================= */
 
-    return (
-        Date.now() >
-        tokenExpiry - 60000
-    );
-}
+    async function syncTasks() {
 
+        if (!accessToken || syncing) {
+            return;
+        }
 
-function requireLoginAgain() {
+        if (Date.now() >= tokenExpiry) {
+            return;
+        }
 
-    stopAutoSync();
+        syncing = true;
 
+        try {
 
-    accessToken = "";
+            const newTasks =
+                await getTasks();
 
-    tokenExpiry = 0;
+            if (!sameTasks(tasksData, newTasks)) {
 
+                tasksData =
+                    newTasks;
 
-    loginButton.style.display =
-        "block";
-
-
-    logoutButton.style.display =
-        "none";
-
-
-    loginOverlay.style.display =
-        "flex";
-
-
-    setStatus(
-        "Google 登入已過期，請重新登入。"
-    );
-}
-
-
-/* =========================================================
-   API FETCH
-========================================================= */
-
-async function googleFetch(
-    url,
-    options = {}
-) {
-
-    if (tokenExpired()) {
-
-        requireLoginAgain();
-
-        throw new Error(
-            "TOKEN_EXPIRED"
-        );
-    }
-
-
-    const headers = {};
-
-    if (options.headers) {
-
-        Object.assign(
-            headers,
-            options.headers
-        );
-    }
-
-
-    headers.Authorization =
-        "Bearer " +
-        accessToken;
-
-
-    const response =
-        await fetch(
-            url,
-            {
-                ...options,
-                headers:
-                    headers
+                renderTasks();
             }
-        );
 
+            statusElement.textContent =
+                `最後同步 ${formatTime(new Date())}`;
 
-    if (
-        response.status === 401
-    ) {
+        } catch (error) {
 
-        requireLoginAgain();
+            console.error(error);
 
-        throw new Error(
-            "TOKEN_EXPIRED"
-        );
+            if (
+                error.message !== "TOKEN_EXPIRED"
+            ) {
+
+                statusElement.textContent =
+                    "同步失敗";
+            }
+
+        } finally {
+
+            syncing = false;
+        }
     }
 
 
-    return response;
-}
+    /* =========================================================
+       ⭐ 排序
+       
+       1. 過期
+       2. 今日
+       3. 明日
+       4. 其他日期，由近至遠
+       5. 沒有日期
+       
+       同一日期保持 Google Tasks 原本順序
+    ========================================================= */
+
+    function sortTasks(tasks) {
+
+        return [...tasks].sort((a, b) => {
+
+            /* 沒日期 */
+
+            if (!a.due && !b.due) {
+                return 0;
+            }
+
+            if (!a.due) {
+                return 1;
+            }
+
+            if (!b.due) {
+                return -1;
+            }
 
 
-/* =========================================================
-   GET TASKS
-========================================================= */
+            /* 有日期 */
 
-async function getTasks() {
+            const dateA =
+                new Date(a.due);
 
-    const allTasks = [];
-
-    let pageToken = "";
+            const dateB =
+                new Date(b.due);
 
 
-    do {
+            /* 直接按時間由近至遠 */
 
-        let url =
-            API_BASE +
-            "/lists/@default/tasks" +
-            "?showCompleted=false" +
-            "&showDeleted=false" +
-            "&maxResults=100";
-
-
-        if (pageToken) {
-
-            url +=
-                "&pageToken=" +
-                encodeURIComponent(
-                    pageToken
-                );
-        }
-
-
-        const response =
-            await googleFetch(
-                url
-            );
-
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-
-            throw new Error(
-                "Google Tasks API " +
-                response.status +
-                " " +
-                errorText
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            Array.isArray(
-                data.items
-            )
-        ) {
-
-            data.items.forEach(
-                task => {
-
-                    allTasks.push(
-                        task
-                    );
-
-                }
-            );
-        }
-
-
-        pageToken =
-            data.nextPageToken || "";
-
-
-    } while (
-        pageToken
-    );
-
-
-    return allTasks;
-}
-
-
-/* =========================================================
-   TASK COMPARISON
-========================================================= */
-
-function sameTasks(
-    oldTasks,
-    newTasks
-) {
-
-    if (
-        oldTasks.length !==
-        newTasks.length
-    ) {
-
-        return false;
+            return dateA - dateB;
+        });
     }
 
 
-    for (
-        let i = 0;
-        i < oldTasks.length;
-        i++
-    ) {
+    /* =========================================================
+       Render
+    ========================================================= */
 
-        const oldTask =
-            oldTasks[i];
+    function renderTasks() {
 
-        const newTask =
-            newTasks[i];
+        tasksElement.innerHTML = "";
+
+        const sortedTasks =
+            sortTasks(tasksData);
 
 
-        if (
-            oldTask.id !==
-            newTask.id
-        ) {
-            return false;
+        if (sortedTasks.length === 0) {
+
+            const empty =
+                document.createElement("div");
+
+            empty.className =
+                "empty";
+
+            empty.textContent =
+                "沒有未完成工作";
+
+            tasksElement.appendChild(empty);
+
+            return;
         }
 
 
-        if (
-            oldTask.title !==
-            newTask.title
-        ) {
-            return false;
-        }
-
-
-        if (
-            oldTask.notes !==
-            newTask.notes
-        ) {
-            return false;
-        }
-
-
-        if (
-            oldTask.status !==
-            newTask.status
-        ) {
-            return false;
-        }
-
-
-        if (
-            oldTask.updated !==
-            newTask.updated
-        ) {
-            return false;
-        }
-
-
-        if (
-            oldTask.due !==
-            newTask.due
-        ) {
-            return false;
-        }
-
-
-        if (
-            oldTask.position !==
-            newTask.position
-        ) {
-            return false;
-        }
-
-    }
-
-
-    return true;
-}
-
-
-/* =========================================================
-   SYNC
-========================================================= */
-
-async function syncTasks() {
-
-    if (!accessToken) {
-        return;
-    }
-
-
-    if (syncing) {
-        return;
-    }
-
-
-    if (tokenExpired()) {
-
-        requireLoginAgain();
-
-        return;
-    }
-
-
-    syncing = true;
-
-    syncButton.disabled = true;
-
-
-    try {
-
-        const newTasks =
-            await getTasks();
-
-
-        if (
-            !sameTasks(
-                tasksData,
-                newTasks
-            )
-        ) {
-
-            tasksData =
-                newTasks;
-tasksData.sort((a, b) => {
-    return new Date(b.updated || 0) - new Date(a.updated || 0);
-});
-            renderTasks(
-                tasksData
-            );
-        }
-
-
-        const time =
-            new Date()
-                .toLocaleTimeString(
-                    "zh-HK",
-                    {
-                        hour:
-                            "2-digit",
-
-                        minute:
-                            "2-digit",
-
-                        second:
-                            "2-digit"
-                    }
-                );
-
-
-        setStatus(
-            tasksData.length +
-            " 個待辦 · 最後同步 " +
-            time
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "SYNC ERROR:",
-            error
-        );
-
-
-        if (
-            error.message !==
-            "TOKEN_EXPIRED"
-        ) {
-
-            setStatus(
-                "同步失敗：" +
-                error.message
-            );
-        }
-
-    } finally {
-
-        syncing = false;
-
-        syncButton.disabled = false;
-    }
-}
-
-
-/* =========================================================
-   RENDER TASKS
-========================================================= */
-
-function renderTasks(
-    taskArray
-) {
-
-    /*
-     * 先清空
-     */
-
-    tasksElement.innerHTML = "";
-
-
-    /*
-     * 沒有 Task
-     */
-
-    if (
-        taskArray.length === 0
-    ) {
-
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-
-        empty.className =
-            "empty";
-
-
-        empty.textContent =
-            "目前沒有未完成 Task";
-
-
-        tasksElement.appendChild(
-            empty
-        );
-
-
-        return;
-    }
-
-
-    /*
-     * 一個一個建立
-     */
-
-    taskArray.forEach(
-        task => {
+        sortedTasks.forEach(task => {
 
             const card =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             card.className =
                 "task";
 
 
-            card.dataset.taskId =
-                task.id;
-
-
-            /*
-             * Checkbox
-             */
+            /* Checkbox */
 
             const checkbox =
-                document.createElement(
-                    "button"
-                );
-
-
-            checkbox.type =
-                "button";
-
+                document.createElement("div");
 
             checkbox.className =
                 "task-checkbox";
 
 
-            checkbox.setAttribute(
-                "aria-label",
-                "完成 Task"
-            );
-
-
-            checkbox.addEventListener(
-                "click",
-                function () {
-
-                    completeTask(
-                        task.id,
-                        card,
-                        checkbox
-                    );
-
-                }
-            );
-
-
-            /*
-             * Content
-             */
+            /* Task 內容 */
 
             const content =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             content.className =
                 "task-content";
 
 
-            /*
-             * Title
-             */
+            /* 標題 */
 
             const title =
-                document.createElement(
-                    "div"
-                );
-
+                document.createElement("div");
 
             title.className =
                 "task-title";
 
-
             title.textContent =
-                task.title ||
-                "(沒有標題)";
+                task.title || "(沒有標題)";
 
 
-            /*
-             * Date
-             */
+            /* 日期 */
 
             const date =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
+
+            const dateInfo =
+                getTaskDate(task);
 
 
-            date.className =
-                "task-date";
+            if (dateInfo) {
 
-
-            const dateData =
-                getTaskDate(
-                    task.due
-                );
-
-
-            if (
-                dateData
-            ) {
+                date.className =
+                    `task-date ${dateInfo.type}`;
 
                 date.textContent =
-                    dateData.text;
+                    dateInfo.text;
 
+            } else {
 
-                /*
-                 * 注意：
-                 *
-                 * 呢度完全唔用
-                 * classList.add()
-                 *
-                 * 直接修改 className。
-                 *
-                 * 因此絕對唔會有
-                 * classList.add("")
-                 * 呢個錯誤。
-                 */
-
-                if (
-                    dateData.type ===
-                    "today"
-                ) {
-
-                    date.className =
-                        "task-date today";
-
-                }
-                else if (
-                    dateData.type ===
-                    "tomorrow"
-                ) {
-
-                    date.className =
-                        "task-date tomorrow";
-
-                }
-                else if (
-                    dateData.type ===
-                    "overdue"
-                ) {
-
-                    date.className =
-                        "task-date overdue";
-
-                }
-                else {
-
-                    date.className =
-                        "task-date";
-                }
-
-            }
-            else {
+                date.className =
+                    "task-date";
 
                 date.style.display =
                     "none";
             }
 
 
-            /*
-             * 組合
-             */
+            content.appendChild(title);
 
-            content.appendChild(
-                title
+            content.appendChild(date);
+
+
+            card.appendChild(checkbox);
+
+            card.appendChild(content);
+
+            tasksElement.appendChild(card);
+
+
+            /* 點擊完成 */
+
+            checkbox.addEventListener(
+                "click",
+                () => completeTask(
+                    task,
+                    card,
+                    checkbox
+                )
             );
-
-            content.appendChild(
-                date
-            );
+        });
+    }
 
 
-            card.appendChild(
-                checkbox
-            );
+    /* =========================================================
+       日期顯示
+    ========================================================= */
 
-            card.appendChild(
-                content
-            );
+    function getTaskDate(task) {
 
-
-            tasksElement.appendChild(
-                card
-            );
-
+        if (!task.due) {
+            return null;
         }
-    );
-}
+
+        const due =
+            new Date(task.due);
+
+        const now =
+            new Date();
 
 
-/* =========================================================
-   TASK DATE
-========================================================= */
+        /* 清除時間，只比較日期 */
 
-function getTaskDate(
-    due
-) {
+        const dueDay =
+            new Date(
+                due.getFullYear(),
+                due.getMonth(),
+                due.getDate()
+            );
 
-    if (!due) {
+        const today =
+            new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
 
-        return null;
-    }
+        const tomorrow =
+            new Date(today);
 
-
-    const date =
-        new Date(
-            due
+        tomorrow.setDate(
+            tomorrow.getDate() + 1
         );
 
 
-    if (
-        Number.isNaN(
-            date.getTime()
-        )
-    ) {
-
-        return null;
-    }
+        const diff =
+            Math.round(
+                (dueDay - today) /
+                86400000
+            );
 
 
-    const now =
-        new Date();
+        const dateText =
+            `${due.getMonth() + 1}/${due.getDate()}`;
 
 
-    const today =
-        new Date(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate()
-        );
+        if (diff < 0) {
+
+            return {
+                text: `已過期 · ${dateText}`,
+                type: "overdue"
+            };
+        }
 
 
-    const taskDay =
-        new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate()
-        );
+        if (diff === 0) {
+
+            return {
+                text: `今日 · ${dateText}`,
+                type: "today"
+            };
+        }
 
 
-    const difference =
-        Math.round(
-            (
-                taskDay.getTime() -
-                today.getTime()
-            ) /
-            86400000
-        );
+        if (diff === 1) {
 
+            return {
+                text: `明日 · ${dateText}`,
+                type: "tomorrow"
+            };
+        }
 
-    if (
-        difference === 0
-    ) {
 
         return {
-
-            text:
-                "今日",
-
-            type:
-                "today"
-
+            text: dateText,
+            type: "normal"
         };
     }
 
 
-    if (
-        difference === 1
+    /* =========================================================
+       完成 Task
+    ========================================================= */
+
+    async function completeTask(
+        task,
+        card,
+        checkbox
     ) {
 
-        return {
-
-            text:
-                "明日",
-
-            type:
-                "tomorrow"
-
-        };
-    }
-
-
-    if (
-        difference < 0
-    ) {
-
-        return {
-
-            text:
-                "逾期 · " +
-                date.toLocaleDateString(
-                    "zh-HK",
-                    {
-                        month:
-                            "numeric",
-
-                        day:
-                            "numeric"
-                    }
-                ),
-
-            type:
-                "overdue"
-
-        };
-    }
-
-
-    return {
-
-        text:
-            date.toLocaleDateString(
-                "zh-HK",
-                {
-                    month:
-                        "numeric",
-
-                    day:
-                        "numeric"
-                }
-            ),
-
-        type:
-            "normal"
-
-    };
-}
-
-
-/* =========================================================
-   COMPLETE TASK
-========================================================= */
-
-async function completeTask(
-    taskId,
-    card,
-    checkbox
-) {
-
-    if (!accessToken) {
-        return;
-    }
-
-
-    if (
-        card.classList.contains(
-            "fading"
-        )
-    ) {
-
-        return;
-    }
-
-
-    /*
-     * 即時 UI
-     */
-
-    checkbox.classList.add(
-        "done"
-    );
-
-    card.classList.add(
-        "fading"
-    );
-
-
-    try {
-
-        await setTaskCompleted(
-            taskId
-        );
-
-
-        /*
-         * API 成功
-         */
-
-        tasksData =
-            tasksData.filter(
-                task =>
-                    task.id !==
-                    taskId
-            );
-
-
-        setTimeout(
-            function () {
-
-                renderTasks(
-                    tasksData
-                );
-
-            },
-            250
-        );
-
-
-        setStatus(
-            "Task 已完成 ✓"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "COMPLETE ERROR:",
-            error
-        );
-
-
-        /*
-         * API 失敗
-         * 還原 UI
-         */
-
-        card.classList.remove(
-            "fading"
-        );
-
-        checkbox.classList.remove(
-            "done"
-        );
-
-
         if (
-            error.message !==
-            "TOKEN_EXPIRED"
+            card.className.includes("fading")
         ) {
-
-            setStatus(
-                "完成 Task 失敗，已還原。"
-            );
-        }
-    }
-}
-
-
-/* =========================================================
-   PATCH TASK
-========================================================= */
-
-async function setTaskCompleted(
-    taskId
-) {
-
-    const url =
-        API_BASE +
-        "/lists/@default/tasks/" +
-        encodeURIComponent(
-            taskId
-        );
-
-
-    const response =
-        await googleFetch(
-            url,
-            {
-
-                method:
-                    "PATCH",
-
-                headers: {
-
-                    "Content-Type":
-                        "application/json"
-
-                },
-
-                body:
-                    JSON.stringify({
-
-                        status:
-                            "completed"
-
-                    })
-
-            }
-        );
-
-
-    if (!response.ok) {
-
-        const text =
-            await response.text();
-
-
-        throw new Error(
-            "PATCH " +
-            response.status +
-            ": " +
-            text
-        );
-    }
-
-
-    return response.json();
-}
-
-
-/* =========================================================
-   MANUAL SYNC
-========================================================= */
-
-syncButton.addEventListener(
-    "click",
-    function () {
-
-        syncTasks();
-
-    }
-);
-
-
-/* =========================================================
-   AUTO SYNC
-========================================================= */
-
-function startAutoSync() {
-
-    stopAutoSync();
-
-
-    /*
-     * 登入後立即同步
-     */
-
-    syncTasks();
-
-
-    /*
-     * 每 5 秒
-     */
-
-    syncTimer =
-        setInterval(
-            function () {
-
-                if (
-                    document.visibilityState ===
-                    "visible"
-                ) {
-
-                    syncTasks();
-
-                }
-
-            },
-            SYNC_INTERVAL
-        );
-}
-
-
-function stopAutoSync() {
-
-    if (syncTimer) {
-
-        clearInterval(
-            syncTimer
-        );
-
-        syncTimer = null;
-    }
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-logoutButton.addEventListener(
-    "click",
-    function () {
-
-        stopAutoSync();
-
-
-        if (
-            accessToken &&
-            typeof google !== "undefined" &&
-            google.accounts &&
-            google.accounts.oauth2
-        ) {
-
-            try {
-
-                google.accounts.oauth2.revoke(
-                    accessToken,
-                    function () {}
-                );
-
-            } catch (error) {
-
-                console.warn(
-                    error
-                );
-            }
+            return;
         }
 
 
-        accessToken = "";
+        /* 立即反映 UI */
 
-        tokenExpiry = 0;
+        checkbox.className =
+            "task-checkbox done";
 
-        tasksData = [];
+        card.className =
+            "task fading";
 
-
-        loginButton.style.display =
-            "block";
-
-        logoutButton.style.display =
-            "none";
-
-
-        loginOverlay.style.display =
-            "none";
-
-
-        tasksElement.innerHTML =
-            '<div class="empty">' +
-            '請先登入 Google' +
-            '</div>';
-
-
-        setStatus(
-            "尚未登入"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   VISIBILITY
-========================================================= */
-
-document.addEventListener(
-    "visibilitychange",
-    function () {
-
-        if (
-            document.visibilityState ===
-            "visible"
-        ) {
-
-            if (accessToken) {
-
-                syncTasks();
-
-            }
-        }
-    }
-);
-
-
-/* =========================================================
-   NETWORK
-========================================================= */
-
-window.addEventListener(
-    "online",
-    function () {
-
-        if (accessToken) {
-
-            setStatus(
-                "網絡已恢復，正在同步…"
-            );
-
-            syncTasks();
-
-        }
-    }
-);
-
-
-window.addEventListener(
-    "offline",
-    function () {
-
-        setStatus(
-            "網絡中斷，等待恢復…"
-        );
-
-    }
-);
-
-
-/* =========================================================
-   FULLSCREEN
-========================================================= */
-
-fullscreenButton.addEventListener(
-    "click",
-    async function () {
 
         try {
 
-            if (
-                !document.fullscreenElement
-            ) {
+            const url =
+                `${API_BASE}/lists/@default/tasks/${encodeURIComponent(task.id)}`;
 
-                await document.documentElement.requestFullscreen();
 
-            }
-            else {
+            await googleFetch(
+                url,
+                {
+                    method: "PATCH",
 
-                await document.exitFullscreen();
+                    body: JSON.stringify({
+                        status: "completed"
+                    })
+                }
+            );
 
-            }
+
+            /* 本地立即移除 */
+
+            tasksData =
+                tasksData.filter(
+                    item => item.id !== task.id
+                );
+
+
+            setTimeout(() => {
+
+                renderTasks();
+
+            }, 250);
+
 
         } catch (error) {
 
-            console.warn(
-                "Fullscreen error:",
-                error
-            );
+            console.error(error);
 
-            setStatus(
-                "瀏覽器未能進入全螢幕。"
-            );
+
+            /* 失敗就還原 */
+
+            checkbox.className =
+                "task-checkbox";
+
+            card.className =
+                "task";
+
+
+            statusElement.textContent =
+                "完成 Task 失敗";
         }
-
     }
-);
 
 
-/* =========================================================
-   INITIAL
-========================================================= */
+    /* =========================================================
+       自動同步
+    ========================================================= */
 
-setStatus(
-    "尚未登入"
-);
+    function startAutoSync() {
+
+        stopAutoSync();
+
+        syncTimer =
+            setInterval(
+                syncTasks,
+                SYNC_INTERVAL
+            );
+    }
+
+
+    function stopAutoSync() {
+
+        if (syncTimer) {
+
+            clearInterval(syncTimer);
+
+            syncTimer = null;
+        }
+    }
+
+
+    /* =========================================================
+       時間
+    ========================================================= */
+
+    function formatTime(date) {
+
+        const h =
+            String(
+                date.getHours()
+            ).padStart(2, "0");
+
+        const m =
+            String(
+                date.getMinutes()
+            ).padStart(2, "0");
+
+        return `${h}:${m}`;
+    }
+
+
+    /* =========================================================
+       手動同步
+    ========================================================= */
+
+    syncButton.addEventListener(
+        "click",
+        () => {
+
+            if (!accessToken) {
+
+                login();
+
+                return;
+            }
+
+            syncTasks();
+        }
+    );
+
+
+    /* =========================================================
+       Login
+    ========================================================= */
+
+    loginButton.addEventListener(
+        "click",
+        login
+    );
+
+
+    overlayLoginButton.addEventListener(
+        "click",
+        login
+    );
+
+
+    /* =========================================================
+       Logout
+    ========================================================= */
+
+    logoutButton.addEventListener(
+        "click",
+        () => {
+
+            accessToken = null;
+
+            tokenExpiry = 0;
+
+            tasksData = [];
+
+            stopAutoSync();
+
+            tasksElement.innerHTML = "";
+
+            loginOverlay.style.display =
+                "flex";
+
+            loginButton.style.display =
+                "block";
+
+            logoutButton.style.display =
+                "none";
+
+            statusElement.textContent =
+                "已登出";
+        }
+    );
+
+
+    /* =========================================================
+       全螢幕
+    ========================================================= */
+
+    fullscreenButton.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                if (!document.fullscreenElement) {
+
+                    await document.documentElement.requestFullscreen();
+
+                } else {
+
+                    await document.exitFullscreen();
+                }
+
+            } catch (error) {
+
+                console.error(error);
+            }
+        }
+    );
+
+
+    /* =========================================================
+       網絡恢復
+    ========================================================= */
+
+    window.addEventListener(
+        "online",
+        () => {
+
+            if (accessToken) {
+                syncTasks();
+            }
+        }
+    );
+
+
+    /* =========================================================
+       App 回到前景
+    ========================================================= */
+
+    document.addEventListener(
+        "visibilitychange",
+        () => {
+
+            if (
+                document.visibilityState === "visible" &&
+                accessToken
+            ) {
+                syncTasks();
+            }
+        }
+    );
+
+
+    /* =========================================================
+       初始化
+    ========================================================= */
+
+    initGoogle();
 
 </script>
 
