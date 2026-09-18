@@ -83,9 +83,9 @@ button {
 ========================================================= */
 
 .header {
-  flex: 0 0 78px;
+  flex: 0 0 auto;
 
-  height: 78px;
+  min-height: 78px;
 
   padding: 8px 14px 7px;
 
@@ -151,9 +151,11 @@ button {
   background: #292929;
   color: #ffffff;
 
-  font-size: 0.76rem;
+  font-size: 0.75rem;
 
   cursor: pointer;
+
+  white-space: nowrap;
 }
 
 .header-button:active {
@@ -166,18 +168,29 @@ button {
 
 
 /* =========================================================
-   WEATHER BAR
+   WEATHER
 ========================================================= */
 
-.weather-bar {
-  height: 25px;
-
+.weather-area {
   margin-top: 5px;
 
   display: flex;
   align-items: center;
 
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+.weather-bar {
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+
   gap: 17px;
+
+  min-width: 0;
 
   overflow: hidden;
 
@@ -204,36 +217,95 @@ button {
 .weather-status {
   color: #555555;
 
-  font-size: 0.65rem;
-}
-
-.aqhi-low {
-  color: #81c784;
-}
-
-.aqhi-moderate {
-  color: #ffca5c;
-}
-
-.aqhi-high {
-  color: #ff9b6b;
-}
-
-.aqhi-very-high {
-  color: #ff7373;
-}
-
-.aqhi-serious {
-  color: #ff4f81;
+  font-size: 0.64rem;
 }
 
 
 /* =========================================================
-   MAIN DASHBOARD
+   WEATHER WARNINGS
+========================================================= */
+
+.warning-bar {
+  display: none;
+
+  flex: 1;
+
+  min-width: 0;
+
+  margin-left: 18px;
+
+  height: 25px;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  color: #ffca5c;
+
+  font-size: 0.72rem;
+
+  font-weight: 600;
+}
+
+.warning-bar.active {
+  display: flex;
+}
+
+.warning-icon {
+  flex: 0 0 auto;
+
+  margin-right: 5px;
+}
+
+.warning-text {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* warning levels */
+
+.warning-normal {
+  color: #ffca5c;
+}
+
+.warning-high {
+  color: #ff8a65;
+}
+
+.warning-extreme {
+  color: #ff5f6d;
+}
+
+
+/* =========================================================
+   LAST SYNC
+========================================================= */
+
+.sync-status {
+  flex: 0 0 auto;
+
+  margin-left: 10px;
+
+  color: #555555;
+
+  font-size: 0.62rem;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   DASHBOARD
 ========================================================= */
 
 .dashboard {
-  flex: 1 1 auto;
+  flex: 1 1 0;
 
   min-width: 0;
   min-height: 0;
@@ -244,12 +316,10 @@ button {
 
   display: grid;
 
-  /*
-    Tasks       45%
-    Schedule    35%
-    Email       20%
-  */
-  grid-template-columns: 45fr 35fr 20fr;
+  grid-template-columns:
+    45fr
+    35fr
+    20fr;
 
   gap: 10px;
 
@@ -304,7 +374,7 @@ button {
 .panel-subtitle {
   color: #777777;
 
-  font-size: 0.68rem;
+  font-size: 0.67rem;
 }
 
 .panel-body {
@@ -360,10 +430,6 @@ button {
   margin-bottom: 0;
 }
 
-.task-card:hover {
-  background: #242424;
-}
-
 .task-card.fading {
   opacity: 0;
   transform: translateX(20px);
@@ -374,6 +440,8 @@ button {
 
   width: 27px;
   height: 27px;
+
+  padding: 0;
 
   border: 2px solid #777777;
 
@@ -386,7 +454,6 @@ button {
 
 .task-checkbox.done {
   background: #777777;
-
   border-color: #777777;
 }
 
@@ -424,7 +491,9 @@ button {
   color: #ffca5c;
 }
 
-.task-empty {
+.task-empty,
+.schedule-empty,
+.mail-empty {
   height: 100%;
 
   display: flex;
@@ -434,6 +503,8 @@ button {
   color: #666666;
 
   font-size: 0.82rem;
+
+  text-align: center;
 }
 
 .task-error {
@@ -467,7 +538,7 @@ button {
 
   color: #888888;
 
-  font-size: 0.7rem;
+  font-size: 0.69rem;
 
   font-weight: 600;
 }
@@ -481,15 +552,18 @@ button {
 
   display: grid;
 
-  grid-template-columns: 54px 10px 1fr;
+  grid-template-columns:
+    54px
+    10px
+    1fr;
 
   align-items: stretch;
-
-  border-radius: 8px;
 
   background: #202020;
 
   border: 1px solid #292929;
+
+  border-radius: 8px;
 
   overflow: hidden;
 }
@@ -558,7 +632,7 @@ button {
 
   color: #666666;
 
-  font-size: 0.64rem;
+  font-size: 0.63rem;
 
   white-space: nowrap;
 
@@ -567,14 +641,32 @@ button {
   text-overflow: ellipsis;
 }
 
-.schedule-item.now {
-  background: #252525;
+.schedule-next {
+  margin-top: 4px;
 
-  border-color: #555555;
+  color: #777777;
+
+  font-size: 0.62rem;
+}
+
+.schedule-item.now {
+  background: #292929;
+
+  border-color: #666666;
+
+  min-height: 58px;
 }
 
 .schedule-item.now .schedule-time {
   color: #ffffff;
+
+  font-weight: 700;
+
+  font-size: 0.76rem;
+}
+
+.schedule-item.now .schedule-title {
+  font-size: 0.88rem;
 
   font-weight: 700;
 }
@@ -582,7 +674,8 @@ button {
 .schedule-item.now .schedule-dot {
   background: #ffffff;
 
-  box-shadow: 0 0 0 3px #444444;
+  box-shadow:
+    0 0 0 3px #444444;
 }
 
 .schedule-item.now .schedule-line::before {
@@ -590,41 +683,17 @@ button {
 }
 
 .schedule-item.past {
-  opacity: 0.48;
+  opacity: 0.45;
+}
+
+.schedule-item.next {
+  border-color: #444444;
 }
 
 .schedule-all-day {
   color: #aaaaaa;
 
-  font-size: 0.7rem;
-}
-
-.schedule-empty {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #666666;
-
-  font-size: 0.82rem;
-}
-
-.schedule-loading {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: #666666;
-
-  font-size: 0.78rem;
-}
-
-.schedule-tomorrow {
-  margin-top: 12px;
+  font-size: 0.68rem;
 }
 
 
@@ -727,26 +796,60 @@ button {
   display: -webkit-box;
 
   -webkit-line-clamp: 2;
+
   -webkit-box-orient: vertical;
 
   overflow: hidden;
 }
 
-.mail-empty {
-  height: 100%;
 
-  display: flex;
+/* =========================================================
+   AFTER WORK MODE
+========================================================= */
+
+.work-off {
+  display: none;
+
+  flex: 1;
+
+  min-width: 0;
+
   align-items: center;
+
   justify-content: center;
 
-  color: #666666;
+  padding: 10px;
+
+  color: #aaaaaa;
 
   font-size: 0.78rem;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+.work-off.active {
+  display: flex;
+}
+
+.work-off-message {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.continue-button {
+  display: none;
+}
+
+.continue-button.active {
+  display: block;
 }
 
 
 /* =========================================================
-   LOGIN OVERLAY
+   LOGIN
 ========================================================= */
 
 .login-overlay {
@@ -833,11 +936,15 @@ button {
 
   .header-button {
     padding: 0 7px;
-    font-size: 0.68rem;
+
+    font-size: 0.67rem;
   }
 
   .dashboard {
-    grid-template-columns: 44fr 36fr 20fr;
+    grid-template-columns:
+      44fr
+      36fr
+      20fr;
   }
 
 }
@@ -848,11 +955,15 @@ button {
 
 <body>
 
+
 <!-- =======================================================
      LOGIN
 ======================================================= -->
 
-<div id="loginOverlay" class="login-overlay">
+<div
+  id="loginOverlay"
+  class="login-overlay"
+>
 
   <div class="login-box">
 
@@ -884,7 +995,10 @@ button {
 
 <div class="app">
 
-  <!-- HEADER -->
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
 
   <header class="header">
 
@@ -917,6 +1031,22 @@ button {
         </button>
 
         <button
+          id="workButton"
+          class="header-button"
+          type="button"
+        >
+          🌙 收工
+        </button>
+
+        <button
+          id="continueButton"
+          class="header-button continue-button"
+          type="button"
+        >
+          ☀️ 繼續工作
+        </button>
+
+        <button
           id="fullscreenButton"
           class="header-button"
           type="button"
@@ -939,77 +1069,115 @@ button {
 
     <!-- WEATHER -->
 
-    <div class="weather-bar">
+    <div class="weather-area">
 
-      <div class="weather-item">
-        <span>🌡</span>
-        <span
-          id="weatherTemp"
-          class="weather-value"
-        >
-          --
-        </span>
+      <div class="weather-bar">
+
+        <div class="weather-item">
+
+          <span>🌡</span>
+
+          <span
+            id="weatherTemp"
+            class="weather-value"
+          >
+            --
+          </span>
+
+        </div>
+
+
+        <div class="weather-item">
+
+          <span id="weatherIcon">
+            ☁
+          </span>
+
+          <span
+            id="weatherText"
+            class="weather-value"
+          >
+            天氣讀取中
+          </span>
+
+        </div>
+
+
+        <div class="weather-item">
+
+          <span>💧</span>
+
+          <span
+            id="humidity"
+            class="weather-value"
+          >
+            --
+          </span>
+
+        </div>
+
+
+        <div class="weather-item">
+
+          <span>☔</span>
+
+          <span
+            id="rainProbability"
+            class="weather-value"
+          >
+            --
+          </span>
+
+        </div>
+
+
+        <div class="weather-item">
+
+          <span>AQHI</span>
+
+          <span
+            id="aqhi"
+            class="weather-value"
+          >
+            --
+          </span>
+
+        </div>
+
       </div>
 
-      <div class="weather-item">
 
-        <span id="weatherIcon">
-          ☁
-        </span>
-
-        <span
-          id="weatherText"
-          class="weather-value"
-        >
-          天氣讀取中
-        </span>
-
-      </div>
-
-      <div class="weather-item">
-
-        <span>💧</span>
-
-        <span
-          id="humidity"
-          class="weather-value"
-        >
-          --
-        </span>
-
-      </div>
-
-      <div class="weather-item">
-
-        <span>☔</span>
-
-        <span
-          id="rainProbability"
-          class="weather-value"
-        >
-          --
-        </span>
-
-      </div>
-
-      <div class="weather-item">
-
-        <span>AQHI</span>
-
-        <span
-          id="aqhi"
-          class="weather-value"
-        >
-          --
-        </span>
-
-      </div>
+      <!-- WARNING -->
 
       <div
-        id="weatherStatus"
-        class="weather-status"
+        id="warningBar"
+        class="warning-bar"
       >
-        天文台資料
+
+        <span
+          id="warningIcon"
+          class="warning-icon"
+        >
+          ⚠️
+        </span>
+
+        <span
+          id="warningText"
+          class="warning-text"
+        >
+          --
+        </span>
+
+      </div>
+
+
+      <!-- SYNC -->
+
+      <div
+        id="syncStatus"
+        class="sync-status"
+      >
+        未同步
       </div>
 
     </div>
@@ -1018,10 +1186,29 @@ button {
 
 
   <!-- =====================================================
+       WORK OFF MESSAGE
+  ====================================================== -->
+
+  <div
+    id="workOffMessage"
+    class="work-off"
+  >
+
+    <div class="work-off-message">
+      今日辛苦了，祝您有個愉快的晚上。
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
        DASHBOARD
   ====================================================== -->
 
-  <main class="dashboard">
+  <main
+    id="dashboard"
+    class="dashboard"
+  >
 
 
     <!-- ===================================================
@@ -1044,6 +1231,7 @@ button {
         </div>
 
       </div>
+
 
       <div class="panel-body">
 
@@ -1084,6 +1272,7 @@ button {
 
       </div>
 
+
       <div class="panel-body">
 
         <div
@@ -1091,7 +1280,7 @@ button {
           class="schedule-scroll"
         >
 
-          <div class="schedule-loading">
+          <div class="schedule-empty">
             尚未登入
           </div>
 
@@ -1122,6 +1311,7 @@ button {
         </div>
 
       </div>
+
 
       <div class="panel-body">
 
@@ -1182,13 +1372,20 @@ const AQHI_API =
   "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
 
-const TASK_INTERVAL = 5000;
+const TASK_INTERVAL =
+  5000;
 
-const CALENDAR_INTERVAL = 60000;
 
-const MAIL_INTERVAL = 60000;
+const CALENDAR_INTERVAL =
+  60000;
 
-const WEATHER_INTERVAL = 600000;
+
+const MAIL_INTERVAL =
+  60000;
+
+
+const WEATHER_INTERVAL =
+  300000;
 
 
 /* =========================================================
@@ -1201,11 +1398,7 @@ let tokenClient = null;
 
 let taskListId = null;
 
-let tasksLoaded = false;
-
-let calendarLoaded = false;
-
-let mailLoaded = false;
+let workOff = false;
 
 
 /* =========================================================
@@ -1213,40 +1406,104 @@ let mailLoaded = false;
 ========================================================= */
 
 const loginOverlay =
-  document.getElementById("loginOverlay");
+  document.getElementById(
+    "loginOverlay"
+  );
 
 const loginButton =
-  document.getElementById("loginButton");
+  document.getElementById(
+    "loginButton"
+  );
 
 const logoutButton =
-  document.getElementById("logoutButton");
+  document.getElementById(
+    "logoutButton"
+  );
 
 const syncButton =
-  document.getElementById("syncButton");
+  document.getElementById(
+    "syncButton"
+  );
+
+const workButton =
+  document.getElementById(
+    "workButton"
+  );
+
+const continueButton =
+  document.getElementById(
+    "continueButton"
+  );
 
 const fullscreenButton =
-  document.getElementById("fullscreenButton");
+  document.getElementById(
+    "fullscreenButton"
+  );
+
+const dashboard =
+  document.getElementById(
+    "dashboard"
+  );
+
+const workOffMessage =
+  document.getElementById(
+    "workOffMessage"
+  );
 
 const clock =
-  document.getElementById("clock");
+  document.getElementById(
+    "clock"
+  );
 
 const taskScroll =
-  document.getElementById("taskScroll");
+  document.getElementById(
+    "taskScroll"
+  );
 
 const taskCount =
-  document.getElementById("taskCount");
+  document.getElementById(
+    "taskCount"
+  );
 
 const scheduleScroll =
-  document.getElementById("scheduleScroll");
+  document.getElementById(
+    "scheduleScroll"
+  );
 
 const scheduleDate =
-  document.getElementById("scheduleDate");
+  document.getElementById(
+    "scheduleDate"
+  );
 
 const mailScroll =
-  document.getElementById("mailScroll");
+  document.getElementById(
+    "mailScroll"
+  );
 
 const mailCount =
-  document.getElementById("mailCount");
+  document.getElementById(
+    "mailCount"
+  );
+
+const warningBar =
+  document.getElementById(
+    "warningBar"
+  );
+
+const warningText =
+  document.getElementById(
+    "warningText"
+  );
+
+const warningIcon =
+  document.getElementById(
+    "warningIcon"
+  );
+
+const syncStatus =
+  document.getElementById(
+    "syncStatus"
+  );
 
 
 /* =========================================================
@@ -1255,22 +1512,40 @@ const mailCount =
 
 function updateClock() {
 
-  const now = new Date();
+  const now =
+    new Date();
+
 
   const hh =
-    String(now.getHours()).padStart(2, "0");
+    String(
+      now.getHours()
+    ).padStart(
+      2,
+      "0"
+    );
+
 
   const mm =
-    String(now.getMinutes()).padStart(2, "0");
+    String(
+      now.getMinutes()
+    ).padStart(
+      2,
+      "0"
+    );
+
 
   clock.textContent =
     `${hh}:${mm}`;
 
 }
 
+
 updateClock();
 
-setInterval(updateClock, 1000);
+setInterval(
+  updateClock,
+  1000
+);
 
 
 /* =========================================================
@@ -1279,9 +1554,15 @@ setInterval(updateClock, 1000);
 
 function startOfToday() {
 
-  const d = new Date();
+  const d =
+    new Date();
 
-  d.setHours(0, 0, 0, 0);
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
 
   return d;
 
@@ -1290,20 +1571,12 @@ function startOfToday() {
 
 function startOfTomorrow() {
 
-  const d = startOfToday();
+  const d =
+    startOfToday();
 
-  d.setDate(d.getDate() + 1);
-
-  return d;
-
-}
-
-
-function endOfToday() {
-
-  const d = startOfTomorrow();
-
-  d.setMilliseconds(-1);
+  d.setDate(
+    d.getDate() + 1
+  );
 
   return d;
 
@@ -1312,7 +1585,10 @@ function endOfToday() {
 
 function formatDateMD(date) {
 
-  return `${date.getMonth() + 1}/${date.getDate()}`;
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}`
+  );
 
 }
 
@@ -1329,7 +1605,13 @@ function formatScheduleDate(date) {
     "六"
   ];
 
-  return `${date.getMonth() + 1}/${date.getDate()}（${weekdays[date.getDay()]}）`;
+
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}（` +
+    `${weekdays[date.getDay()]}` +
+    "）"
+  );
 
 }
 
@@ -1358,37 +1640,48 @@ function initGoogleAuth() {
   tokenClient =
     google.accounts.oauth2.initTokenClient({
 
-      client_id: CLIENT_ID,
+      client_id:
+        CLIENT_ID,
 
-      scope: GOOGLE_SCOPE,
+      scope:
+        GOOGLE_SCOPE,
 
-      callback: async (response) => {
+      callback:
+        async response => {
 
-        if (response.error) {
-
-          console.error(response);
-
-          alert(
-            "Google 登入失敗：" +
+          if (
             response.error
-          );
+          ) {
 
-          return;
+            console.error(
+              response
+            );
+
+            alert(
+              "Google 登入失敗：" +
+              response.error
+            );
+
+            return;
+
+          }
+
+
+          accessToken =
+            response.access_token;
+
+
+          loginOverlay.style.display =
+            "none";
+
+
+          logoutButton.style.display =
+            "block";
+
+
+          await syncAll();
 
         }
-
-        accessToken =
-          response.access_token;
-
-        loginOverlay.style.display =
-          "none";
-
-        logoutButton.style.display =
-          "block";
-
-        await syncAll();
-
-      }
 
     });
 
@@ -1445,7 +1738,11 @@ logoutButton.addEventListener(
       accessToken,
       () => {
 
-        accessToken = null;
+        accessToken =
+          null;
+
+        taskListId =
+          null;
 
         loginOverlay.style.display =
           "flex";
@@ -1453,26 +1750,33 @@ logoutButton.addEventListener(
         logoutButton.style.display =
           "none";
 
+
         taskScroll.innerHTML =
           `<div class="task-empty">
              已登出
            </div>`;
+
 
         scheduleScroll.innerHTML =
           `<div class="schedule-empty">
              已登出
            </div>`;
 
+
         mailScroll.innerHTML =
           `<div class="mail-empty">
              已登出
            </div>`;
+
 
         taskCount.textContent =
           "--";
 
         mailCount.textContent =
           "未讀";
+
+        syncStatus.textContent =
+          "未同步";
 
       }
     );
@@ -1482,7 +1786,7 @@ logoutButton.addEventListener(
 
 
 /* =========================================================
-   GOOGLE API FETCH
+   GOOGLE API
 ========================================================= */
 
 async function googleFetch(
@@ -1507,11 +1811,14 @@ async function googleFetch(
 
         headers: {
           ...(options.headers || {}),
+
           Authorization:
             `Bearer ${accessToken}`,
+
           "Content-Type":
             "application/json"
         }
+
       }
     );
 
@@ -1520,7 +1827,8 @@ async function googleFetch(
     response.status === 401
   ) {
 
-    accessToken = null;
+    accessToken =
+      null;
 
     loginOverlay.style.display =
       "flex";
@@ -1536,6 +1844,7 @@ async function googleFetch(
 
     const text =
       await response.text();
+
 
     throw new Error(
       `${response.status}: ${text}`
@@ -1556,7 +1865,9 @@ async function googleFetch(
 async function getDefaultTaskList() {
 
   if (taskListId) {
+
     return taskListId;
+
   }
 
 
@@ -1572,7 +1883,8 @@ async function getDefaultTaskList() {
 
   const defaultList =
     lists.find(
-      item => item.id === "@default"
+      item =>
+        item.id === "@default"
     );
 
 
@@ -1581,7 +1893,9 @@ async function getDefaultTaskList() {
     taskListId =
       defaultList.id;
 
-  } else if (lists.length > 0) {
+  } else if (
+    lists.length
+  ) {
 
     taskListId =
       lists[0].id;
@@ -1610,11 +1924,14 @@ function taskDateInfo(due) {
   const date =
     new Date(due);
 
+
   const today =
     startOfToday();
 
+
   const tomorrow =
     startOfTomorrow();
+
 
   const dateOnly =
     new Date(
@@ -1624,7 +1941,9 @@ function taskDateInfo(due) {
     );
 
 
-  if (dateOnly < today) {
+  if (
+    dateOnly < today
+  ) {
 
     return {
       text: "逾期",
@@ -1661,8 +1980,11 @@ function taskDateInfo(due) {
 
 
   return {
-    text: formatDateMD(date),
-    className: ""
+    text:
+      formatDateMD(date),
+
+    className:
+      ""
   };
 
 }
@@ -1670,20 +1992,30 @@ function taskDateInfo(due) {
 
 function sortTasks(tasks) {
 
-  return [...tasks].sort(
+  return [
+    ...tasks
+  ].sort(
     (a, b) => {
 
-      if (!a.due && !b.due) {
+      if (
+        !a.due &&
+        !b.due
+      ) {
+
         return 0;
+
       }
+
 
       if (!a.due) {
         return 1;
       }
 
+
       if (!b.due) {
         return -1;
       }
+
 
       return (
         new Date(a.due) -
@@ -1698,13 +2030,17 @@ function sortTasks(tasks) {
 
 function renderTasks(tasks) {
 
-  taskScroll.innerHTML = "";
+  taskScroll.innerHTML =
+    "";
+
 
   taskCount.textContent =
     `${tasks.length} 項`;
 
 
-  if (!tasks.length) {
+  if (
+    !tasks.length
+  ) {
 
     taskScroll.innerHTML =
       `<div class="task-empty">
@@ -1716,157 +2052,170 @@ function renderTasks(tasks) {
   }
 
 
-  const sorted =
-    sortTasks(tasks);
+  sortTasks(tasks)
+    .forEach(
+      task => {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+        card.className =
+          "task-card";
 
 
-  sorted.forEach(
-    task => {
+        const checkbox =
+          document.createElement(
+            "button"
+          );
 
-      const card =
-        document.createElement("div");
+        checkbox.type =
+          "button";
 
-      card.className =
-        "task-card";
-
-
-      const checkbox =
-        document.createElement("button");
-
-      checkbox.type =
-        "button";
-
-      checkbox.className =
-        "task-checkbox";
+        checkbox.className =
+          "task-checkbox";
 
 
-      checkbox.addEventListener(
-        "click",
-        async () => {
+        checkbox.addEventListener(
+          "click",
+          async () => {
 
-          checkbox.className =
-            "task-checkbox done";
-
-          card.className =
-            "task-card fading";
+            checkbox.className =
+              "task-checkbox done";
 
 
-          setTimeout(
-            () => {
+            card.className =
+              "task-card fading";
 
-              if (
-                card.parentNode
-              ) {
 
-                card.parentNode.removeChild(
-                  card
-                );
+            setTimeout(
+              () => {
 
-              }
+                if (
+                  card.parentNode
+                ) {
 
-            },
-            250
+                  card.parentNode
+                    .removeChild(
+                      card
+                    );
+
+                }
+
+              },
+              250
+            );
+
+
+            try {
+
+              await googleFetch(
+                `${TASKS_API}/lists/${encodeURIComponent(taskListId)}/tasks/${encodeURIComponent(task.id)}`,
+                {
+                  method:
+                    "PATCH",
+
+                  body:
+                    JSON.stringify({
+                      status:
+                        "completed"
+                    })
+
+                }
+              );
+
+            } catch (
+              error
+            ) {
+
+              console.error(
+                error
+              );
+
+              await syncTasks();
+
+            }
+
+          }
+        );
+
+
+        const content =
+          document.createElement(
+            "div"
+          );
+
+        content.className =
+          "task-content";
+
+
+        const title =
+          document.createElement(
+            "div"
+          );
+
+        title.className =
+          "task-title";
+
+        title.textContent =
+          task.title ||
+          "(無標題)";
+
+
+        const info =
+          taskDateInfo(
+            task.due
           );
 
 
-          try {
+        if (info) {
 
-            await googleFetch(
-              `${TASKS_API}/lists/${encodeURIComponent(taskListId)}/tasks/${encodeURIComponent(task.id)}`,
-              {
-                method: "PATCH",
-                body: JSON.stringify({
-                  status: "completed"
-                })
-              }
+          const date =
+            document.createElement(
+              "div"
             );
-
-          } catch (error) {
-
-            console.error(
-              "Task 完成失敗",
-              error
-            );
-
-            await syncTasks();
-
-          }
-
-        }
-      );
-
-
-      const content =
-        document.createElement("div");
-
-      content.className =
-        "task-content";
-
-
-      const title =
-        document.createElement("div");
-
-      title.className =
-        "task-title";
-
-      title.textContent =
-        task.title || "(無標題)";
-
-
-      const date =
-        document.createElement("div");
-
-      date.className =
-        "task-date";
-
-
-      const info =
-        taskDateInfo(task.due);
-
-
-      if (info) {
-
-        date.textContent =
-          info.text;
-
-        if (info.className) {
 
           date.className =
-            `task-date ${info.className}`;
+            info.className
+              ? `task-date ${info.className}`
+              : "task-date";
+
+          date.textContent =
+            info.text;
+
+          content.appendChild(
+            title
+          );
+
+          content.appendChild(
+            date
+          );
+
+        } else {
+
+          content.appendChild(
+            title
+          );
 
         }
 
-      }
+
+        card.appendChild(
+          checkbox
+        );
+
+        card.appendChild(
+          content
+        );
 
 
-      content.appendChild(
-        title
-      );
-
-      if (info) {
-
-        content.appendChild(
-          date
+        taskScroll.appendChild(
+          card
         );
 
       }
-
-
-      card.appendChild(
-        checkbox
-      );
-
-      card.appendChild(
-        content
-      );
-
-
-      taskScroll.appendChild(
-        card
-      );
-
-    }
-  );
+    );
 
 }
 
@@ -1885,16 +2234,14 @@ async function syncTasks() {
       );
 
 
-    const tasks =
-      data.items || [];
+    renderTasks(
+      data.items || []
+    );
 
 
-    renderTasks(tasks);
-
-    tasksLoaded = true;
-
-
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
       "Tasks error:",
@@ -1905,7 +2252,9 @@ async function syncTasks() {
     taskScroll.innerHTML =
       `<div class="task-error">
          Tasks 讀取失敗<br><br>
-         ${escapeHtml(error.message)}
+         ${escapeHtml(
+           error.message
+         )}
        </div>`;
 
   }
@@ -1921,47 +2270,63 @@ async function syncCalendar() {
 
   try {
 
-    const now =
-      new Date();
-
-    const todayStart =
+    const today =
       startOfToday();
 
-    const tomorrowEnd =
+
+    const tomorrow =
+      startOfTomorrow();
+
+
+    const dayAfterTomorrow =
       new Date(
-        startOfTomorrow()
+        tomorrow
       );
 
-    tomorrowEnd.setDate(
-      tomorrowEnd.getDate() + 1
+
+    dayAfterTomorrow.setDate(
+      dayAfterTomorrow.getDate() + 1
     );
 
 
     const params =
-      new URLSearchParams({
+      new URLSearchParams();
 
-        calendarId:
-          "primary",
 
-        timeMin:
-          todayStart.toISOString(),
+    params.set(
+      "timeMin",
+      today.toISOString()
+    );
 
-        timeMax:
-          tomorrowEnd.toISOString(),
 
-        showDeleted:
-          "false",
+    params.set(
+      "timeMax",
+      dayAfterTomorrow.toISOString()
+    );
 
-        singleEvents:
-          "true",
 
-        orderBy:
-          "startTime",
+    params.set(
+      "showDeleted",
+      "false"
+    );
 
-        maxResults:
-          "50"
 
-      });
+    params.set(
+      "singleEvents",
+      "true"
+    );
+
+
+    params.set(
+      "orderBy",
+      "startTime"
+    );
+
+
+    params.set(
+      "maxResults",
+      "50"
+    );
 
 
     const data =
@@ -1970,16 +2335,14 @@ async function syncCalendar() {
       );
 
 
-    const events =
-      data.items || [];
+    renderSchedule(
+      data.items || []
+    );
 
 
-    renderSchedule(events);
-
-    calendarLoaded = true;
-
-
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
       "Calendar error:",
@@ -1990,7 +2353,9 @@ async function syncCalendar() {
     scheduleScroll.innerHTML =
       `<div class="schedule-empty">
          Calendar 讀取失敗<br><br>
-         ${escapeHtml(error.message)}
+         ${escapeHtml(
+           error.message
+         )}
        </div>`;
 
   }
@@ -1999,7 +2364,7 @@ async function syncCalendar() {
 
 
 /* =========================================================
-   CALENDAR EVENT HELPERS
+   CALENDAR HELPERS
 ========================================================= */
 
 function eventStart(event) {
@@ -2021,13 +2386,15 @@ function eventStart(event) {
     event.start.date
   ) {
 
-    const parts =
-      event.start.date.split("-");
+    const p =
+      event.start.date
+        .split("-");
+
 
     return new Date(
-      Number(parts[0]),
-      Number(parts[1]) - 1,
-      Number(parts[2])
+      Number(p[0]),
+      Number(p[1]) - 1,
+      Number(p[2])
     );
 
   }
@@ -2057,19 +2424,31 @@ function eventEnd(event) {
     event.end.date
   ) {
 
-    const parts =
-      event.end.date.split("-");
+    const p =
+      event.end.date
+        .split("-");
+
 
     return new Date(
-      Number(parts[0]),
-      Number(parts[1]) - 1,
-      Number(parts[2])
+      Number(p[0]),
+      Number(p[1]) - 1,
+      Number(p[2])
     );
 
   }
 
 
   return null;
+
+}
+
+
+function isAllDayEvent(event) {
+
+  return Boolean(
+    event.start &&
+    event.start.date
+  );
 
 }
 
@@ -2084,22 +2463,19 @@ function formatTime(date) {
   return (
     String(
       date.getHours()
-    ).padStart(2, "0")
+    ).padStart(
+      2,
+      "0"
+    )
     +
-    ":" +
+    ":"
+    +
     String(
       date.getMinutes()
-    ).padStart(2, "0")
-  );
-
-}
-
-
-function isAllDayEvent(event) {
-
-  return Boolean(
-    event.start &&
-    event.start.date
+    ).padStart(
+      2,
+      "0"
+    )
   );
 
 }
@@ -2119,8 +2495,10 @@ function isEventNow(event) {
   const start =
     eventStart(event);
 
+
   const end =
     eventEnd(event);
+
 
   if (!start || !end) {
     return false;
@@ -2153,12 +2531,75 @@ function isEventPast(event) {
   const end =
     eventEnd(event);
 
+
   if (!end) {
     return false;
   }
 
 
-  return new Date() >= end;
+  return (
+    new Date() >= end
+  );
+
+}
+
+
+function minutesUntil(date) {
+
+  const diff =
+    Math.round(
+      (
+        date.getTime() -
+        Date.now()
+      ) / 60000
+    );
+
+
+  return diff;
+
+}
+
+
+function countdownText(minutes) {
+
+  if (
+    minutes <= 0
+  ) {
+
+    return "";
+
+  }
+
+
+  if (
+    minutes < 60
+  ) {
+
+    return `${minutes} 分鐘後`;
+
+  }
+
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+
+  const mins =
+    minutes % 60;
+
+
+  if (!mins) {
+
+    return `${hours} 小時後`;
+
+  }
+
+
+  return (
+    `${hours} 小時 ${mins} 分鐘後`
+  );
 
 }
 
@@ -2169,7 +2610,8 @@ function isEventPast(event) {
 
 function renderSchedule(events) {
 
-  scheduleScroll.innerHTML = "";
+  scheduleScroll.innerHTML =
+    "";
 
 
   const today =
@@ -2180,8 +2622,21 @@ function renderSchedule(events) {
     startOfTomorrow();
 
 
+  const dayAfterTomorrow =
+    new Date(
+      tomorrow
+    );
+
+
+  dayAfterTomorrow.setDate(
+    dayAfterTomorrow.getDate() + 1
+  );
+
+
   scheduleDate.textContent =
-    formatScheduleDate(today);
+    formatScheduleDate(
+      today
+    );
 
 
   const todayEvents =
@@ -2191,9 +2646,11 @@ function renderSchedule(events) {
         const start =
           eventStart(event);
 
+
         if (!start) {
           return false;
         }
+
 
         return (
           start >= today &&
@@ -2204,20 +2661,6 @@ function renderSchedule(events) {
     );
 
 
-  const tomorrowStart =
-    tomorrow;
-
-
-  const tomorrowEnd =
-    new Date(
-      tomorrowStart
-    );
-
-  tomorrowEnd.setDate(
-    tomorrowEnd.getDate() + 1
-  );
-
-
   const tomorrowEvents =
     events.filter(
       event => {
@@ -2225,13 +2668,15 @@ function renderSchedule(events) {
         const start =
           eventStart(event);
 
+
         if (!start) {
           return false;
         }
 
+
         return (
-          start >= tomorrowStart &&
-          start < tomorrowEnd
+          start >= tomorrow &&
+          start < dayAfterTomorrow
         );
 
       }
@@ -2239,8 +2684,7 @@ function renderSchedule(events) {
 
 
   if (
-    todayEvents.length === 0 &&
-    tomorrowEvents.length === 0
+    todayEvents.length === 0
   ) {
 
     scheduleScroll.innerHTML =
@@ -2248,34 +2692,34 @@ function renderSchedule(events) {
          今日沒有 Calendar 行程
        </div>`;
 
-    return;
+  } else {
 
-  }
+    const label =
+      document.createElement(
+        "div"
+      );
 
-
-  if (
-    todayEvents.length > 0
-  ) {
-
-    const todayLabel =
-      document.createElement("div");
-
-    todayLabel.className =
+    label.className =
       "schedule-day-label";
 
-    todayLabel.textContent =
+    label.textContent =
       `今日 · ${formatScheduleDate(today)}`;
 
+
     scheduleScroll.appendChild(
-      todayLabel
+      label
     );
 
 
     todayEvents.forEach(
-      event => {
+      (event, index) => {
 
         scheduleScroll.appendChild(
-          createScheduleItem(event)
+          createScheduleItem(
+            event,
+            todayEvents,
+            index
+          )
         );
 
       }
@@ -2285,20 +2729,26 @@ function renderSchedule(events) {
 
 
   if (
-    tomorrowEvents.length > 0
+    tomorrowEvents.length
   ) {
 
-    const tomorrowLabel =
-      document.createElement("div");
+    const label =
+      document.createElement(
+        "div"
+      );
 
-    tomorrowLabel.className =
-      "schedule-day-label schedule-tomorrow";
+    label.className =
+      "schedule-day-label";
 
-    tomorrowLabel.textContent =
+    label.style.marginTop =
+      "14px";
+
+    label.textContent =
       `明日 · ${formatScheduleDate(tomorrow)}`;
 
+
     scheduleScroll.appendChild(
-      tomorrowLabel
+      label
     );
 
 
@@ -2306,7 +2756,11 @@ function renderSchedule(events) {
       event => {
 
         scheduleScroll.appendChild(
-          createScheduleItem(event)
+          createScheduleItem(
+            event,
+            [],
+            -1
+          )
         );
 
       }
@@ -2317,29 +2771,83 @@ function renderSchedule(events) {
 }
 
 
-function createScheduleItem(event) {
+/* =========================================================
+   CREATE SCHEDULE ITEM
+========================================================= */
+
+function createScheduleItem(
+  event,
+  todayEvents,
+  index
+) {
 
   const item =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
 
   let className =
     "schedule-item";
 
 
+  const now =
+    isEventNow(event);
+
+
+  const past =
+    isEventPast(event);
+
+
+  /*
+    找下一個未開始的行程
+  */
+
+  let isNext =
+    false;
+
+
   if (
-    isEventNow(event)
+    todayEvents.length
   ) {
+
+    const nextIndex =
+      todayEvents.findIndex(
+        e => {
+
+          const start =
+            eventStart(e);
+
+
+          return (
+            start &&
+            start > new Date()
+          );
+
+        }
+      );
+
+
+    isNext =
+      index === nextIndex;
+
+  }
+
+
+  if (now) {
 
     className +=
       " now";
 
-  } else if (
-    isEventPast(event)
-  ) {
+  } else if (past) {
 
     className +=
       " past";
+
+  } else if (isNext) {
+
+    className +=
+      " next";
 
   }
 
@@ -2349,37 +2857,12 @@ function createScheduleItem(event) {
 
 
   const time =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   time.className =
     "schedule-time";
-
-
-  const info =
-    document.createElement("div");
-
-
-  info.className =
-    "schedule-info";
-
-
-  const line =
-    document.createElement("div");
-
-  line.className =
-    "schedule-line";
-
-
-  const dot =
-    document.createElement("div");
-
-  dot.className =
-    "schedule-dot";
-
-
-  line.appendChild(
-    dot
-  );
 
 
   if (
@@ -2393,17 +2876,50 @@ function createScheduleItem(event) {
 
   } else {
 
-    const start =
-      eventStart(event);
-
     time.textContent =
-      formatTime(start);
+      formatTime(
+        eventStart(event)
+      );
 
   }
 
 
+  const line =
+    document.createElement(
+      "div"
+    );
+
+  line.className =
+    "schedule-line";
+
+
+  const dot =
+    document.createElement(
+      "div"
+    );
+
+  dot.className =
+    "schedule-dot";
+
+
+  line.appendChild(
+    dot
+  );
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+  info.className =
+    "schedule-info";
+
+
   const title =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   title.className =
     "schedule-title";
@@ -2423,7 +2939,9 @@ function createScheduleItem(event) {
   ) {
 
     const location =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     location.className =
       "schedule-location";
@@ -2431,9 +2949,84 @@ function createScheduleItem(event) {
     location.textContent =
       event.location;
 
+
     info.appendChild(
       location
     );
+
+  }
+
+
+  /*
+    NOW
+  */
+
+  if (now) {
+
+    const nowText =
+      document.createElement(
+        "div"
+      );
+
+    nowText.className =
+      "schedule-next";
+
+    nowText.textContent =
+      "● NOW";
+
+
+    info.appendChild(
+      nowText
+    );
+
+  }
+
+
+  /*
+    NEXT
+  */
+
+  if (
+    isNext &&
+    !now &&
+    !isAllDayEvent(event)
+  ) {
+
+    const start =
+      eventStart(event);
+
+
+    const minutes =
+      minutesUntil(
+        start
+      );
+
+
+    const countdown =
+      countdownText(
+        minutes
+      );
+
+
+    if (countdown) {
+
+      const nextText =
+        document.createElement(
+          "div"
+        );
+
+      nextText.className =
+        "schedule-next";
+
+      nextText.textContent =
+        `→ ${countdown}`;
+
+
+      info.appendChild(
+        nextText
+      );
+
+    }
 
   }
 
@@ -2465,15 +3058,19 @@ async function syncMail() {
   try {
 
     const params =
-      new URLSearchParams({
+      new URLSearchParams();
 
-        maxResults:
-          "8",
 
-        q:
-          "in:inbox is:unread"
+    params.set(
+      "maxResults",
+      "8"
+    );
 
-      });
+
+    params.set(
+      "q",
+      "in:inbox is:unread"
+    );
 
 
     const data =
@@ -2491,7 +3088,7 @@ async function syncMail() {
 
 
     if (
-      messages.length === 0
+      !messages.length
     ) {
 
       mailScroll.innerHTML =
@@ -2515,12 +3112,14 @@ async function syncMail() {
       );
 
 
-    renderMail(details);
+    renderMail(
+      details
+    );
 
-    mailLoaded = true;
 
-
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
       "Gmail error:",
@@ -2531,7 +3130,9 @@ async function syncMail() {
     mailScroll.innerHTML =
       `<div class="mail-empty">
          Email 讀取失敗<br><br>
-         ${escapeHtml(error.message)}
+         ${escapeHtml(
+           error.message
+         )}
        </div>`;
 
   }
@@ -2541,24 +3142,17 @@ async function syncMail() {
 
 async function getMailDetail(id) {
 
-  const params =
-    new URLSearchParams({
-
-      format:
-        "metadata",
-
-      metadataHeaders:
-        "From",
-
-      metadataHeaders:
-        "Subject"
-
-    });
+  const url =
+    `${GMAIL_API}/users/me/messages/` +
+    `${encodeURIComponent(id)}` +
+    `?format=metadata` +
+    `&metadataHeaders=From` +
+    `&metadataHeaders=Subject`;
 
 
   const data =
     await googleFetch(
-      `${GMAIL_API}/users/me/messages/${encodeURIComponent(id)}?format=metadata&metadataHeaders=From&metadataHeaders=Subject`
+      url
     );
 
 
@@ -2587,7 +3181,7 @@ async function getMailDetail(id) {
 
   return {
 
-    id: id,
+    id,
 
     threadId:
       data.threadId,
@@ -2607,7 +3201,9 @@ async function getMailDetail(id) {
 
     internalDate:
       data.internalDate
-        ? Number(data.internalDate)
+        ? Number(
+            data.internalDate
+          )
         : 0
 
   };
@@ -2615,7 +3211,39 @@ async function getMailDetail(id) {
 }
 
 
-function formatMailTime(timestamp) {
+function cleanSender(sender) {
+
+  if (!sender) {
+    return "";
+  }
+
+
+  const match =
+    sender.match(
+      /^(.+?)\s*<.*>$/
+    );
+
+
+  if (match) {
+
+    return match[1]
+      .replace(
+        /^"|"$/g,
+        ""
+      )
+      .trim();
+
+  }
+
+
+  return sender;
+
+}
+
+
+function formatMailTime(
+  timestamp
+) {
 
   if (!timestamp) {
     return "";
@@ -2623,7 +3251,10 @@ function formatMailTime(timestamp) {
 
 
   const date =
-    new Date(timestamp);
+    new Date(
+      timestamp
+    );
+
 
   const now =
     new Date();
@@ -2634,7 +3265,9 @@ function formatMailTime(timestamp) {
     now.toDateString()
   ) {
 
-    return formatTime(date);
+    return formatTime(
+      date
+    );
 
   }
 
@@ -2647,16 +3280,21 @@ function formatMailTime(timestamp) {
 }
 
 
-function renderMail(messages) {
+function renderMail(
+  messages
+) {
 
-  mailScroll.innerHTML = "";
+  mailScroll.innerHTML =
+    "";
 
 
   messages.forEach(
     message => {
 
       const card =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       card.className =
         "mail-card";
@@ -2681,14 +3319,18 @@ function renderMail(messages) {
 
 
       const top =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       top.className =
         "mail-top";
 
 
       const sender =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       sender.className =
         "mail-sender";
@@ -2700,7 +3342,9 @@ function renderMail(messages) {
 
 
       const time =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       time.className =
         "mail-time";
@@ -2721,7 +3365,9 @@ function renderMail(messages) {
 
 
       const subject =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       subject.className =
         "mail-subject";
@@ -2731,7 +3377,9 @@ function renderMail(messages) {
 
 
       const snippet =
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
 
       snippet.className =
         "mail-snippet";
@@ -2763,33 +3411,6 @@ function renderMail(messages) {
 }
 
 
-function cleanSender(sender) {
-
-  if (!sender) {
-    return "";
-  }
-
-
-  const match =
-    sender.match(
-      /^(.+?)\s*<.*>$/
-    );
-
-
-  if (match) {
-
-    return match[1]
-      .replace(/^"|"$/g, "")
-      .trim();
-
-  }
-
-
-  return sender;
-
-}
-
-
 /* =========================================================
    WEATHER
 ========================================================= */
@@ -2800,7 +3421,8 @@ async function loadWeather() {
 
     const [
       currentResponse,
-      forecastResponse
+      forecastResponse,
+      warningResponse
     ] =
       await Promise.all([
 
@@ -2810,6 +3432,10 @@ async function loadWeather() {
 
         fetch(
           `${HKO_API}?dataType=fnd&lang=tc`
+        ),
+
+        fetch(
+          `${HKO_API}?dataType=warnsum&lang=tc`
         )
 
       ]);
@@ -2818,8 +3444,13 @@ async function loadWeather() {
     const current =
       await currentResponse.json();
 
+
     const forecast =
       await forecastResponse.json();
+
+
+    const warnings =
+      await warningResponse.json();
 
 
     renderCurrentWeather(
@@ -2832,7 +3463,14 @@ async function loadWeather() {
     );
 
 
-  } catch (error) {
+    renderWarnings(
+      warnings
+    );
+
+
+  } catch (
+    error
+  ) {
 
     console.error(
       "Weather error:",
@@ -2844,7 +3482,13 @@ async function loadWeather() {
 }
 
 
-function renderCurrentWeather(data) {
+/* =========================================================
+   CURRENT WEATHER
+========================================================= */
+
+function renderCurrentWeather(
+  data
+) {
 
   try {
 
@@ -2881,16 +3525,14 @@ function renderCurrentWeather(data) {
         : [];
 
 
-    const humidity =
-      humidityData[0];
-
-
-    if (humidity) {
+    if (
+      humidityData[0]
+    ) {
 
       document.getElementById(
         "humidity"
       ).textContent =
-        `${humidity.value}%`;
+        `${humidityData[0].value}%`;
 
     }
 
@@ -2900,12 +3542,6 @@ function renderCurrentWeather(data) {
       data.icon.length
         ? data.icon[0]
         : null;
-
-
-    const weatherText =
-      getWeatherText(
-        data
-      );
 
 
     document.getElementById(
@@ -2919,13 +3555,16 @@ function renderCurrentWeather(data) {
     document.getElementById(
       "weatherText"
     ).textContent =
-      weatherText;
+      getWeatherText(
+        data
+      );
 
-
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
-      "Current weather parse error",
+      "Weather parse error:",
       error
     );
 
@@ -2934,7 +3573,9 @@ function renderCurrentWeather(data) {
 }
 
 
-function getWeatherText(data) {
+function getWeatherText(
+  data
+) {
 
   if (
     data.weatherDesc &&
@@ -2946,22 +3587,14 @@ function getWeatherText(data) {
   }
 
 
-  if (
-    data.generalSituation
-  ) {
-
-    return data.generalSituation
-      .slice(0, 18);
-
-  }
-
-
   return "天氣";
 
 }
 
 
-function weatherIcon(icon) {
+function weatherIcon(
+  icon
+) {
 
   const n =
     Number(icon);
@@ -3020,11 +3653,13 @@ function weatherIcon(icon) {
 }
 
 
-function renderRainProbability(data) {
+/* =========================================================
+   RAIN
+========================================================= */
 
-  let probability =
-    null;
-
+function renderRainProbability(
+  data
+) {
 
   const forecast =
     data &&
@@ -3034,43 +3669,341 @@ function renderRainProbability(data) {
 
 
   if (
-    forecast.length
+    !forecast.length
   ) {
-
-    const first =
-      forecast[0];
-
-
-    probability =
-      first.PSR ||
-      first.psr ||
-      first.rainProbability ||
-      first.rainProb ||
-      null;
-
-  }
-
-
-  if (
-    probability !== null
-  ) {
-
-    document.getElementById(
-      "rainProbability"
-    ).textContent =
-      String(probability)
-        .includes("%")
-        ? String(probability)
-        : `${probability}%`;
-
-  } else {
 
     document.getElementById(
       "rainProbability"
     ).textContent =
       "--";
 
+    return;
+
   }
+
+
+  const first =
+    forecast[0];
+
+
+  const value =
+    first.PSR ||
+    first.psr ||
+    first.rainProbability ||
+    first.rainProb ||
+    null;
+
+
+  document.getElementById(
+    "rainProbability"
+  ).textContent =
+    value !== null
+      ? String(value)
+      : "--";
+
+}
+
+
+/* =========================================================
+   WARNINGS
+========================================================= */
+
+function renderWarnings(
+  data
+) {
+
+  /*
+    HKO warnsum 的每個 key
+    代表一種現時警告。
+
+    CANCEL 不視為現行警告。
+  */
+
+
+  const warnings = [];
+
+
+  if (
+    data &&
+    typeof data === "object"
+  ) {
+
+    Object.keys(data)
+      .forEach(
+        key => {
+
+          const item =
+            data[key];
+
+
+          if (
+            !item ||
+            typeof item !==
+            "object"
+          ) {
+
+            return;
+
+          }
+
+
+          const action =
+            String(
+              item.actionCode || ""
+            ).toUpperCase();
+
+
+          const code =
+            String(
+              item.code || key
+            ).toUpperCase();
+
+
+          if (
+            action === "CANCEL" ||
+            code === "CANCEL"
+          ) {
+
+            return;
+
+          }
+
+
+          if (
+            item.name
+          ) {
+
+            warnings.push(
+              item
+            );
+
+          }
+
+        }
+      );
+
+  }
+
+
+  /*
+    去除重複
+  */
+
+  const unique =
+    [];
+
+
+  const seen =
+    new Set();
+
+
+  warnings.forEach(
+    item => {
+
+      const key =
+        item.code ||
+        item.name;
+
+
+      if (
+        !seen.has(key)
+      ) {
+
+        seen.add(key);
+
+        unique.push(
+          item
+        );
+
+      }
+
+    }
+  );
+
+
+  if (
+    !unique.length
+  ) {
+
+    warningBar.className =
+      "warning-bar";
+
+    warningText.textContent =
+      "";
+
+    return;
+
+  }
+
+
+  /*
+    排序：
+    熱帶氣旋／暴雨／雷暴等較重要的先。
+  */
+
+  unique.sort(
+    (a, b) =>
+      warningPriority(
+        b
+      ) -
+      warningPriority(
+        a
+      )
+  );
+
+
+  const names =
+    unique.map(
+      item =>
+        item.name
+    );
+
+
+  warningText.textContent =
+    names.join(
+      "　"
+    );
+
+
+  warningBar.className =
+    "warning-bar active";
+
+
+  const highest =
+    Math.max(
+      ...unique.map(
+        item =>
+          warningPriority(
+            item
+          )
+      )
+    );
+
+
+  if (
+    highest >= 90
+  ) {
+
+    warningBar.className =
+      "warning-bar active warning-extreme";
+
+    warningIcon.textContent =
+      "🚨";
+
+  } else if (
+    highest >= 60
+  ) {
+
+    warningBar.className =
+      "warning-bar active warning-high";
+
+    warningIcon.textContent =
+      "⚠️";
+
+  } else {
+
+    warningBar.className =
+      "warning-bar active warning-normal";
+
+    warningIcon.textContent =
+      "⚠️";
+
+  }
+
+}
+
+
+function warningPriority(
+  item
+) {
+
+  const code =
+    String(
+      item.code || ""
+    ).toUpperCase();
+
+
+  /*
+    只用於 Dashboard 顯示次序，
+    不是 HKO 官方嚴重程度評級。
+  */
+
+
+  if (
+    code === "TC10"
+  ) {
+
+    return 100;
+
+  }
+
+
+  if (
+    code === "TC9"
+  ) {
+
+    return 95;
+
+  }
+
+
+  if (
+    code.includes("TC8")
+  ) {
+
+    return 90;
+
+  }
+
+
+  if (
+    code === "WRAINB"
+  ) {
+
+    return 88;
+
+  }
+
+
+  if (
+    code === "WRAINR"
+  ) {
+
+    return 80;
+
+  }
+
+
+  if (
+    code === "TWS" ||
+    code === "WTS"
+  ) {
+
+    return 65;
+
+  }
+
+
+  if (
+    code === "WMSGNL"
+  ) {
+
+    return 55;
+
+  }
+
+
+  if (
+    code === "WHOT" ||
+    code === "WCOLD"
+  ) {
+
+    return 45;
+
+  }
+
+
+  return 40;
 
 }
 
@@ -3112,9 +4045,12 @@ async function loadAQHI() {
       element.textContent =
         String(value);
 
+
       element.className =
         "weather-value " +
-        aqhiClass(value);
+        aqhiClass(
+          value
+        );
 
     } else {
 
@@ -3126,7 +4062,9 @@ async function loadAQHI() {
 
     }
 
-  } catch (error) {
+  } catch (
+    error
+  ) {
 
     console.error(
       "AQHI error:",
@@ -3138,7 +4076,9 @@ async function loadAQHI() {
 }
 
 
-function findAQHIValue(data) {
+function findAQHIValue(
+  data
+) {
 
   let list = [];
 
@@ -3177,7 +4117,7 @@ function findAQHIValue(data) {
   }
 
 
-  let north =
+  const north =
     list.find(
       item => {
 
@@ -3186,9 +4126,14 @@ function findAQHIValue(data) {
             item
           ).toLowerCase();
 
+
         return (
-          text.includes("北區") ||
-          text.includes("north")
+          text.includes(
+            "北區"
+          ) ||
+          text.includes(
+            "north"
+          )
         );
 
       }
@@ -3205,7 +4150,7 @@ function findAQHIValue(data) {
   }
 
 
-  const possibleKeys = [
+  const keys = [
     "aqhi",
     "AQHI",
     "value",
@@ -3214,12 +4159,14 @@ function findAQHIValue(data) {
 
 
   for (
-    const key of possibleKeys
+    const key of keys
   ) {
 
     if (
-      target[key] !== undefined &&
-      target[key] !== null
+      target[key] !==
+      undefined &&
+      target[key] !==
+      null
     ) {
 
       return target[key];
@@ -3234,35 +4181,64 @@ function findAQHIValue(data) {
 }
 
 
-function aqhiClass(value) {
+function aqhiClass(
+  value
+) {
 
   const n =
     Number(
       String(value)
-        .replace(/[^\d.]/g, "")
+        .replace(
+          /[^\d.]/g,
+          ""
+        )
     );
 
 
-  if (Number.isNaN(n)) {
+  if (
+    Number.isNaN(n)
+  ) {
+
     return "";
+
   }
 
 
-  if (n <= 3) {
+  if (
+    n <= 3
+  ) {
+
     return "aqhi-low";
+
   }
 
-  if (n <= 6) {
+
+  if (
+    n <= 6
+  ) {
+
     return "aqhi-moderate";
+
   }
 
-  if (n <= 9) {
+
+  if (
+    n <= 9
+  ) {
+
     return "aqhi-high";
+
   }
 
-  if (n <= 12) {
+
+  if (
+    n <= 12
+  ) {
+
     return "aqhi-very-high";
+
   }
+
 
   return "aqhi-serious";
 
@@ -3270,8 +4246,20 @@ function aqhiClass(value) {
 
 
 /* =========================================================
-   SYNC ALL
+   SYNC
 ========================================================= */
+
+function updateSyncTime() {
+
+  const now =
+    new Date();
+
+
+  syncStatus.textContent =
+    `● ${formatTime(now)} 更新`;
+
+}
+
 
 async function syncAll() {
 
@@ -3295,15 +4283,14 @@ async function syncAll() {
   ]);
 
 
+  updateSyncTime();
+
+
   syncButton.textContent =
     "↻ 同步";
 
 }
 
-
-/* =========================================================
-   MANUAL SYNC
-========================================================= */
 
 syncButton.addEventListener(
   "click",
@@ -3318,6 +4305,64 @@ syncButton.addEventListener(
       loadAQHI()
 
     ]);
+
+  }
+);
+
+
+/* =========================================================
+   WORK OFF MODE
+========================================================= */
+
+workButton.addEventListener(
+  "click",
+  () => {
+
+    workOff =
+      true;
+
+
+    dashboard.style.display =
+      "none";
+
+
+    workOffMessage.className =
+      "work-off active";
+
+
+    workButton.style.display =
+      "none";
+
+
+    continueButton.className =
+      "header-button continue-button active";
+
+  }
+);
+
+
+continueButton.addEventListener(
+  "click",
+  () => {
+
+    workOff =
+      false;
+
+
+    dashboard.style.display =
+      "grid";
+
+
+    workOffMessage.className =
+      "work-off";
+
+
+    workButton.style.display =
+      "block";
+
+
+    continueButton.className =
+      "header-button continue-button";
 
   }
 );
@@ -3346,7 +4391,9 @@ fullscreenButton.addEventListener(
 
       }
 
-    } catch (error) {
+    } catch (
+      error
+    ) {
 
       console.error(
         "Fullscreen error:",
@@ -3363,14 +4410,33 @@ fullscreenButton.addEventListener(
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value) {
+function escapeHtml(
+  value
+) {
 
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+  return String(
+    value
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
@@ -3379,29 +4445,15 @@ function escapeHtml(value) {
    AUTO REFRESH
 ========================================================= */
 
-/*
-  Tasks：
-  每 5 秒
-
-  Calendar：
-  每 60 秒
-
-  Email：
-  每 60 秒
-
-  Weather：
-  每 10 分鐘
-
-  AQHI：
-  每 10 分鐘
-*/
-
-
 setInterval(
   () => {
 
-    if (accessToken) {
+    if (
+      accessToken
+    ) {
+
       syncTasks();
+
     }
 
   },
@@ -3412,8 +4464,12 @@ setInterval(
 setInterval(
   () => {
 
-    if (accessToken) {
+    if (
+      accessToken
+    ) {
+
       syncCalendar();
+
     }
 
   },
@@ -3424,8 +4480,12 @@ setInterval(
 setInterval(
   () => {
 
-    if (accessToken) {
+    if (
+      accessToken
+    ) {
+
       syncMail();
+
     }
 
   },
@@ -3452,7 +4512,6 @@ setInterval(
 loadWeather();
 
 loadAQHI();
-
 
 </script>
 
