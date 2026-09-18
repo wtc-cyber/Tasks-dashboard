@@ -1,25 +1,38 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,
-               maximum-scale=1.0, user-scalable=no">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<meta name="theme-color" content="#121212">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="theme-color"
+      content="#121212">
+
+<meta name="mobile-web-app-capable"
+      content="yes">
+
+<meta name="apple-mobile-web-app-capable"
+      content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style"
+      content="black">
 
 <title>WTC Work Dashboard</title>
 
 <script src="https://accounts.google.com/gsi/client"></script>
 
+
 <style>
 
 /* =========================================================
-   RESET
+   GLOBAL
 ========================================================= */
 
 * {
@@ -30,11 +43,12 @@
 
 html,
 body {
-    margin: 0;
-    padding: 0;
 
     width: 100%;
     height: 100%;
+
+    margin: 0;
+    padding: 0;
 
     overflow: hidden;
 
@@ -50,6 +64,11 @@ body {
         sans-serif;
 }
 
+body {
+    position: fixed;
+    inset: 0;
+}
+
 button {
     font-family: inherit;
 }
@@ -60,11 +79,14 @@ button {
 ========================================================= */
 
 .app {
+
     width: 100%;
-    height: 100vh;
+    height: 100%;
 
     display: flex;
     flex-direction: column;
+
+    overflow: hidden;
 
     background: #121212;
 }
@@ -75,125 +97,163 @@ button {
 ========================================================= */
 
 .header {
-    flex: 0 0 auto;
 
-    padding: 10px 16px 8px;
+    flex: 0 0 78px;
+
+    height: 78px;
+
+    padding:
+        8px
+        14px
+        7px;
 
     background: #121212;
 
-    border-bottom: 1px solid #292929;
+    border-bottom:
+        1px solid #292929;
+
+    overflow: hidden;
 }
 
-.header-row {
+
+/* Header first row */
+
+.header-top {
+
+    height: 34px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
     gap: 12px;
 }
 
 .header-left {
+
     min-width: 0;
 
     display: flex;
+
     align-items: center;
 
     gap: 14px;
 }
 
 .title {
-    font-size: 1.35rem;
+
+    font-size: 1.25rem;
+
     font-weight: 700;
 
     white-space: nowrap;
 }
 
 .clock {
+
     font-size: 1.25rem;
+
     font-weight: 600;
 
     color: #bbbbbb;
 
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric:
+        tabular-nums;
 
     white-space: nowrap;
 }
 
-.header-actions {
+
+/* Header buttons */
+
+.header-buttons {
+
     display: flex;
+
     align-items: center;
 
-    gap: 6px;
+    gap: 5px;
 }
 
 .header-button {
-    min-height: 34px;
 
-    padding: 0 11px;
+    height: 32px;
+
+    padding:
+        0 10px;
 
     border: 0;
+
     border-radius: 8px;
 
     background: #292929;
+
     color: #ffffff;
 
-    font-size: 0.78rem;
+    font-size: 0.76rem;
 
     cursor: pointer;
 }
 
 .header-button:active {
+
     background: #3a3a3a;
 }
 
 .logout-button {
+
     display: none;
 }
 
 
 /* =========================================================
-   TOP WEATHER BAR
+   WEATHER TOP BAR
 ========================================================= */
 
 .weather-bar {
-    margin-top: 7px;
+
+    height: 25px;
+
+    margin-top: 5px;
 
     display: flex;
+
     align-items: center;
 
-    gap: 18px;
+    gap: 17px;
+
+    overflow: hidden;
 
     white-space: nowrap;
-
-    overflow-x: auto;
-
-    scrollbar-width: none;
-}
-
-.weather-bar::-webkit-scrollbar {
-    display: none;
 }
 
 .weather-item {
+
     display: flex;
+
     align-items: center;
 
-    gap: 5px;
+    gap: 4px;
 
-    color: #aaaaaa;
+    color: #999999;
 
-    font-size: 0.82rem;
+    font-size: 0.77rem;
 }
 
 .weather-value {
+
     color: #ffffff;
+
     font-weight: 600;
 }
 
 .weather-status {
-    color: #666666;
 
-    font-size: 0.68rem;
+    color: #555555;
+
+    font-size: 0.65rem;
 }
 
 .aqhi-low {
@@ -222,26 +282,28 @@ button {
 ========================================================= */
 
 .dashboard {
-    flex: 1 1 auto;
+
+    flex: 1 1 0;
 
     min-height: 0;
 
-    padding: 12px;
+    height: 0;
+
+    padding:
+        10px
+        12px
+        12px;
 
     display: grid;
 
-    /*
-       Tasks     46%
-       Weather   24%
-       Email     30%
-    */
-
     grid-template-columns:
-        46fr
+        48fr
         24fr
-        30fr;
+        28fr;
 
-    gap: 12px;
+    gap: 10px;
+
+    overflow: hidden;
 }
 
 
@@ -250,117 +312,143 @@ button {
 ========================================================= */
 
 .panel {
+
     min-width: 0;
     min-height: 0;
 
+    height: 100%;
+
     display: flex;
+
     flex-direction: column;
 
     background: #181818;
 
-    border: 1px solid #282828;
+    border:
+        1px solid #292929;
 
-    border-radius: 14px;
+    border-radius: 12px;
 
     overflow: hidden;
 }
 
 .panel-header {
-    flex: 0 0 auto;
 
-    height: 48px;
+    flex: 0 0 42px;
 
-    padding: 0 14px;
+    height: 42px;
+
+    padding:
+        0 12px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    background: #1c1c1c;
+    background: #1d1d1d;
 
-    border-bottom: 1px solid #292929;
+    border-bottom:
+        1px solid #292929;
 }
 
 .panel-title {
-    font-size: 0.98rem;
+
+    font-size: 0.92rem;
+
     font-weight: 700;
 }
 
 .panel-info {
+
     color: #666666;
 
-    font-size: 0.68rem;
+    font-size: 0.65rem;
 }
 
 
 /* =========================================================
-   TASKS
+   TASK PANEL
 ========================================================= */
 
 .task-scroll {
-    flex: 1 1 auto;
+
+    flex: 1 1 0;
 
     min-height: 0;
 
     overflow-y: auto;
+
     overflow-x: hidden;
 
-    padding: 9px;
+    padding: 8px;
 
     -webkit-overflow-scrolling: touch;
 }
 
 #tasks {
+
     display: flex;
+
     flex-direction: column;
 
-    gap: 8px;
+    gap: 7px;
 }
 
 
 /* Task */
 
 .task {
+
     width: 100%;
 
-    min-height: 64px;
+    min-height: 59px;
 
-    padding: 9px 11px;
+    padding:
+        8px
+        10px;
 
     display: flex;
+
     align-items: center;
 
     background: #222222;
 
-    border-radius: 11px;
+    border-radius: 10px;
 
     transition:
         opacity .25s ease,
-        transform .25s ease,
-        background .15s ease;
+        transform .25s ease;
 }
 
 .task:active {
+
     background: #2b2b2b;
 }
 
 .task.fading {
+
     opacity: 0;
-    transform: translateX(30px);
+
+    transform:
+        translateX(25px);
 }
 
 
-/* Checkbox */
+/* Task checkbox */
 
 .task-checkbox {
+
     flex: 0 0 auto;
 
-    width: 28px;
-    height: 28px;
+    width: 27px;
+    height: 27px;
 
-    margin-right: 12px;
+    margin-right: 11px;
 
-    border: 2px solid #888888;
+    border:
+        2px solid #888888;
 
     border-radius: 50%;
 
@@ -372,40 +460,49 @@ button {
 }
 
 .task-checkbox.done {
+
     border-color: #777777;
+
     background: #777777;
 }
 
 .task-checkbox.done::after {
+
     content: "";
 
     position: absolute;
 
-    left: 7px;
+    left: 6px;
     top: 3px;
 
     width: 7px;
-    height: 13px;
+    height: 12px;
 
-    border-right: 2px solid #ffffff;
-    border-bottom: 2px solid #ffffff;
+    border-right:
+        2px solid #ffffff;
 
-    transform: rotate(45deg);
+    border-bottom:
+        2px solid #ffffff;
+
+    transform:
+        rotate(45deg);
 }
 
 
-/* Task content */
+/* Task text */
 
 .task-content {
+
     flex: 1;
 
     min-width: 0;
 }
 
 .task-title {
-    font-size: 1.08rem;
 
-    line-height: 1.35;
+    font-size: 1.02rem;
+
+    line-height: 1.3;
 
     font-weight: 500;
 
@@ -413,11 +510,12 @@ button {
 }
 
 .task-date {
+
     margin-top: 3px;
 
-    font-size: 0.75rem;
+    font-size: 0.70rem;
 
-    color: #888888;
+    color: #777777;
 }
 
 .task-date.overdue {
@@ -433,30 +531,34 @@ button {
 }
 
 
-/* Empty */
+/* Task empty */
 
 .empty {
-    padding: 45px 20px;
+
+    padding:
+        40px
+        15px;
 
     text-align: center;
 
     color: #666666;
 
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+
+    line-height: 1.5;
 }
 
 .task-status {
-    flex: 0 0 auto;
 
-    min-height: 20px;
+    flex: 0 0 19px;
 
-    padding: 4px;
+    height: 19px;
 
     text-align: center;
 
     color: #555555;
 
-    font-size: 0.63rem;
+    font-size: 0.60rem;
 }
 
 
@@ -465,36 +567,44 @@ button {
 ========================================================= */
 
 .weather-scroll {
-    flex: 1 1 auto;
+
+    flex: 1 1 0;
 
     min-height: 0;
 
     overflow-y: auto;
 
-    padding: 14px;
+    padding: 10px;
 }
 
 
-/* Current weather */
+/* Current */
 
 .current-weather {
-    padding: 5px 0 15px;
+
+    padding:
+        4px
+        0
+        10px;
 
     text-align: center;
 
-    border-bottom: 1px solid #292929;
+    border-bottom:
+        1px solid #292929;
 }
 
 .weather-icon-large {
-    font-size: 3rem;
+
+    font-size: 2.5rem;
 
     line-height: 1;
 
-    margin-bottom: 7px;
+    margin-bottom: 5px;
 }
 
 .temperature-large {
-    font-size: 2.65rem;
+
+    font-size: 2.25rem;
 
     line-height: 1;
 
@@ -502,48 +612,55 @@ button {
 }
 
 .weather-description {
-    margin-top: 7px;
 
-    color: #aaaaaa;
+    margin-top: 5px;
 
-    font-size: 0.85rem;
+    color: #999999;
+
+    font-size: 0.75rem;
 }
 
 
-/* Weather stats */
+/* Stats */
 
 .weather-stats {
-    margin-top: 12px;
+
+    margin-top: 9px;
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        1fr
+        1fr;
 
-    gap: 7px;
+    gap: 6px;
 }
 
 .weather-stat {
-    padding: 8px;
+
+    padding: 7px;
 
     background: #222222;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
     text-align: center;
 }
 
 .weather-stat-label {
-    color: #777777;
 
-    font-size: 0.63rem;
+    color: #666666;
+
+    font-size: 0.59rem;
 }
 
 .weather-stat-value {
-    margin-top: 3px;
+
+    margin-top: 2px;
 
     color: #ffffff;
 
-    font-size: 0.82rem;
+    font-size: 0.75rem;
 
     font-weight: 600;
 }
@@ -552,64 +669,73 @@ button {
 /* Forecast */
 
 .forecast-heading {
-    margin-top: 15px;
-    margin-bottom: 7px;
 
-    color: #777777;
+    margin-top: 11px;
 
-    font-size: 0.7rem;
+    margin-bottom: 5px;
+
+    color: #666666;
+
+    font-size: 0.64rem;
 
     font-weight: 600;
 }
 
 .forecast-list {
+
     display: flex;
 
     flex-direction: column;
 
-    gap: 5px;
+    gap: 4px;
 }
 
 .forecast-row {
-    min-height: 39px;
 
-    padding: 6px 7px;
+    min-height: 34px;
+
+    padding:
+        5px
+        6px;
 
     display: grid;
 
     grid-template-columns:
-        55px
-        28px
+        45px
+        23px
         minmax(0, 1fr)
-        62px;
+        55px;
 
     align-items: center;
 
-    gap: 5px;
+    gap: 4px;
 
     background: #222222;
 
-    border-radius: 7px;
+    border-radius: 6px;
 }
 
 .forecast-day {
-    color: #aaaaaa;
 
-    font-size: 0.68rem;
+    color: #999999;
+
+    font-size: 0.60rem;
 }
 
 .forecast-icon {
-    font-size: 0.95rem;
+
+    font-size: 0.82rem;
 
     text-align: center;
 }
 
 .forecast-weather {
+
     min-width: 0;
 
     color: #cccccc;
 
-    font-size: 0.68rem;
+    font-size: 0.61rem;
 
     white-space: nowrap;
 
@@ -619,44 +745,51 @@ button {
 }
 
 .forecast-temp {
-    color: #888888;
 
-    font-size: 0.64rem;
+    color: #777777;
+
+    font-size: 0.58rem;
 
     text-align: right;
 }
 
 
 /* =========================================================
-   EMAIL
+   MAIL PANEL
 ========================================================= */
 
 .mail-scroll {
-    flex: 1 1 auto;
+
+    flex: 1 1 0;
 
     min-height: 0;
 
     overflow-y: auto;
 
-    padding: 9px;
+    padding: 8px;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .mail-list {
+
     display: flex;
 
     flex-direction: column;
 
-    gap: 7px;
+    gap: 6px;
 }
 
 .mail-item {
+
     width: 100%;
 
-    padding: 11px;
+    padding:
+        9px;
 
     border: 0;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     background: #222222;
 
@@ -668,30 +801,36 @@ button {
 }
 
 .mail-item:active {
-    background: #2c2c2c;
+
+    background: #2b2b2b;
 }
 
 .mail-item.unread {
-    border-left: 3px solid #ffffff;
 
-    padding-left: 8px;
+    border-left:
+        3px solid #ffffff;
+
+    padding-left: 6px;
 }
 
 .mail-header {
+
     display: flex;
 
     align-items: center;
+
     justify-content: space-between;
 
-    gap: 8px;
+    gap: 7px;
 }
 
 .mail-sender {
-    min-width: 0;
 
     flex: 1;
 
-    font-size: 0.82rem;
+    min-width: 0;
+
+    font-size: 0.76rem;
 
     font-weight: 600;
 
@@ -703,21 +842,23 @@ button {
 }
 
 .mail-time {
+
     flex: 0 0 auto;
 
-    color: #666666;
+    color: #555555;
 
-    font-size: 0.63rem;
+    font-size: 0.59rem;
 }
 
 .mail-subject {
-    margin-top: 5px;
+
+    margin-top: 4px;
 
     color: #dddddd;
 
-    font-size: 0.8rem;
+    font-size: 0.73rem;
 
-    line-height: 1.35;
+    line-height: 1.3;
 
     white-space: nowrap;
 
@@ -727,13 +868,14 @@ button {
 }
 
 .mail-snippet {
-    margin-top: 4px;
 
-    color: #777777;
+    margin-top: 3px;
 
-    font-size: 0.67rem;
+    color: #707070;
 
-    line-height: 1.35;
+    font-size: 0.62rem;
+
+    line-height: 1.3;
 
     white-space: nowrap;
 
@@ -743,23 +885,31 @@ button {
 }
 
 .mail-empty {
-    padding: 50px 15px;
+
+    padding:
+        40px
+        10px;
 
     color: #666666;
 
     text-align: center;
 
-    font-size: 0.85rem;
+    font-size: 0.78rem;
+
+    line-height: 1.5;
 }
 
 .mail-error {
-    padding: 30px 15px;
+
+    padding:
+        30px
+        10px;
 
     color: #777777;
 
     text-align: center;
 
-    font-size: 0.75rem;
+    font-size: 0.70rem;
 
     line-height: 1.6;
 }
@@ -770,6 +920,7 @@ button {
 ========================================================= */
 
 .login-overlay {
+
     position: fixed;
 
     inset: 0;
@@ -777,7 +928,9 @@ button {
     z-index: 1000;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     padding: 20px;
@@ -786,48 +939,55 @@ button {
 }
 
 .login-box {
-    width: min(400px, 100%);
 
-    padding: 30px;
+    width:
+        min(380px, 100%);
+
+    padding: 28px;
 
     background: #1e1e1e;
 
-    border-radius: 18px;
+    border-radius: 17px;
 
     text-align: center;
 }
 
 .login-title {
-    font-size: 1.5rem;
+
+    font-size: 1.4rem;
 
     font-weight: 700;
 }
 
 .login-description {
-    margin-top: 10px;
-    margin-bottom: 24px;
+
+    margin:
+        10px
+        0
+        22px;
 
     color: #999999;
 
-    font-size: 0.88rem;
+    font-size: 0.82rem;
 
     line-height: 1.6;
 }
 
 .login-button {
+
     width: 100%;
 
-    min-height: 50px;
+    min-height: 48px;
 
     border: 0;
 
-    border-radius: 12px;
+    border-radius: 11px;
 
     background: #ffffff;
 
     color: #111111;
 
-    font-size: 1rem;
+    font-size: 0.95rem;
 
     font-weight: 600;
 
@@ -836,76 +996,61 @@ button {
 
 
 /* =========================================================
-   SMALL SCREEN
+   LANDSCAPE SAFETY
 ========================================================= */
 
-@media (max-width: 850px) {
+@media (orientation: landscape) {
 
-    .dashboard {
-        grid-template-columns:
-            45fr
-            25fr
-            30fr;
-    }
+    html,
+    body,
+    .app {
 
-    .task-title {
-        font-size: 0.98rem;
-    }
+        width: 100vw;
 
-    .temperature-large {
-        font-size: 2.3rem;
-    }
+        height: 100vh;
 
-    .forecast-row {
-        grid-template-columns:
-            45px
-            25px
-            minmax(0, 1fr);
-    }
+        max-height: 100vh;
 
-    .forecast-temp {
-        display: none;
+        overflow: hidden;
     }
 }
 
 
 /* =========================================================
-   PORTRAIT FALLBACK
+   VERY WIDE SCREEN
 ========================================================= */
 
-@media (max-width: 650px) {
+@media (min-width: 1100px) {
 
-    html,
-    body {
-        overflow: auto;
-    }
+    .header {
 
-    .app {
-        height: auto;
-        min-height: 100vh;
+        padding-left: 18px;
+        padding-right: 18px;
     }
 
     .dashboard {
-        grid-template-columns: 1fr;
 
-        overflow: visible;
+        padding-left: 14px;
+        padding-right: 14px;
     }
 
-    .panel {
-        min-height: 350px;
+    .task-title {
+
+        font-size: 1.08rem;
     }
 }
 
 </style>
+
 </head>
 
 
 <body>
 
 
-<!-- =========================================================
+<!-- =======================================================
      LOGIN
-========================================================= -->
+======================================================= -->
 
 <div
     id="loginOverlay"
@@ -914,19 +1059,20 @@ button {
     <div class="login-box">
 
         <div class="login-title">
-            工作 Dashboard
+            Work Dashboard
         </div>
 
         <div class="login-description">
-            登入 Google 後，
-            Dashboard 會顯示 Tasks、未讀 Email
-            及天氣資訊。
+            登入 Google 後顯示 Tasks、
+            未讀 Email 及天氣資訊。
         </div>
 
         <button
             id="loginButton"
             class="login-button">
+
             使用 Google 登入
+
         </button>
 
     </div>
@@ -934,20 +1080,22 @@ button {
 </div>
 
 
-<!-- =========================================================
+<!-- =======================================================
      APP
-========================================================= -->
+======================================================= -->
 
 <div class="app">
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          HEADER
-    ====================================================== -->
+    ==================================================== -->
 
     <header class="header">
 
-        <div class="header-row">
+
+        <div class="header-top">
+
 
             <div class="header-left">
 
@@ -964,7 +1112,7 @@ button {
             </div>
 
 
-            <div class="header-actions">
+            <div class="header-buttons">
 
                 <button
                     id="syncButton"
@@ -986,6 +1134,7 @@ button {
 
             </div>
 
+
         </div>
 
 
@@ -993,9 +1142,12 @@ button {
 
         <div class="weather-bar">
 
+
             <div class="weather-item">
 
-                <span>🌡️</span>
+                <span>
+                    🌡️
+                </span>
 
                 <span
                     id="topTemp"
@@ -1023,7 +1175,9 @@ button {
 
             <div class="weather-item">
 
-                <span>💧</span>
+                <span>
+                    💧
+                </span>
 
                 <span
                     id="topHumidity"
@@ -1036,7 +1190,9 @@ button {
 
             <div class="weather-item">
 
-                <span>🌧️</span>
+                <span>
+                    🌧️
+                </span>
 
                 <span
                     id="topRain"
@@ -1049,7 +1205,9 @@ button {
 
             <div class="weather-item">
 
-                <span>🏭</span>
+                <span>
+                    🏭
+                </span>
 
                 <span
                     id="topAQHI"
@@ -1066,14 +1224,15 @@ button {
                 HKO
             </div>
 
+
         </div>
 
     </header>
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          DASHBOARD
-    ====================================================== -->
+    ==================================================== -->
 
     <main class="dashboard">
 
@@ -1083,6 +1242,7 @@ button {
         ================================================== -->
 
         <section class="panel">
+
 
             <div class="panel-header">
 
@@ -1109,12 +1269,14 @@ button {
 
                 </div>
 
+
                 <div
                     id="taskStatus"
                     class="task-status">
                 </div>
 
             </div>
+
 
         </section>
 
@@ -1124,6 +1286,7 @@ button {
         ================================================== -->
 
         <section class="panel">
+
 
             <div class="panel-header">
 
@@ -1168,6 +1331,7 @@ button {
 
                 <div class="weather-stats">
 
+
                     <div class="weather-stat">
 
                         <div class="weather-stat-label">
@@ -1197,6 +1361,7 @@ button {
 
                     </div>
 
+
                 </div>
 
 
@@ -1204,13 +1369,15 @@ button {
                     未來天氣
                 </div>
 
+
                 <div
                     id="forecastList"
                     class="forecast-list">
-
                 </div>
 
+
             </div>
+
 
         </section>
 
@@ -1220,6 +1387,7 @@ button {
         ================================================== -->
 
         <section class="panel">
+
 
             <div class="panel-header">
 
@@ -1250,12 +1418,14 @@ button {
 
             </div>
 
+
         </section>
 
 
     </main>
 
 </div>
+
 
 
 <script>
@@ -1356,17 +1526,21 @@ const fullscreenButton =
 
 function updateClock() {
 
-    const now = new Date();
+    const now =
+        new Date();
+
 
     const h =
         String(
             now.getHours()
         ).padStart(2, "0");
 
+
     const m =
         String(
             now.getMinutes()
         ).padStart(2, "0");
+
 
     document.getElementById(
         "clock"
@@ -1374,7 +1548,9 @@ function updateClock() {
         `${h}:${m}`;
 }
 
+
 updateClock();
+
 
 setInterval(
     updateClock,
@@ -1403,7 +1579,7 @@ function timeString(date) {
 
 
 /* =========================================================
-   TASK DATE
+   DATE
 ========================================================= */
 
 function dateOnly(date) {
@@ -1416,14 +1592,20 @@ function dateOnly(date) {
 }
 
 
+/* =========================================================
+   TASK DATE INFO
+========================================================= */
+
 function taskDateInfo(value) {
 
     if (!value) {
         return null;
     }
 
+
     const date =
         new Date(value);
+
 
     if (
         Number.isNaN(
@@ -1443,6 +1625,7 @@ function taskDateInfo(value) {
     const tomorrow =
         new Date(today);
 
+
     tomorrow.setDate(
         tomorrow.getDate() + 1
     );
@@ -1460,9 +1643,11 @@ function taskDateInfo(value) {
         return {
             text:
                 `逾期 · ${d.getMonth() + 1}/${d.getDate()}`,
+
             type:
                 "overdue"
         };
+
     }
 
 
@@ -1472,9 +1657,13 @@ function taskDateInfo(value) {
     ) {
 
         return {
-            text: "今日",
-            type: "today"
+            text:
+                "今日",
+
+            type:
+                "today"
         };
+
     }
 
 
@@ -1484,23 +1673,30 @@ function taskDateInfo(value) {
     ) {
 
         return {
-            text: "明日",
-            type: "tomorrow"
+            text:
+                "明日",
+
+            type:
+                "tomorrow"
         };
+
     }
 
 
     return {
+
         text:
             `${d.getMonth() + 1}/${d.getDate()}`,
+
         type:
             ""
+
     };
 }
 
 
 /* =========================================================
-   GOOGLE TASKS
+   TASK LIST
 ========================================================= */
 
 async function getTaskList() {
@@ -1518,9 +1714,11 @@ async function getTaskList() {
 
 
     if (!response.ok) {
+
         throw new Error(
-            "Task List error"
+            "Task list error"
         );
+
     }
 
 
@@ -1536,7 +1734,9 @@ async function getTaskList() {
 
 
     if (defaultList) {
+
         return defaultList.id;
+
     }
 
 
@@ -1599,9 +1799,11 @@ async function loadTasks() {
 
 
         if (!response.ok) {
+
             throw new Error(
                 "Tasks error"
             );
+
         }
 
 
@@ -1627,6 +1829,7 @@ async function loadTasks() {
         console.error(
             error
         );
+
 
         document.getElementById(
             "taskStatus"
@@ -1662,6 +1865,7 @@ function sortedTasks() {
                 new Date(a.due) -
                 new Date(b.due)
             );
+
         }
     );
 }
@@ -1838,12 +2042,9 @@ async function completeTask(
     }
 
 
-    /*
-     * 即時 UI
-     */
-
     checkbox.className =
         "task-checkbox done";
+
 
     card.className =
         "task fading";
@@ -1858,28 +2059,36 @@ async function completeTask(
                 `/tasks/` +
                 `${encodeURIComponent(task.id)}`,
                 {
-                    method: "PATCH",
+
+                    method:
+                        "PATCH",
 
                     headers: {
+
                         Authorization:
                             `Bearer ${accessToken}`,
 
                         "Content-Type":
                             "application/json"
+
                     },
 
-                    body: JSON.stringify({
-                        status:
-                            "completed"
-                    })
+                    body:
+                        JSON.stringify({
+                            status:
+                                "completed"
+                        })
+
                 }
             );
 
 
         if (!response.ok) {
+
             throw new Error(
-                "Complete task failed"
+                "Complete failed"
             );
+
         }
 
 
@@ -1891,6 +2100,7 @@ async function completeTask(
                         item =>
                             item.id !== task.id
                     );
+
 
                 renderTasks();
 
@@ -1908,6 +2118,7 @@ async function completeTask(
 
         checkbox.className =
             "task-checkbox";
+
 
         card.className =
             "task";
@@ -1931,7 +2142,7 @@ async function loadMail() {
 
         const url =
             `${GMAIL_API}/users/me/messages` +
-            `?maxResults=6` +
+            `?maxResults=8` +
             `&q=${encodeURIComponent(
                 "in:inbox is:unread"
             )}`;
@@ -1989,7 +2200,8 @@ async function loadMail() {
 
         mails =
             result.filter(
-                item => item !== null
+                item =>
+                    item !== null
             );
 
 
@@ -2172,6 +2384,7 @@ function renderMail() {
                     "button"
                 );
 
+
             item.className =
                 "mail-item unread";
 
@@ -2180,6 +2393,7 @@ function renderMail() {
                 document.createElement(
                     "div"
                 );
+
 
             header.className =
                 "mail-header";
@@ -2190,8 +2404,10 @@ function renderMail() {
                     "div"
                 );
 
+
             sender.className =
                 "mail-sender";
+
 
             sender.textContent =
                 mail.sender;
@@ -2202,8 +2418,10 @@ function renderMail() {
                     "div"
                 );
 
+
             time.className =
                 "mail-time";
+
 
             time.textContent =
                 mailTime(
@@ -2227,8 +2445,10 @@ function renderMail() {
                     "div"
                 );
 
+
             subject.className =
                 "mail-subject";
+
 
             subject.textContent =
                 mail.subject;
@@ -2239,8 +2459,10 @@ function renderMail() {
                     "div"
                 );
 
+
             snippet.className =
                 "mail-snippet";
+
 
             snippet.textContent =
                 mail.snippet;
@@ -2310,7 +2532,7 @@ function mailTime(date) {
 
 
 /* =========================================================
-   WEATHER
+   HKO WEATHER
 ========================================================= */
 
 async function loadWeather() {
@@ -2319,12 +2541,15 @@ async function loadWeather() {
 
         const results =
             await Promise.all([
+
                 fetch(
                     `${HKO_API}?dataType=rhrread&lang=tc`
                 ),
+
                 fetch(
                     `${HKO_API}?dataType=fnd&lang=tc`
                 )
+
             ]);
 
 
@@ -2332,9 +2557,11 @@ async function loadWeather() {
             !results[0].ok ||
             !results[1].ok
         ) {
+
             throw new Error(
                 "HKO error"
             );
+
         }
 
 
@@ -2355,6 +2582,7 @@ async function loadWeather() {
             "Weather:",
             error
         );
+
 
         document.getElementById(
             "weatherStatus"
@@ -2463,14 +2691,7 @@ function weatherDescription(data) {
         62: "雷雨",
         63: "有雨",
         64: "有驟雨",
-        65: "雷雨",
-
-        70: "霧",
-        71: "薄霧",
-
-        80: "熱帶氣旋",
-        81: "暴雨",
-        82: "雷暴"
+        65: "雷雨"
 
     };
 
@@ -2521,7 +2742,6 @@ function renderWeather() {
 
         temp =
             `${item.value}°C`;
-
     }
 
 
@@ -2536,7 +2756,6 @@ function renderWeather() {
 
         humidity =
             `${humidityData[0].value}%`;
-
     }
 
 
@@ -2647,6 +2866,7 @@ function getRainProbability() {
         !Array.isArray(list) ||
         !list.length
     ) {
+
         return "--";
     }
 
@@ -2669,6 +2889,7 @@ function getRainProbability() {
         text.includes("High") ||
         text.includes("高")
     ) {
+
         return "較高";
     }
 
@@ -2677,6 +2898,7 @@ function getRainProbability() {
         text.includes("Medium") ||
         text.includes("中")
     ) {
+
         return "中等";
     }
 
@@ -2685,6 +2907,7 @@ function getRainProbability() {
         text.includes("Low") ||
         text.includes("低")
     ) {
+
         return "較低";
     }
 
@@ -2730,6 +2953,7 @@ function renderForecast() {
                         "div"
                     );
 
+
                 row.className =
                     "forecast-row";
 
@@ -2739,8 +2963,10 @@ function renderForecast() {
                         "div"
                     );
 
+
                 day.className =
                     "forecast-day";
+
 
                 day.textContent =
                     forecastDay(
@@ -2753,8 +2979,10 @@ function renderForecast() {
                         "div"
                     );
 
+
                 icon.className =
                     "forecast-icon";
+
 
                 icon.textContent =
                     weatherIcon(
@@ -2768,8 +2996,10 @@ function renderForecast() {
                         "div"
                     );
 
+
                 weather.className =
                     "forecast-weather";
+
 
                 weather.textContent =
                     item.forecastWeather ||
@@ -2781,8 +3011,10 @@ function renderForecast() {
                         "div"
                     );
 
+
                 temp.className =
                     "forecast-temp";
+
 
                 temp.textContent =
                     forecastTemp(
@@ -2791,8 +3023,11 @@ function renderForecast() {
 
 
                 row.appendChild(day);
+
                 row.appendChild(icon);
+
                 row.appendChild(weather);
+
                 row.appendChild(temp);
 
 
@@ -2804,7 +3039,7 @@ function renderForecast() {
 
 
 /* =========================================================
-   FORECAST DATE
+   FORECAST DAY
 ========================================================= */
 
 function forecastDay(value) {
@@ -2823,10 +3058,12 @@ function forecastDay(value) {
             text.substring(0, 4)
         );
 
+
     const month =
         Number(
             text.substring(4, 6)
         );
+
 
     const day =
         Number(
@@ -2851,6 +3088,7 @@ function forecastDay(value) {
     const tomorrow =
         new Date(today);
 
+
     tomorrow.setDate(
         tomorrow.getDate() + 1
     );
@@ -2860,6 +3098,7 @@ function forecastDay(value) {
         date.getTime() ===
         today.getTime()
     ) {
+
         return "今日";
     }
 
@@ -2868,6 +3107,7 @@ function forecastDay(value) {
         date.getTime() ===
         tomorrow.getTime()
     ) {
+
         return "明日";
     }
 
@@ -2901,6 +3141,7 @@ function forecastTemp(item) {
     const min =
         item.forecastMintemp?.value;
 
+
     const max =
         item.forecastMaxtemp?.value;
 
@@ -2910,7 +3151,9 @@ function forecastTemp(item) {
         max !== undefined
     ) {
 
-        return `${min}°-${max}°`;
+        return (
+            `${min}°-${max}°`
+        );
 
     }
 
@@ -2934,9 +3177,11 @@ async function loadAQHI() {
 
 
         if (!response.ok) {
+
             throw new Error(
                 "AQHI error"
             );
+
         }
 
 
@@ -2958,14 +3203,11 @@ async function loadAQHI() {
             error
         );
 
-        const element =
-            document.getElementById(
-                "topAQHI"
-            );
 
-        element.textContent =
+        document.getElementById(
+            "topAQHI"
+        ).textContent =
             "AQHI --";
-
     }
 }
 
@@ -2992,7 +3234,6 @@ function findAQHI(data) {
             data?.records ||
             data?.results ||
             [];
-
     }
 
 
@@ -3000,10 +3241,6 @@ function findAQHI(data) {
         return null;
     }
 
-
-    /*
-     * 嘗試找北區。
-     */
 
     const north =
         list.find(
@@ -3019,7 +3256,6 @@ function findAQHI(data) {
                     text.includes("北區") ||
                     text.includes("north")
                 );
-
             }
         );
 
@@ -3122,7 +3358,7 @@ function showAQHI(value) {
 
 
 /* =========================================================
-   GOOGLE LOGIN
+   GOOGLE AUTH
 ========================================================= */
 
 function initGoogle() {
@@ -3142,7 +3378,8 @@ function initGoogle() {
 
 
     tokenClient =
-        google.accounts.oauth2.initTokenClient({
+        google.accounts.oauth2
+        .initTokenClient({
 
             client_id:
                 CLIENT_ID,
@@ -3187,12 +3424,11 @@ function initGoogle() {
                 }
 
         });
-
 }
 
 
 /* =========================================================
-   LOGIN BUTTON
+   LOGIN
 ========================================================= */
 
 loginButton.addEventListener(
@@ -3209,9 +3445,10 @@ loginButton.addEventListener(
         }
 
 
-        tokenClient.requestAccessToken({
-            prompt: "consent"
-        });
+        tokenClient
+            .requestAccessToken({
+                prompt: "consent"
+            });
 
     }
 );
@@ -3292,10 +3529,15 @@ syncButton.addEventListener(
 
 
         await Promise.all([
+
             loadTasks(),
+
             loadMail(),
+
             loadWeather(),
+
             loadAQHI()
+
         ]);
 
 
@@ -3320,13 +3562,15 @@ fullscreenButton.addEventListener(
                 !document.fullscreenElement
             ) {
 
-                await document.documentElement
+                await document
+                    .documentElement
                     .requestFullscreen();
 
             }
             else {
 
-                await document.exitFullscreen();
+                await document
+                    .exitFullscreen();
 
             }
 
@@ -3350,10 +3594,15 @@ fullscreenButton.addEventListener(
 async function initialLoad() {
 
     await Promise.all([
+
         loadTasks(),
+
         loadMail(),
+
         loadWeather(),
+
         loadAQHI()
+
     ]);
 
 }
@@ -3370,7 +3619,9 @@ setInterval(
     () => {
 
         if (accessToken) {
+
             loadTasks();
+
         }
 
     },
@@ -3384,7 +3635,9 @@ setInterval(
     () => {
 
         if (accessToken) {
+
             loadMail();
+
         }
 
     },
@@ -3392,7 +3645,7 @@ setInterval(
 );
 
 
-/* Weather / AQHI：10 分鐘 */
+/* Weather + AQHI：10 分鐘 */
 
 setInterval(
     () => {
@@ -3410,19 +3663,40 @@ setInterval(
    START
 ========================================================= */
 
-initGoogle();
-
 
 /*
- * 天氣不需要 Google 登入，
- * 所以開頁面立即載入。
+ * 天氣唔需要登入，
+ * 開頁面立即讀取。
  */
 
 loadWeather();
 
 loadAQHI();
 
+
+/*
+ * Google Identity Services
+ */
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initGoogle
+    );
+
+}
+else {
+
+    initGoogle();
+
+}
+
 </script>
 
 </body>
 </html>
+```
