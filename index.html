@@ -1029,7 +1029,7 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaB
 const HKO_API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 const AQHI_API = "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
-const DATA_SYNC_INTERVAL = 2 * 60 * 1000;      // 每 1 分鐘自動從 GAS 更新
+const DATA_SYNC_INTERVAL = 1 * 60 * 1000;      // 每 1 分鐘自動從 GAS 更新
 const WEATHER_INTERVAL = 5 * 60 * 1000;       // 每 5 分鐘更新天氣
 const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日曆 / 課堂」視圖
 
@@ -1331,7 +1331,7 @@ function renderScheduleDisplay() {
     scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
     renderCalendar(cachedCalendarData);
   } else {
-    scheduleDate.textContent = `📚 今日課堂 | ${formatScheduleDate(today)}`;
+    scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}`;
     renderClassSchedule(cachedClassData);
   }
   setPanelUpdated(scheduleUpdated, currentScheduleMode === "calendar" ? "日曆" : "課堂");
