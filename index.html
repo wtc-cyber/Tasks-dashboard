@@ -1375,8 +1375,32 @@ button {
    CONFIG
 ========================================================= */
 
-const CLIENT_ID =
-  "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
+// 替換成你在 GAS 部署後獲得的 URL
+const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvtFOlq0Tom8Z__WDAbetsH6JR2HnFVEsSXkmaBm_5IhjSPKlt3zHhNSPteY74wUDiwA/exec";
+
+async function syncAllData() {
+  try {
+    console.log("正在從 GAS 獲取最新資料...");
+    const res = await fetch(GAS_API_URL);
+    const data = await res.json();
+    
+    console.log("日曆行程:", data.calendar);
+    console.log("代辦事項:", data.tasks);
+    console.log("未讀電郵:", data.gmail);
+
+    // 渲染你的畫面 HTML (Render functions)
+    renderCalendar(data.calendar);
+    renderTasks(data.tasks);
+    renderGmail(data.gmail);
+
+  } catch (err) {
+    console.error("更新資料失敗:", err);
+  }
+}
+
+// 每 15 分鐘自動刷新一次資料（永遠不會再有授權過期問題！）
+setInterval(syncAllData, 15 * 60 * 1000);
+syncAllData();
 
 const GOOGLE_SCOPE =
   "https://www.googleapis.com/auth/tasks " +
