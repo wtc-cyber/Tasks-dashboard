@@ -975,33 +975,6 @@ button {
   }
 
 }
-/* =========================================================
-   手機版響應式排版 (RWD)
-========================================================= */
-@media (max-width: 768px) {
-  /* 手機螢幕不夠寬時，強制將三欄改為單欄上下排列 */
-  .dashboard {
-    grid-template-columns: 1fr !important;
-    gap: 16px;
-  }
-
-  /* 調整每塊 Panel 在手機上的高度，避免太長 */
-  .panel {
-    max-height: 400px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* 時間與倒數標籤在手機畫面過窄時自動換行 */
-  .schedule-title {
-    flex-wrap: wrap;
-  }
-
-  .countdown-tag {
-    margin-left: 0 !important;
-  }
-}
 </style>
 </head>
 
