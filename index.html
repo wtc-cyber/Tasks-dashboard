@@ -1341,6 +1341,9 @@ const GOOGLE_SCOPE =
   "https://www.googleapis.com/auth/calendar.readonly " +
   "https://www.googleapis.com/auth/gmail.readonly";
 
+// Google Sheet CSV 連結
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaBuir-NFhfq75miYTkRHi_HgoTy1bcmQWKL957yJj1VPKQlQN_5A1sONCTmMu2y3cP6WutcL/pub?output=csv";
+
 const TASKS_API = "https://tasks.googleapis.com/tasks/v1";
 const CALENDAR_API = "https://www.googleapis.com/calendar/v3";
 const GMAIL_API = "https://gmail.googleapis.com/gmail/v1";
@@ -1351,6 +1354,7 @@ const TASK_INTERVAL = 5000;
 const CALENDAR_INTERVAL = 60000;
 const MAIL_INTERVAL = 60000;
 const WEATHER_INTERVAL = 300000;
+const SCHEDULE_SWITCH_INTERVAL = 30000; // 30秒自動切換
 
 
 /* =========================================================
@@ -1361,6 +1365,11 @@ let accessToken = null;
 let tokenClient = null;
 let taskListId = null;
 let workOff = false;
+
+// Schedule 切換狀態 ('calendar' 或 'class')
+let currentScheduleMode = "calendar";
+let cachedCalendarData = [];
+let cachedClassData = [];
 
 
 /* =========================================================
@@ -1392,7 +1401,6 @@ const mailUpdated = document.getElementById("mailUpdated");
 
 const warningBar = document.getElementById("warningBar");
 const warningText = document.getElementById("warningText");
-const warningIcon = document.getElementById("warningIcon");
 
 
 /* =========================================================
@@ -1424,8 +1432,8 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-function setPanelUpdated(element) {
-  element.textContent = `更新 ${formatTime(new Date())}`;
+function setPanelUpdated(element, prefix = "更新") {
+  element.textContent = `${prefix} ${formatTime(new Date())}`;
 }
 
 function startOfToday() {
@@ -1449,6 +1457,31 @@ function formatScheduleDate(date) {
   return `${date.getMonth() + 1}/${date.getDate()}（${weekdays[date.getDay()]}）`;
 }
 
+// 通用 CSV 解析器
+function parseCSV(text) {
+  const lines = text.split(/\r\n|\n/);
+  const result = [];
+  for (let line of lines) {
+    if (!line.trim()) continue;
+    const row = [];
+    let insideQuote = false;
+    let entry = "";
+    for (let char of line) {
+      if (char === '"') {
+        insideQuote = !insideQuote;
+      } else if (char === ',' && !insideQuote) {
+        row.push(entry.trim());
+        entry = "";
+      } else {
+        entry += char;
+      }
+    }
+    row.push(entry.trim());
+    result.push(row);
+  }
+  return result;
+}
+
 
 /* =========================================================
    GOOGLE AUTH & PERSISTENCE
@@ -1456,7 +1489,6 @@ function formatScheduleDate(date) {
 
 function saveToken(tokenResp) {
   accessToken = tokenResp.access_token;
-  // expires_in 單位為秒，預減 60 秒做緩衝時間
   const expiresAt = Date.now() + ((tokenResp.expires_in || 3600) - 60) * 1000;
   
   localStorage.setItem("google_access_token", accessToken);
@@ -1495,7 +1527,6 @@ function initGoogleAuth() {
     scope: GOOGLE_SCOPE,
     callback: async response => {
       if (response.error) {
-        // 若背景靜默授權失敗，顯示手動登入畫面
         loginOverlay.style.display = "flex";
         return;
       }
@@ -1508,10 +1539,8 @@ function initGoogleAuth() {
     }
   });
 
-  // 1. 嘗試載入 localStorage 有效 Token
   const hasValidToken = loadSavedToken();
 
-  // 2. 若無效則嘗試背景靜默授權 (無彈窗)
   if (!hasValidToken) {
     tokenClient.requestAccessToken({ prompt: "" });
   }
@@ -1719,7 +1748,7 @@ async function syncTasks() {
 
 
 /* =========================================================
-   CALENDAR / SCHEDULE
+   CALENDAR & GOOGLE SHEET CLASS SCHEDULE (DUAL MODE)
 ========================================================= */
 
 async function syncCalendar() {
@@ -1729,8 +1758,6 @@ async function syncCalendar() {
     const dayAfterTomorrow = new Date(tomorrow);
     dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
 
-    scheduleDate.textContent = formatScheduleDate(today);
-
     const params = new URLSearchParams({
       timeMin: today.toISOString(),
       timeMax: dayAfterTomorrow.toISOString(),
@@ -1739,12 +1766,49 @@ async function syncCalendar() {
     });
 
     const data = await googleFetch(`${CALENDAR_API}/calendars/primary/events?${params.toString()}`);
-    renderCalendar(data.items || []);
-    setPanelUpdated(scheduleUpdated);
+    cachedCalendarData = data.items || [];
+    
+    if (currentScheduleMode === "calendar") {
+      renderScheduleDisplay();
+    }
   } catch (error) {
     console.error("Calendar error:", error);
-    scheduleScroll.innerHTML = `<div class="task-error">Schedule 讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
+    if (currentScheduleMode === "calendar") {
+      scheduleScroll.innerHTML = `<div class="task-error">Schedule 讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
+    }
   }
+}
+
+async function syncClassSchedule() {
+  try {
+    const res = await fetch(SHEET_CSV_URL);
+    if (!res.ok) throw new Error("無法讀取 Google Sheet CSV");
+    const text = await res.text();
+    cachedClassData = parseCSV(text);
+
+    if (currentScheduleMode === "class") {
+      renderScheduleDisplay();
+    }
+  } catch (error) {
+    console.error("Class Schedule error:", error);
+    if (currentScheduleMode === "class") {
+      scheduleScroll.innerHTML = `<div class="task-error">課堂表讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
+    }
+  }
+}
+
+// 切換及渲染 Schedule
+function renderScheduleDisplay() {
+  const today = new Date();
+  
+  if (currentScheduleMode === "calendar") {
+    scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
+    renderCalendar(cachedCalendarData);
+  } else {
+    scheduleDate.textContent = `📚 今日課堂 | ${formatScheduleDate(today)}`;
+    renderClassSchedule(cachedClassData);
+  }
+  setPanelUpdated(scheduleUpdated, currentScheduleMode === "calendar" ? "日曆" : "課堂");
 }
 
 function renderCalendar(events) {
@@ -1840,6 +1904,78 @@ function renderCalendar(events) {
 
   renderGroup(todayEvents, "今日");
   renderGroup(tomorrowEvents, "明日");
+}
+
+function renderClassSchedule(rows) {
+  scheduleScroll.innerHTML = "";
+
+  if (!rows || rows.length <= 1) {
+    scheduleScroll.innerHTML = `<div class="schedule-empty">📖 今日無課堂資料</div>`;
+    return;
+  }
+
+  // 自動根據今日星期（日:0, 一:1 ... 六:6）篩選或展示 CSV
+  const weekdaysMap = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+  const todayWeekday = weekdaysMap[new Date().getDay()];
+
+  // 嘗試解析 CSV 內容
+  const headers = rows[0];
+  let todayRows = [];
+
+  // 如果 CSV 有「星期」或「Day」欄位
+  const dayColIndex = headers.findIndex(h => h.includes("星期") || h.toLowerCase().includes("day") || h.includes("日"));
+
+  if (dayColIndex !== -1) {
+    todayRows = rows.slice(1).filter(r => r[dayColIndex] && (r[dayColIndex].includes(todayWeekday) || r[dayColIndex].includes(String(new Date().getDay()))));
+  } else {
+    // 若無特定日期欄位，顯示前 15 行資料
+    todayRows = rows.slice(1, 15);
+  }
+
+  if (!todayRows.length) {
+    // 若今日無匹配，呈現完整課堂清單
+    todayRows = rows.slice(1, 12);
+  }
+
+  todayRows.forEach(row => {
+    const item = document.createElement("div");
+    item.className = "schedule-item";
+
+    const timeText = row[0] || "--:--";
+    const titleText = row[1] || "(未指定科目)";
+    const locText = row[2] ? `📍 ${row[2]}` : "";
+
+    const timeDiv = document.createElement("div");
+    timeDiv.className = "schedule-time";
+    timeDiv.textContent = timeText;
+
+    const lineDiv = document.createElement("div");
+    lineDiv.className = "schedule-line";
+    const dot = document.createElement("div");
+    dot.className = "schedule-dot";
+    lineDiv.appendChild(dot);
+
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "schedule-info";
+
+    const titleDiv = document.createElement("div");
+    titleDiv.className = "schedule-title";
+    titleDiv.textContent = titleText;
+    infoDiv.appendChild(titleDiv);
+
+    if (locText) {
+      const locDiv = document.createElement("div");
+      locDiv.className = "schedule-location";
+      locDiv.textContent = locText;
+      infoDiv.appendChild(locDiv);
+    }
+
+    item.appendChild(timeDiv);
+    item.appendChild(lineDiv);
+    item.appendChild(infoDiv);
+
+    scheduleScroll.appendChild(item);
+  });
 }
 
 
@@ -1978,7 +2114,7 @@ async function syncWeather() {
       }
     }
   } catch (e) {
-    // Silently continue if AQHI fails
+    // Silently continue
   }
 }
 
@@ -2003,10 +2139,10 @@ function getWeatherText(code) {
 ========================================================= */
 
 async function syncAll() {
-  if (!accessToken) return;
   await Promise.allSettled([
     syncTasks(),
     syncCalendar(),
+    syncClassSchedule(),
     syncMail(),
     syncWeather()
   ]);
@@ -2042,16 +2178,26 @@ fullscreenButton.addEventListener("click", () => {
 
 
 /* =========================================================
-   INTERVAL TIMERS
+   INTERVAL TIMERS & AUTOMATIC SWITCH
 ========================================================= */
 
 setInterval(() => { if (accessToken && !workOff) syncTasks(); }, TASK_INTERVAL);
 setInterval(() => { if (accessToken && !workOff) syncCalendar(); }, CALENDAR_INTERVAL);
+setInterval(() => { if (!workOff) syncClassSchedule(); }, CALENDAR_INTERVAL);
 setInterval(() => { if (accessToken && !workOff) syncMail(); }, MAIL_INTERVAL);
 setInterval(() => { syncWeather(); }, WEATHER_INTERVAL);
 
-// 頁面載入時即時獲取天氣
+// 30 秒自動在 「Google 行程」與「Google Sheet 今日課堂」之間切換
+setInterval(() => {
+  if (!workOff) {
+    currentScheduleMode = (currentScheduleMode === "calendar") ? "class" : "calendar";
+    renderScheduleDisplay();
+  }
+}, SCHEDULE_SWITCH_INTERVAL);
+
+// 初始化加載
 syncWeather();
+syncClassSchedule();
 
 </script>
 </body>
