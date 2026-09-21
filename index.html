@@ -1247,52 +1247,28 @@ function renderTasks(tasks) {
     return;
   }
 
-  tasks.forEach(task => {
+  const sorted = [...tasks].sort((a, b) => {
+    if (!a.due && !b.due) return 0;
+    if (!a.due) return 1;
+    if (!b.due) return -1;
+    return new Date(a.due) - new Date(b.due);
+  });
+
+  sorted.forEach(task => {
     const card = document.createElement("div");
     card.className = "task-card";
 
-    const checkbox = document.createElement("div");
+    const checkbox = document.createElement("button");
+    checkbox.type = "button";
     checkbox.className = "task-checkbox";
 
-    // ⬇️ 主要是修改這一段 click 事件 ⬇️
     checkbox.addEventListener("click", () => {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
-
-      // 即時發送請求給 Google，將 Task 標記為完成
-      if (task.id) {
-        fetch(`${GAS_API_URL}?action=completeTask&taskId=${encodeURIComponent(task.id)}`)
-          .then(res => res.json())
-          .then(data => console.log("Task 完成狀態同步:", data))
-          .catch(err => console.error("Task 同步失敗:", err));
-      }
-
       setTimeout(() => {
         if (card.parentNode) card.parentNode.removeChild(card);
       }, 250);
     });
-
-    const info = document.createElement("div");
-    info.className = "task-info";
-
-    const title = document.createElement("div");
-    title.className = "task-title";
-    title.textContent = task.title;
-
-    info.appendChild(title);
-
-    if (task.dueDate) {
-      const due = document.createElement("div");
-      due.className = "task-due";
-      due.textContent = `📅 ${task.dueDate}`;
-      info.appendChild(due);
-    }
-
-    card.appendChild(checkbox);
-    card.appendChild(info);
-    taskScroll.appendChild(card);
-  });
-}
 
     const content = document.createElement("div");
     content.className = "task-content";
