@@ -18,22 +18,43 @@
 <script src="https://accounts.google.com/gsi/client"></script>
 
 <style>
-/* 加大課堂與行程標題字體 */
+/* 調整 Schedule 標題與排版 */
 .schedule-title {
-  font-size: 1.25rem !important; /* 放大字體 */
+  font-size: 1.05rem !important; /* 字體調至適中大小 */
   font-weight: 600 !important;
-  line-height: 1.3;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  line-height: 1.4;
 }
 
-/* 倒數標籤樣式 */
-.countdown-tag {
+/* 節數 (Period) 醒目标籤 */
+.period-badge {
+  background: #3b82f6;
+  color: #ffffff;
   font-size: 0.85rem;
-  font-weight: normal;
-  margin-left: 8px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+
+/* 班別 (Class) 標題 */
+.class-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+/* 倒數時間標籤 */
+.countdown-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
   padding: 2px 6px;
   border-radius: 4px;
   background: rgba(59, 130, 246, 0.2);
   color: #60a5fa;
+  margin-left: auto; /* 自動推至右側或跟隨 */
 }
 
 .schedule-item.now .countdown-tag {
@@ -1956,7 +1977,6 @@ function renderClassSchedule(rows) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  // 1. 今日星期定義
   const todayIdx = now.getDay();
   const dayKeywords = [
     ["sun", "sunday", "星期日", "日"],
@@ -1968,7 +1988,6 @@ function renderClassSchedule(rows) {
     ["sat", "saturday", "星期六", "六"]
   ][todayIdx];
 
-  // 2. 定位「星期」欄位
   let dayColIdx = 0;
   for (let r = 0; r < Math.min(rows.length, 5); r++) {
     for (let c = 0; c < rows[r].length; c++) {
@@ -1980,7 +1999,6 @@ function renderClassSchedule(rows) {
     }
   }
 
-  // 3. 篩選屬於「今天」的課堂
   const todayRows = rows.filter(row => {
     const cellVal = (row[dayColIdx] || "").toLowerCase().trim();
     return dayKeywords.some(kw => cellVal === kw || cellVal.includes(kw));
@@ -2012,7 +2030,7 @@ function renderClassSchedule(rows) {
     const startTimeStr = times[0] || "";
     const endTimeStr = times[1] || "";
 
-    // 4. 完咗就唔再顯示
+    // 完結自動隱藏
     if (endTimeStr) {
       const [eH, eM] = endTimeStr.split(":").map(Number);
       const endTotalMinutes = eH * 60 + eM;
@@ -2021,14 +2039,14 @@ function renderClassSchedule(rows) {
 
     visibleCount++;
 
-    // 計算倒數時間
+    // 倒數計算
     let countdownText = "";
     let isNow = false;
 
     if (startTimeStr) {
       const [sH, sM] = startTimeStr.split(":").map(Number);
       const startMin = sH * 60 + sM;
-      let endMin = startMin + 45; // 若無結束時間預設45分鐘
+      let endMin = startMin + 45;
 
       if (endTimeStr) {
         const [eH, eM] = endTimeStr.split(":").map(Number);
@@ -2038,21 +2056,24 @@ function renderClassSchedule(rows) {
       if (currentMinutes >= startMin && currentMinutes < endMin) {
         isNow = true;
         const remain = endMin - currentMinutes;
-        countdownText = `進行中 (剩 ${remain} 分鐘)`;
+        countdownText = `進行中 (${remain}m)`;
       } else if (currentMinutes < startMin) {
         const diff = startMin - currentMinutes;
         const h = Math.floor(diff / 60);
         const m = diff % 60;
-        countdownText = h > 0 ? `重有 ${h}小時${m}分鐘` : `重有 ${m}分鐘`;
+        countdownText = h > 0 ? `重有 ${h}h ${m}m` : `重有 ${m}m`;
       }
     }
 
-    // 顯示時間與標題
-    let timeDisplay = startTimeStr && endTimeStr ? `${startTimeStr} - ${endTimeStr}` : (startTimeStr || "--:--");
-    const titleText = texts[0] || "(課堂科目)";
-    const locText = texts[1] ? `📍 ${texts[1]}` : "";
+    const timeDisplay = startTimeStr && endTimeStr ? `${startTimeStr} - ${endTimeStr}` : (startTimeStr || "--:--");
 
-    // DOM 節點建立
+    // texts[0] 為 Period (例: 5, 6, CT)
+    // texts[1] 為 Class (例: 4A+4B, NSL)
+    const periodText = texts[0] || "";
+    const classText = texts[1] || "";
+    const extraLoc = texts[2] ? `📍 ${texts[2]}` : "";
+
+    // 建立卡片
     const item = document.createElement("div");
     item.className = "schedule-item" + (isNow ? " now" : "");
 
@@ -2071,8 +2092,29 @@ function renderClassSchedule(rows) {
 
     const titleDiv = document.createElement("div");
     titleDiv.className = "schedule-title";
-    titleDiv.textContent = titleText;
 
+    // Period 藍色小標籤
+    if (periodText) {
+      const pBadge = document.createElement("span");
+      pBadge.className = "period-badge";
+      pBadge.textContent = isNaN(periodText) ? periodText : `第 ${periodText} 節`;
+      titleDiv.appendChild(pBadge);
+    }
+
+    // Class 班別主要標題
+    if (classText) {
+      const cSpan = document.createElement("span");
+      cSpan.className = "class-title";
+      cSpan.textContent = classText;
+      titleDiv.appendChild(cSpan);
+    } else if (!periodText) {
+      const cSpan = document.createElement("span");
+      cSpan.className = "class-title";
+      cSpan.textContent = "(課堂資料)";
+      titleDiv.appendChild(cSpan);
+    }
+
+    // 倒數標籤
     if (countdownText) {
       const tag = document.createElement("span");
       tag.className = "countdown-tag";
@@ -2082,10 +2124,11 @@ function renderClassSchedule(rows) {
 
     infoDiv.appendChild(titleDiv);
 
-    if (locText) {
+    // 若有第 3 欄地點則顯示在次要位置
+    if (extraLoc) {
       const locDiv = document.createElement("div");
       locDiv.className = "schedule-location";
-      locDiv.textContent = locText;
+      locDiv.textContent = extraLoc;
       infoDiv.appendChild(locDiv);
     }
 
@@ -2100,7 +2143,6 @@ function renderClassSchedule(rows) {
     scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日課堂已全部結束</div>`;
   }
 }
-
 
 /* =========================================================
    EMAIL
