@@ -293,23 +293,20 @@ button {
 
 .dashboard {
   flex: 1 1 0;
-
   min-width: 0;
   min-height: 0;
-
   width: 100%;
-
   padding: 10px 12px 12px;
 
   display: grid;
 
+  /* 將 Tasks 改為 15fr (15%)，Schedule 與 Email 各改為 42.5fr (42.5%) */
   grid-template-columns:
-    20fr
-    40fr
-    40fr;
+    15fr
+    42.5fr
+    42.5fr;
 
   gap: 10px;
-
   overflow: hidden;
 }
 
@@ -857,9 +854,9 @@ button {
 
   .dashboard {
     grid-template-columns:
-      44fr
-      36fr
-      20fr;
+      15fr
+      42.5fr
+      42.5fr;
   }
 
   .panel-updated {
@@ -1113,6 +1110,12 @@ function startOfTomorrow() {
   d.setDate(d.getDate() + 1);
   return d;
 }
+   // ➕ 新增這段：計算後天 00:00 的時間
+function startOfDayAfterTomorrow() {
+  const d = startOfToday();
+  d.setDate(d.getDate() + 2);
+  return d;
+}
 
 function formatDateMD(date) {
   return `${date.getMonth() + 1}/${date.getDate()}`;
@@ -1335,7 +1338,9 @@ function renderCalendar(events) {
   }
 
   const now = new Date();
+  const todayStart = startOfToday();
   const tomorrow = startOfTomorrow();
+  const dayAfterTomorrow = startOfDayAfterTomorrow(); // 取得後天開始時間
 
   const todayEvents = [];
   const tomorrowEvents = [];
@@ -1344,17 +1349,20 @@ function renderCalendar(events) {
     const evt = parseEventData(rawEvt);
     if (!evt.start || isNaN(evt.start.getTime())) return;
 
-    if (evt.start < tomorrow) {
+    // 精準判斷：只有屬於「今天」和真正的「明天」才會放進列表
+    if (evt.start >= todayStart && evt.start < tomorrow) {
       todayEvents.push(evt);
-    } else {
+    } else if (evt.start >= tomorrow && evt.start < dayAfterTomorrow) {
       tomorrowEvents.push(evt);
     }
   });
 
   if (!todayEvents.length && !tomorrowEvents.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
+    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日及明日無預定行程</div>`;
     return;
   }
+
+  // 下方其餘程式碼保持不變...
 
   let nextFound = false;
 
