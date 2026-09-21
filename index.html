@@ -18,7 +18,28 @@
 <script src="https://accounts.google.com/gsi/client"></script>
 
 <style>
+/* 加大課堂與行程標題字體 */
+.schedule-title {
+  font-size: 1.25rem !important; /* 放大字體 */
+  font-weight: 600 !important;
+  line-height: 1.3;
+}
 
+/* 倒數標籤樣式 */
+.countdown-tag {
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.schedule-item.now .countdown-tag {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
 /* =========================================================
    GLOBAL
 ========================================================= */
@@ -1851,6 +1872,7 @@ function renderCalendar(events) {
 
       const isAllDay = !evt.start.dateTime;
       let timeText = "";
+      let countdownText = "";
 
       if (isAllDay) {
         timeText = "全天";
@@ -1861,11 +1883,20 @@ function renderCalendar(events) {
 
         if (now >= start && now <= end) {
           item.classList.add("now");
+          const remain = Math.max(1, Math.floor((end - now) / 60000));
+          countdownText = `進行中 (剩 ${remain} 分鐘)`;
         } else if (now > end) {
           item.classList.add("past");
-        } else if (!nextFound && now < start) {
-          item.classList.add("next");
-          nextFound = true;
+        } else if (now < start) {
+          if (!nextFound) {
+            item.classList.add("next");
+            nextFound = true;
+          }
+          const diffMs = start - now;
+          const totalMin = Math.floor(diffMs / 60000);
+          const h = Math.floor(totalMin / 60);
+          const m = totalMin % 60;
+          countdownText = h > 0 ? `重有 ${h}小時${m}分鐘` : `重有 ${m}分鐘`;
         }
       }
 
@@ -1885,6 +1916,14 @@ function renderCalendar(events) {
       const titleDiv = document.createElement("div");
       titleDiv.className = "schedule-title";
       titleDiv.textContent = evt.summary || "(無主題)";
+
+      if (countdownText) {
+        const tag = document.createElement("span");
+        tag.className = "countdown-tag";
+        tag.textContent = countdownText;
+        titleDiv.appendChild(tag);
+      }
+
       infoDiv.appendChild(titleDiv);
 
       if (evt.location) {
@@ -1917,8 +1956,8 @@ function renderClassSchedule(rows) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  // 1. 定義今日星期關鍵字（過濾只顯示今天的課堂）
-  const todayIdx = now.getDay(); // 0:日, 1:一, 2:二, 3:三, 4:四, 5:五, 6:六
+  // 1. 今日星期定義
+  const todayIdx = now.getDay();
   const dayKeywords = [
     ["sun", "sunday", "星期日", "日"],
     ["mon", "monday", "星期一", "一"],
@@ -1929,7 +1968,7 @@ function renderClassSchedule(rows) {
     ["sat", "saturday", "星期六", "六"]
   ][todayIdx];
 
-  // 2. 自動定位「星期」欄位索引
+  // 2. 定位「星期」欄位
   let dayColIdx = 0;
   for (let r = 0; r < Math.min(rows.length, 5); r++) {
     for (let c = 0; c < rows[r].length; c++) {
@@ -1958,9 +1997,8 @@ function renderClassSchedule(rows) {
     const times = [];
     const texts = [];
 
-    // 分離時間與文字欄位
     row.forEach((cell, idx) => {
-      if (idx === dayColIdx) return; // 跳過 Day 欄位
+      if (idx === dayColIdx) return;
       const clean = (cell || "").trim();
       if (!clean) return;
 
@@ -1974,43 +2012,47 @@ function renderClassSchedule(rows) {
     const startTimeStr = times[0] || "";
     const endTimeStr = times[1] || "";
 
-    // 4. 完咗就唔再顯示：比對結束時間，如果過期直接 Skip 不渲染
+    // 4. 完咗就唔再顯示
     if (endTimeStr) {
       const [eH, eM] = endTimeStr.split(":").map(Number);
       const endTotalMinutes = eH * 60 + eM;
-
-      if (currentMinutes >= endTotalMinutes) {
-        return; // 課堂已完結，隱藏
-      }
+      if (currentMinutes >= endTotalMinutes) return;
     }
 
     visibleCount++;
 
-    // 時間顯示格式（例：8:07 - 8:40）
-    let timeDisplay = "--:--";
-    if (startTimeStr && endTimeStr) {
-      timeDisplay = `${startTimeStr} - ${endTimeStr}`;
-    } else if (startTimeStr) {
-      timeDisplay = startTimeStr;
-    }
-
-    // 科目與地點
-    const titleText = texts[0] || "(課堂科目)";
-    const locText = texts[1] ? `📍 ${texts[1]}` : "";
-
-    // 判斷是否正在上課中
+    // 計算倒數時間
+    let countdownText = "";
     let isNow = false;
-    if (startTimeStr && endTimeStr) {
+
+    if (startTimeStr) {
       const [sH, sM] = startTimeStr.split(":").map(Number);
-      const [eH, eM] = endTimeStr.split(":").map(Number);
       const startMin = sH * 60 + sM;
-      const endMin = eH * 60 + eM;
+      let endMin = startMin + 45; // 若無結束時間預設45分鐘
+
+      if (endTimeStr) {
+        const [eH, eM] = endTimeStr.split(":").map(Number);
+        endMin = eH * 60 + eM;
+      }
+
       if (currentMinutes >= startMin && currentMinutes < endMin) {
         isNow = true;
+        const remain = endMin - currentMinutes;
+        countdownText = `進行中 (剩 ${remain} 分鐘)`;
+      } else if (currentMinutes < startMin) {
+        const diff = startMin - currentMinutes;
+        const h = Math.floor(diff / 60);
+        const m = diff % 60;
+        countdownText = h > 0 ? `重有 ${h}小時${m}分鐘` : `重有 ${m}分鐘`;
       }
     }
 
-    // 建立 DOM 卡片
+    // 顯示時間與標題
+    let timeDisplay = startTimeStr && endTimeStr ? `${startTimeStr} - ${endTimeStr}` : (startTimeStr || "--:--");
+    const titleText = texts[0] || "(課堂科目)";
+    const locText = texts[1] ? `📍 ${texts[1]}` : "";
+
+    // DOM 節點建立
     const item = document.createElement("div");
     item.className = "schedule-item" + (isNow ? " now" : "");
 
@@ -2030,6 +2072,14 @@ function renderClassSchedule(rows) {
     const titleDiv = document.createElement("div");
     titleDiv.className = "schedule-title";
     titleDiv.textContent = titleText;
+
+    if (countdownText) {
+      const tag = document.createElement("span");
+      tag.className = "countdown-tag";
+      tag.textContent = countdownText;
+      titleDiv.appendChild(tag);
+    }
+
     infoDiv.appendChild(titleDiv);
 
     if (locText) {
@@ -2046,7 +2096,6 @@ function renderClassSchedule(rows) {
     scheduleScroll.appendChild(item);
   });
 
-  // 如果當天所有課堂都已經完結
   if (visibleCount === 0) {
     scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日課堂已全部結束</div>`;
   }
