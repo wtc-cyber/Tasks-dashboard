@@ -981,38 +981,6 @@ button {
 
 <body>
 
-
-<!-- LOGIN -->
-
-<div
-  id="loginOverlay"
-  class="login-overlay"
->
-
-  <div class="login-box">
-
-    <div class="login-title">
-      WTC Work Dashboard
-    </div>
-
-    <div class="login-description">
-      登入 Google 後即可同步<br>
-      Tasks、Calendar 及未讀 Email
-    </div>
-
-    <button
-      id="loginButton"
-      class="login-button"
-      type="button"
-    >
-      登入 Google
-    </button>
-
-  </div>
-
-</div>
-
-
 <!-- APP -->
 
 <div class="app">
@@ -1376,42 +1344,33 @@ button {
 ========================================================= */
 
 /* =========================================================
-   1. API & 全局變數設定
+   1. API 設定
 ========================================================= */
-// Google Apps Script 免登入中轉站 URL
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvtFOlq0Tom8Z__WDAbetsH6JR2HnFVEsSXkmaBm_5IhjSPKlt3zHhNSPteY74wUDiwA/exec";
-
-// 天文台與空氣質素 API (直接抓取，無需登入)
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaBuir-NFhfq75miYTkRHi_HgoTy1bcmQWKL957yJj1VPKQlQN_5A1sONCTmMu2y3cP6WutcL/pub?output=csv";
 const HKO_API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 const AQHI_API = "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
-// Google Sheet CSV 連結 (課堂表/自訂行程)
-const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaBuir-NFhfq75miYTkRHi_HgoTy1bcmQWKL957yJj1VPKQlQN_5A1sONCTmMu2y3cP6WutcL/pub?output=csv";
-
-// 定時器設定
-const SCHEDULE_SWITCH_INTERVAL = 10000; // 10秒自動切換輪播
-const WEATHER_INTERVAL = 300000;         // 5分鐘更新天氣
-
 /* =========================================================
-   2. 資料同步邏輯 (替代舊的 syncAll)
+   2. 資料同步 (日曆、Tasks、Gmail)
 ========================================================= */
 async function syncAllData() {
   try {
-    console.log("正在從 GAS 獲取 Calendar, Tasks, Gmail...");
+    console.log("正在從 GAS 獲取最新資料...");
     const res = await fetch(GAS_API_URL);
     const data = await res.json();
-    
-    // 渲染畫面 (請確保你的渲染函數名稱與以下一致)
+
+    // 渲染畫面
     if (typeof renderCalendar === "function") renderCalendar(data.calendar || []);
     if (typeof renderTasks === "function") renderTasks(data.tasks || []);
     if (typeof renderGmail === "function") renderGmail(data.gmail || []);
 
   } catch (err) {
-    console.error("更新 GAS 資料失敗:", err);
+    console.error("GAS 資料讀取失敗:", err);
   }
 }
 
-// 首次執行 + 每 15 分鐘自動刷新一次
+// 首次執行 + 每 15 分鐘自動更新
 syncAllData();
 setInterval(syncAllData, 15 * 60 * 1000);
 
@@ -1436,8 +1395,7 @@ let autoRefreshTimer = null;
    DOM
 ========================================================= */
 
-const loginOverlay = document.getElementById("loginOverlay");
-const loginButton = document.getElementById("loginButton");
+
 const logoutButton = document.getElementById("logoutButton");
 const syncButton = document.getElementById("syncButton");
 const workButton = document.getElementById("workButton");
