@@ -1,1780 +1,4468 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
-
+<html lang="zh-Hant">
 <head>
-
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
 <meta name="theme-color" content="#121212">
-
 <meta name="mobile-web-app-capable" content="yes">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
+<title>WTC Work Dashboard</title>
 
-<title>Task Dashboard V2</title>
-
-
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
+<script src="https://accounts.google.com/gsi/client"></script>
 
 <style>
 
-/* ==========================
-   BASE
-========================== */
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-*{
-    box-sizing:border-box;
-    user-select:none;
+* {
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 
-html,body{
+  overflow: hidden;
 
-    margin:0;
-    padding:0;
+  background: #121212;
+  color: #ffffff;
 
-    width:100%;
-    height:100%;
-
-    overflow:hidden;
-
-    background:#121212;
-    color:#eeeeee;
-
-    font-family:
+  font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    "Microsoft JhengHei",
+    "Noto Sans TC",
+    Arial,
     sans-serif;
 }
 
+body {
+  position: fixed;
+  inset: 0;
+}
 
-body{
-
-    position:fixed;
-
+button {
+  font-family: inherit;
 }
 
 
-/* ==========================
+/* =========================================================
    APP
-========================== */
+========================================================= */
 
+.app {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
 
-.app{
+  display: flex;
+  flex-direction: column;
 
-    height:100vh;
-    width:100%;
+  overflow: hidden;
 
-    display:flex;
-    flex-direction:column;
-
+  background: #121212;
 }
 
 
-/* ==========================
+/* =========================================================
    HEADER
-========================== */
+========================================================= */
 
+.header {
+  flex: 0 0 auto;
 
-.header{
+  min-height: 78px;
 
-    height:65px;
+  padding: 8px 14px 7px;
 
-    flex-shrink:0;
+  background: #121212;
 
-    display:flex;
+  border-bottom: 1px solid #292929;
 
-    justify-content:space-between;
+  overflow: hidden;
+}
 
-    align-items:center;
+.header-top {
+  height: 34px;
 
-    padding:8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    background:#181818;
+  gap: 12px;
+}
 
-    border-bottom:1px solid #333;
+.header-left {
+  min-width: 0;
 
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.clock {
+  font-size: 1.25rem;
+  font-weight: 600;
+
+  color: #bbbbbb;
+
+  font-variant-numeric: tabular-nums;
+
+  white-space: nowrap;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.header-button {
+  height: 32px;
+
+  padding: 0 10px;
+
+  border: 0;
+  border-radius: 8px;
+
+  background: #292929;
+  color: #ffffff;
+
+  font-size: 0.75rem;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+}
+
+.header-button:active {
+  background: #3a3a3a;
+}
+
+.logout-button {
+  display: none;
 }
 
 
-.header-left{
+/* =========================================================
+   WEATHER
+========================================================= */
 
-    display:flex;
+.weather-area {
+  margin-top: 5px;
 
-    align-items:center;
+  display: flex;
+  align-items: center;
 
-    gap:15px;
+  min-width: 0;
 
+  overflow: hidden;
+}
+
+.weather-bar {
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 17px;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+}
+
+.weather-item {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  color: #999999;
+
+  font-size: 0.77rem;
+}
+
+.weather-value {
+  color: #ffffff;
+
+  font-weight: 600;
 }
 
 
-.title{
+/* =========================================================
+   WEATHER WARNING
+========================================================= */
 
-    font-size:1.15rem;
+.warning-bar {
+  display: none;
 
-    font-weight:700;
+  flex: 1;
 
+  min-width: 0;
+
+  margin-left: 18px;
+
+  height: 25px;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  color: #ffca5c;
+
+  font-size: 0.72rem;
+
+  font-weight: 600;
+}
+
+.warning-bar.active {
+  display: flex;
+}
+
+.warning-icon {
+  flex: 0 0 auto;
+
+  margin-right: 5px;
+}
+
+.warning-text {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.warning-normal {
+  color: #ffca5c;
+}
+
+.warning-high {
+  color: #ff8a65;
+}
+
+.warning-extreme {
+  color: #ff5f6d;
 }
 
 
-.clock{
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
-    font-size:1.5rem;
+.dashboard {
+  flex: 1 1 0;
 
-    font-weight:700;
+  min-width: 0;
+  min-height: 0;
 
-    line-height:1;
+  width: 100%;
 
+  padding: 10px 12px 12px;
+
+  display: grid;
+
+  grid-template-columns:
+    45fr
+    35fr
+    20fr;
+
+  gap: 10px;
+
+  overflow: hidden;
 }
 
 
-
-.info{
-
-    font-size:.8rem;
-
-    color:#aaa;
-
-}
-
-
-
-
-.header-right{
-
-    display:flex;
-
-    gap:6px;
-
-}
-
-
-
-button{
-
-    background:#252525;
-
-    color:white;
-
-    border:0;
-
-    border-radius:8px;
-
-    padding:8px 12px;
-
-    font-size:.8rem;
-
-}
-
-
-
-button:active{
-
-    transform:scale(.95);
-
-}
-
-
-
-/* ==========================
-   MAIN GRID
-========================== */
-
-
-.dashboard{
-
-
-    flex:1;
-
-    min-height:0;
-
-
-    display:grid;
-
-
-    grid-template-columns:
-
-    35% 45% 20%;
-
-
-    gap:10px;
-
-
-    padding:10px;
-
-
-}
-
-
-
-
-
-/* ==========================
+/* =========================================================
    PANEL
-========================== */
+========================================================= */
 
+.panel {
+  min-width: 0;
+  min-height: 0;
 
-.panel{
+  height: 100%;
 
+  display: flex;
+  flex-direction: column;
 
-    background:#1e1e1e;
+  background: #181818;
 
+  border: 1px solid #292929;
 
-    border-radius:12px;
+  border-radius: 12px;
 
+  overflow: hidden;
+}
 
-    overflow:hidden;
+.panel-header {
+  flex: 0 0 42px;
 
+  height: 42px;
 
-    display:flex;
+  padding: 0 12px;
 
-    flex-direction:column;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
+  background: #1d1d1d;
 
-    min-width:0;
+  border-bottom: 1px solid #292929;
 
+  gap: 10px;
+}
 
+.panel-title {
+  font-size: 0.95rem;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.panel-meta {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+.panel-count {
+  color: #777777;
+
+  font-size: 0.67rem;
+}
+
+.panel-updated {
+  color: #666666;
+
+  font-size: 0.63rem;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-body {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow: hidden;
 }
 
 
+/* =========================================================
+   TASKS
+========================================================= */
 
-.panel-header{
+.task-scroll {
+  height: 100%;
 
+  padding: 7px;
 
-    height:40px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
+  scrollbar-width: thin;
+}
 
-    flex-shrink:0;
+.task-card {
+  width: 100%;
 
+  min-height: 53px;
 
-    display:flex;
+  margin-bottom: 6px;
 
+  padding: 8px 10px;
 
-    justify-content:space-between;
+  display: flex;
+  align-items: center;
 
+  gap: 10px;
 
-    align-items:center;
+  background: #202020;
 
+  border: 1px solid #2b2b2b;
 
-    padding:0 12px;
+  border-radius: 9px;
 
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
 
-    border-bottom:1px solid #333;
+.task-card:last-child {
+  margin-bottom: 0;
+}
 
+.task-card.fading {
+  opacity: 0;
+  transform: translateX(20px);
+}
 
+.task-checkbox {
+  flex: 0 0 27px;
+
+  width: 27px;
+  height: 27px;
+
+  padding: 0;
+
+  border: 2px solid #777777;
+
+  border-radius: 7px;
+
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.task-checkbox.done {
+  background: #777777;
+  border-color: #777777;
+}
+
+.task-content {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.task-title {
+  font-size: 0.92rem;
+
+  line-height: 1.3;
+
+  word-break: break-word;
+}
+
+.task-date {
+  margin-top: 3px;
+
+  font-size: 0.67rem;
+
+  color: #777777;
+}
+
+.task-date.overdue {
+  color: #ff7373;
+}
+
+.task-date.today {
+  color: #81c784;
+}
+
+.task-date.tomorrow {
+  color: #ffca5c;
+}
+
+.task-empty,
+.schedule-empty,
+.mail-empty {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #666666;
+
+  font-size: 0.82rem;
+
+  text-align: center;
+}
+
+.task-error {
+  padding: 20px;
+
+  color: #ff7373;
+
+  font-size: 0.78rem;
+
+  line-height: 1.5;
 }
 
 
+/* =========================================================
+   SCHEDULE
+========================================================= */
 
-.panel-title{
+.schedule-scroll {
+  height: 100%;
 
+  padding: 8px 9px;
 
-    font-weight:700;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    font-size:.95rem;
+  scrollbar-width: thin;
+}
 
+.schedule-day-label {
+  margin: 2px 4px 7px;
+
+  color: #888888;
+
+  font-size: 0.69rem;
+
+  font-weight: 600;
+}
+
+.schedule-item {
+  position: relative;
+
+  min-height: 49px;
+
+  margin-bottom: 5px;
+
+  display: grid;
+
+  grid-template-columns:
+    54px
+    10px
+    1fr;
+
+  align-items: stretch;
+
+  background: #202020;
+
+  border: 1px solid #292929;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+.schedule-time {
+  padding: 10px 5px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  color: #999999;
+
+  font-size: 0.72rem;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-line {
+  position: relative;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.schedule-line::before {
+  content: "";
+
+  width: 2px;
+
+  height: 100%;
+
+  background: #3c3c3c;
+}
+
+.schedule-dot {
+  position: absolute;
+
+  top: 12px;
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #777777;
+}
+
+.schedule-info {
+  min-width: 0;
+
+  padding: 8px 9px 8px 4px;
+}
+
+.schedule-title {
+  font-size: 0.82rem;
+
+  line-height: 1.3;
+
+  word-break: break-word;
+}
+
+.schedule-location {
+  margin-top: 3px;
+
+  color: #666666;
+
+  font-size: 0.63rem;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.schedule-next {
+  margin-top: 4px;
+
+  color: #777777;
+
+  font-size: 0.62rem;
+}
+
+.schedule-item.now {
+  background: #292929;
+
+  border-color: #666666;
+
+  min-height: 58px;
+}
+
+.schedule-item.now .schedule-time {
+  color: #ffffff;
+
+  font-weight: 700;
+
+  font-size: 0.76rem;
+}
+
+.schedule-item.now .schedule-title {
+  font-size: 0.88rem;
+
+  font-weight: 700;
+}
+
+.schedule-item.now .schedule-dot {
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px #444444;
+}
+
+.schedule-item.now .schedule-line::before {
+  background: #666666;
+}
+
+.schedule-item.past {
+  opacity: 0.45;
+}
+
+.schedule-item.next {
+  border-color: #444444;
+}
+
+.schedule-all-day {
+  color: #aaaaaa;
+
+  font-size: 0.68rem;
 }
 
 
+/* =========================================================
+   EMAIL
+========================================================= */
 
-.update-time{
+.mail-scroll {
+  height: 100%;
 
+  padding: 7px;
 
-    font-size:.62rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-    color:#888;
+  scrollbar-width: thin;
+}
 
+.mail-card {
+  width: 100%;
+
+  margin-bottom: 6px;
+
+  padding: 9px 10px;
+
+  background: #202020;
+
+  border: 1px solid #2b2b2b;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+}
+
+.mail-card:last-child {
+  margin-bottom: 0;
+}
+
+.mail-card:active {
+  background: #292929;
+}
+
+.mail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 7px;
+}
+
+.mail-sender {
+  min-width: 0;
+
+  flex: 1;
+
+  color: #ffffff;
+
+  font-size: 0.74rem;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.mail-time {
+  flex: 0 0 auto;
+
+  color: #666666;
+
+  font-size: 0.6rem;
+}
+
+.mail-subject {
+  margin-top: 4px;
+
+  color: #dddddd;
+
+  font-size: 0.76rem;
+
+  font-weight: 600;
+
+  line-height: 1.3;
+
+  word-break: break-word;
+}
+
+.mail-snippet {
+  margin-top: 4px;
+
+  color: #777777;
+
+  font-size: 0.65rem;
+
+  line-height: 1.3;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
 }
 
 
+/* =========================================================
+   WORK OFF
+========================================================= */
 
-.panel-body{
+.work-off {
+  display: none;
 
+  flex: 1 1 auto;
 
-    flex:1;
+  min-height: 0;
 
-    overflow-y:auto;
+  align-items: center;
+  justify-content: center;
 
-    padding:8px;
+  text-align: center;
 
+  padding: 30px;
+}
+
+.work-off.active {
+  display: flex;
+}
+
+.work-off-message {
+  color: #dddddd;
+
+  /*
+    收工後大字
+  */
+  font-size: clamp(
+    1.8rem,
+    4vw,
+    3.2rem
+  );
+
+  line-height: 1.5;
+
+  font-weight: 500;
+
+  letter-spacing: 0.04em;
+}
+
+.continue-button {
+  display: none;
+}
+
+.continue-button.active {
+  display: block;
 }
 
 
+/* =========================================================
+   LOGIN
+========================================================= */
 
+.login-overlay {
+  position: fixed;
 
-.empty{
+  inset: 0;
 
+  z-index: 999;
 
-    height:100%;
+  display: flex;
 
+  align-items: center;
+  justify-content: center;
 
-    display:flex;
+  background: #121212;
+}
 
+.login-box {
+  width: min(360px, 85vw);
 
-    justify-content:center;
+  padding: 25px;
 
+  text-align: center;
 
-    align-items:center;
+  background: #1c1c1c;
 
+  border: 1px solid #303030;
 
-    color:#777;
+  border-radius: 14px;
+}
 
+.login-title {
+  font-size: 1.15rem;
+
+  font-weight: 700;
+}
+
+.login-description {
+  margin-top: 8px;
+
+  color: #888888;
+
+  font-size: 0.76rem;
+
+  line-height: 1.5;
+}
+
+.login-button {
+  margin-top: 18px;
+
+  width: 100%;
+
+  height: 42px;
+
+  border: 0;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #111111;
+
+  font-size: 0.85rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
 }
 
 
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
+@media (max-width: 800px) {
 
+  .title {
+    font-size: 1rem;
+  }
 
-/* ==========================
- TASK
-========================== */
+  .clock {
+    font-size: 1rem;
+  }
 
+  .header-button {
+    padding: 0 7px;
 
-.task-item{
+    font-size: 0.67rem;
+  }
 
+  .dashboard {
+    grid-template-columns:
+      44fr
+      36fr
+      20fr;
+  }
 
-    display:flex;
-
-
-    align-items:center;
-
-
-    gap:12px;
-
-
-    padding:10px;
-
-
-    margin-bottom:8px;
-
-
-    background:#252525;
-
-
-    border-radius:10px;
-
-
-    transition:.25s;
-
+  .panel-updated {
+    font-size: 0.58rem;
+  }
 
 }
-
-
-
-
-.task-check{
-
-
-    width:28px;
-
-    height:28px;
-
-}
-
-
-
-
-.task-title{
-
-
-    font-size:1.05rem;
-
-    line-height:1.3;
-
-}
-
-
-
-
-/* ==========================
- SCHEDULE
-========================== */
-
-
-.schedule-item{
-
-
-    background:#252525;
-
-
-    padding:10px;
-
-
-    border-radius:10px;
-
-
-    margin-bottom:8px;
-
-
-}
-
-
-
-.schedule-item.now{
-
-
-    border:2px solid #888;
-
-
-}
-
-
-
-
-.schedule-item.past{
-
-
-    opacity:.35;
-
-
-}
-
-
-
-
-.schedule-time{
-
-
-    font-size:.75rem;
-
-    color:#aaa;
-
-
-}
-
-
-
-.schedule-main{
-
-
-    font-size:1.15rem;
-
-    font-weight:bold;
-
-    margin-top:4px;
-
-
-}
-
-
-
-.schedule-detail{
-
-
-    margin-top:6px;
-
-
-    font-size:.85rem;
-
-    color:#ccc;
-
-
-}
-
-
-
-
-
-/* ==========================
- EMAIL
-========================== */
-
-
-.email-item{
-
-
-    background:#252525;
-
-
-    border-radius:8px;
-
-
-    padding:8px;
-
-
-    margin-bottom:7px;
-
-
-}
-
-
-
-.email-from{
-
-
-    color:#999;
-
-
-    font-size:.65rem;
-
-
-}
-
-
-
-.email-title{
-
-
-    font-size:.85rem;
-
-
-    margin-top:4px;
-
-
-}
-
-
-
-
-
-/* ==========================
- WORK OFF
-========================== */
-
-
-.workoff{
-
-
-    display:none;
-
-
-    flex:1;
-
-
-    justify-content:center;
-
-
-    align-items:center;
-
-
-    text-align:center;
-
-
-}
-
-
-
-.workoff.active{
-
-
-    display:flex;
-
-
-}
-
-
-
-
-.workoff-title{
-
-
-    font-size:3rem;
-
-
-    font-weight:800;
-
-
-}
-
-
-
-.workoff-message{
-
-
-    margin-top:15px;
-
-
-    font-size:1.2rem;
-
-
-    color:#aaa;
-
-
-}
-
-
-
-/* ==========================
- MOBILE / MATE 10
-========================== */
-
-
-@media(max-width:800px){
-
-.title{
-
-font-size:1rem;
-
-}
-
-button{
-
-padding:6px 8px;
-
-}
-
-
-}
-
-
 
 </style>
-
 </head>
 
 
 <body>
 
 
+<!-- =======================================================
+     LOGIN
+======================================================= -->
+
+<div
+  id="loginOverlay"
+  class="login-overlay"
+>
+
+  <div class="login-box">
+
+    <div class="login-title">
+      WTC Work Dashboard
+    </div>
+
+    <div class="login-description">
+      登入 Google 後即可同步<br>
+      Tasks、Calendar 及未讀 Email
+    </div>
+
+    <button
+      id="loginButton"
+      class="login-button"
+      type="button"
+    >
+      登入 Google
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     APP
+======================================================= -->
+
 <div class="app">
 
 
-<header class="header">
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
 
+  <header class="header">
 
-<div class="header-left">
+    <div class="header-top">
 
+      <div class="header-left">
 
-<div>
+        <div class="title">
+          WTC Work Dashboard
+        </div>
 
+        <div
+          id="clock"
+          class="clock"
+        >
+          --:--
+        </div>
 
-<div class="title">
+      </div>
 
-📋 Task Dashboard V2
 
-</div>
+      <div class="header-buttons">
 
+        <button
+          id="syncButton"
+          class="header-button"
+          type="button"
+        >
+          ↻ 同步
+        </button>
 
-<div class="clock" id="clock">
+        <button
+          id="workButton"
+          class="header-button"
+          type="button"
+        >
+          🌙 收工
+        </button>
 
-00:00
+        <button
+          id="continueButton"
+          class="header-button continue-button"
+          type="button"
+        >
+          ☀️ 繼續工作
+        </button>
 
-</div>
+        <button
+          id="fullscreenButton"
+          class="header-button"
+          type="button"
+        >
+          ⛶
+        </button>
 
+        <button
+          id="logoutButton"
+          class="header-button logout-button"
+          type="button"
+        >
+          登出
+        </button>
 
-</div>
+      </div>
 
+    </div>
 
-<div class="info">
 
+    <!-- WEATHER -->
 
-🌤️ <span id="weather">--</span>
+    <div class="weather-area">
 
-<br>
+      <div class="weather-bar">
 
-AQHI <span id="aqhi">--</span>
+        <div class="weather-item">
 
+          <span>🌡</span>
 
-</div>
+          <span
+            id="weatherTemp"
+            class="weather-value"
+          >
+            --
+          </span>
 
+        </div>
 
-</div>
 
+        <div class="weather-item">
 
+          <span id="weatherIcon">
+            ☁
+          </span>
 
-<div class="header-right">
+          <span
+            id="weatherText"
+            class="weather-value"
+          >
+            天氣讀取中
+          </span>
 
+        </div>
 
-<button id="loginBtn">
 
-登入
+        <div class="weather-item">
 
-</button>
+          <span>💧</span>
 
+          <span
+            id="humidity"
+            class="weather-value"
+          >
+            --
+          </span>
 
-<button id="syncBtn">
+        </div>
 
-↻
 
-</button>
+        <div class="weather-item">
 
+          <span>☔</span>
 
-<button id="fullscreenBtn">
+          <span
+            id="rainProbability"
+            class="weather-value"
+          >
+            --
+          </span>
 
-⛶
+        </div>
 
-</button>
 
+        <div class="weather-item">
 
-<button id="workBtn">
+          <span>AQHI</span>
 
-🌙
+          <span
+            id="aqhi"
+            class="weather-value"
+          >
+            --
+          </span>
 
-</button>
+        </div>
 
+      </div>
 
-<button id="resumeBtn" style="display:none">
 
-☀️
+      <!-- WARNING -->
 
-</button>
+      <div
+        id="warningBar"
+        class="warning-bar"
+      >
 
+        <span
+          id="warningIcon"
+          class="warning-icon"
+        >
+          ⚠️
+        </span>
 
-</div>
+        <span
+          id="warningText"
+          class="warning-text"
+        >
+          --
+        </span>
 
+      </div>
 
-</header>
+    </div>
 
+  </header>
 
 
+  <!-- =====================================================
+       WORK OFF MESSAGE
+  ====================================================== -->
 
+  <div
+    id="workOffMessage"
+    class="work-off"
+  >
 
-<div class="dashboard">
+    <div class="work-off-message">
+      我已收工，今日您辛苦了，祝您有個愉快的晚上。
+    </div>
 
+  </div>
 
 
-<!-- TASK -->
+  <!-- =====================================================
+       DASHBOARD
+  ====================================================== -->
 
-<section class="panel">
+  <main
+    id="dashboard"
+    class="dashboard"
+  >
 
 
-<div class="panel-header">
+    <!-- ===================================================
+         TASKS
+    ==================================================== -->
 
+    <section class="panel">
 
-<div class="panel-title">
+      <div class="panel-header">
 
-✅ Tasks
+        <div class="panel-title">
+          Tasks
+        </div>
 
-</div>
+        <div class="panel-meta">
 
+          <div
+            id="taskCount"
+            class="panel-count"
+          >
+            --
+          </div>
 
-<div class="update-time" id="taskUpdate">
+          <div
+            id="taskUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
 
---
+        </div>
 
-</div>
+      </div>
 
 
-</div>
+      <div class="panel-body">
 
+        <div
+          id="taskScroll"
+          class="task-scroll"
+        >
 
-<div class="panel-body" id="taskList">
+          <div class="task-empty">
+            尚未登入
+          </div>
 
+        </div>
 
-<div class="empty">
+      </div>
 
-等待登入
+    </section>
 
-</div>
 
+    <!-- ===================================================
+         SCHEDULE
+    ==================================================== -->
 
-</div>
+    <section class="panel">
 
+      <div class="panel-header">
 
-</section>
+        <div class="panel-title">
+          今日 Schedule
+        </div>
 
+        <div class="panel-meta">
 
+          <div
+            id="scheduleDate"
+            class="panel-count"
+          >
+            --
+          </div>
 
+          <div
+            id="scheduleUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
 
+        </div>
 
-<!-- SCHEDULE -->
+      </div>
 
 
-<section class="panel">
+      <div class="panel-body">
 
+        <div
+          id="scheduleScroll"
+          class="schedule-scroll"
+        >
 
-<div class="panel-header">
+          <div class="schedule-empty">
+            尚未登入
+          </div>
 
+        </div>
 
-<div class="panel-title">
+      </div>
 
-🏫 Schedule
+    </section>
 
-</div>
 
+    <!-- ===================================================
+         EMAIL
+    ==================================================== -->
 
-<div class="update-time" id="scheduleUpdate">
+    <section class="panel">
 
---
+      <div class="panel-header">
 
-</div>
+        <div class="panel-title">
+          Email
+        </div>
 
+        <div class="panel-meta">
 
-</div>
+          <div
+            id="mailCount"
+            class="panel-count"
+          >
+            未讀
+          </div>
 
+          <div
+            id="mailUpdated"
+            class="panel-updated"
+          >
+            更新 --
+          </div>
 
-<div class="panel-body" id="scheduleList">
+        </div>
 
+      </div>
 
-<div class="empty">
 
-載入課表
+      <div class="panel-body">
 
-</div>
+        <div
+          id="mailScroll"
+          class="mail-scroll"
+        >
 
+          <div class="mail-empty">
+            尚未登入
+          </div>
 
-</div>
+        </div>
 
+      </div>
 
-</section>
+    </section>
 
 
-
-
-
-<!-- EMAIL -->
-
-
-<section class="panel">
-
-
-<div class="panel-header">
-
-
-<div class="panel-title">
-
-✉️ Email
-
-</div>
-
-
-<div class="update-time" id="emailUpdate">
-
---
-
-</div>
-
-
-</div>
-
-
-<div class="panel-body" id="emailList">
-
-
-<div class="empty">
-
-等待資料
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="workoff" id="workoff">
-
-
-<div>
-
-
-<div class="workoff-title">
-
-🌙 已收工
-
-</div>
-
-
-<div class="workoff-message">
-
-今日工作到此為止，祝您有個愉快的晚上。
-
-</div>
-
-
-</div>
-
-
-</div>
-
-
-
-
+  </main>
 
 </div>
 
 
 <script>
 
-/* ==========================
-   GOOGLE CONFIG
-========================== */
-
+/* =========================================================
+   CONFIG
+========================================================= */
 
 const CLIENT_ID =
-"710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
+  "710651032876-n8m8m7g3rhne9f2r3m0b78vkoqh18lhl.apps.googleusercontent.com";
 
 
-const TASK_SCOPE =
-"https://www.googleapis.com/auth/tasks";
+const GOOGLE_SCOPE =
+  "https://www.googleapis.com/auth/tasks " +
+  "https://www.googleapis.com/auth/calendar.readonly " +
+  "https://www.googleapis.com/auth/gmail.readonly";
 
 
-const SCHEDULE_URL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaBuir-NFhfq75miYTkRHi_HgoTy1bcmQWKL957yJj1VPKQlQN_5A1sONCTmMu2y3cP6WutcL/pub?gid=1147875770&single=true&output=csv";
+const TASKS_API =
+  "https://tasks.googleapis.com/tasks/v1";
 
 
-
-let accessToken=null;
-
-let tokenClient=null;
+const CALENDAR_API =
+  "https://www.googleapis.com/calendar/v3";
 
 
+const GMAIL_API =
+  "https://gmail.googleapis.com/gmail/v1";
 
-/* ==========================
-   ELEMENT
-========================== */
 
+const HKO_API =
+  "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
+
+
+const AQHI_API =
+  "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
+
+
+const TASK_INTERVAL =
+  5000;
+
+
+const CALENDAR_INTERVAL =
+  60000;
+
+
+const MAIL_INTERVAL =
+  60000;
+
+
+const WEATHER_INTERVAL =
+  300000;
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let accessToken = null;
+
+let tokenClient = null;
+
+let taskListId = null;
+
+let workOff = false;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const loginOverlay =
+  document.getElementById(
+    "loginOverlay"
+  );
+
+const loginButton =
+  document.getElementById(
+    "loginButton"
+  );
+
+const logoutButton =
+  document.getElementById(
+    "logoutButton"
+  );
+
+const syncButton =
+  document.getElementById(
+    "syncButton"
+  );
+
+const workButton =
+  document.getElementById(
+    "workButton"
+  );
+
+const continueButton =
+  document.getElementById(
+    "continueButton"
+  );
+
+const fullscreenButton =
+  document.getElementById(
+    "fullscreenButton"
+  );
+
+const dashboard =
+  document.getElementById(
+    "dashboard"
+  );
+
+const workOffMessage =
+  document.getElementById(
+    "workOffMessage"
+  );
 
 const clock =
-document.getElementById("clock");
+  document.getElementById(
+    "clock"
+  );
 
 
-const taskList =
-document.getElementById("taskList");
+const taskScroll =
+  document.getElementById(
+    "taskScroll"
+  );
+
+const taskCount =
+  document.getElementById(
+    "taskCount"
+  );
+
+const taskUpdated =
+  document.getElementById(
+    "taskUpdated"
+  );
 
 
-const taskUpdate =
-document.getElementById("taskUpdate");
+const scheduleScroll =
+  document.getElementById(
+    "scheduleScroll"
+  );
+
+const scheduleDate =
+  document.getElementById(
+    "scheduleDate"
+  );
+
+const scheduleUpdated =
+  document.getElementById(
+    "scheduleUpdated"
+  );
 
 
-const scheduleList =
-document.getElementById("scheduleList");
+const mailScroll =
+  document.getElementById(
+    "mailScroll"
+  );
+
+const mailCount =
+  document.getElementById(
+    "mailCount"
+  );
+
+const mailUpdated =
+  document.getElementById(
+    "mailUpdated"
+  );
 
 
-const scheduleUpdate =
-document.getElementById("scheduleUpdate");
+const warningBar =
+  document.getElementById(
+    "warningBar"
+  );
+
+const warningText =
+  document.getElementById(
+    "warningText"
+  );
+
+const warningIcon =
+  document.getElementById(
+    "warningIcon"
+  );
 
 
-const loginBtn =
-document.getElementById("loginBtn");
-
-
-const syncBtn =
-document.getElementById("syncBtn");
-
-
-const fullscreenBtn =
-document.getElementById("fullscreenBtn");
-
-
-const workBtn =
-document.getElementById("workBtn");
-
-
-const resumeBtn =
-document.getElementById("resumeBtn");
-
-
-const workoff =
-document.getElementById("workoff");
-
-
-
-let taskTimer;
-
-
-/* ==========================
+/* =========================================================
    CLOCK
-========================== */
+========================================================= */
 
+function formatTime(date) {
 
-function updateClock(){
+  return (
+    String(
+      date.getHours()
+    ).padStart(2, "0")
+    +
+    ":"
+    +
+    String(
+      date.getMinutes()
+    ).padStart(2, "0")
+  );
 
-const now=new Date();
-
-clock.textContent=
-
-now.toLocaleTimeString(
-"zh-HK",
-{
-hour:"2-digit",
-minute:"2-digit"
 }
-);
+
+
+function updateClock() {
+
+  clock.textContent =
+    formatTime(
+      new Date()
+    );
 
 }
 
-
-setInterval(updateClock,1000);
 
 updateClock();
 
+setInterval(
+  updateClock,
+  1000
+);
 
 
-/* ==========================
-   GOOGLE LOGIN
-========================== */
+/* =========================================================
+   PANEL UPDATE TIME
+========================================================= */
 
+function setPanelUpdated(
+  element
+) {
 
-function initGoogle(){
-
-
-if(!window.google){
-
-setTimeout(initGoogle,500);
-
-return;
-
-}
-
-
-
-tokenClient=
-
-google.accounts.oauth2.initTokenClient({
-
-client_id:CLIENT_ID,
-
-scope:TASK_SCOPE,
-
-
-callback:(response)=>{
-
-
-if(response.error){
-
-console.log(response);
-
-return;
+  element.textContent =
+    `更新 ${formatTime(new Date())}`;
 
 }
 
 
-accessToken=response.access_token;
+/* =========================================================
+   DATE HELPERS
+========================================================= */
 
+function startOfToday() {
 
-loginBtn.textContent="已登入";
+  const d =
+    new Date();
 
+  d.setHours(
+    0,
+    0,
+    0,
+    0
+  );
 
-loadTasks();
-
-
-startTaskSync();
-
-
-}
-
-
-});
-
-
-}
-
-
-
-initGoogle();
-
-
-
-loginBtn.onclick=()=>{
-
-
-if(tokenClient){
-
-tokenClient.requestAccessToken({
-
-prompt:"consent"
-
-});
+  return d;
 
 }
 
 
-};
+function startOfTomorrow() {
+
+  const d =
+    startOfToday();
+
+  d.setDate(
+    d.getDate() + 1
+  );
+
+  return d;
+
+}
 
 
+function formatDateMD(
+  date
+) {
+
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}`
+  );
+
+}
 
 
-/* ==========================
+function formatScheduleDate(
+  date
+) {
+
+  const weekdays = [
+    "日",
+    "一",
+    "二",
+    "三",
+    "四",
+    "五",
+    "六"
+  ];
+
+
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}（` +
+    `${weekdays[date.getDay()]}` +
+    "）"
+  );
+
+}
+
+
+/* =========================================================
+   GOOGLE AUTH
+========================================================= */
+
+function initGoogleAuth() {
+
+  if (
+    !window.google ||
+    !google.accounts ||
+    !google.accounts.oauth2
+  ) {
+
+    console.error(
+      "Google Identity Services 尚未載入"
+    );
+
+    return;
+
+  }
+
+
+  tokenClient =
+    google.accounts.oauth2.initTokenClient({
+
+      client_id:
+        CLIENT_ID,
+
+      scope:
+        GOOGLE_SCOPE,
+
+      callback:
+        async response => {
+
+          if (
+            response.error
+          ) {
+
+            console.error(
+              response
+            );
+
+            alert(
+              "Google 登入失敗：" +
+              response.error
+            );
+
+            return;
+
+          }
+
+
+          accessToken =
+            response.access_token;
+
+
+          loginOverlay.style.display =
+            "none";
+
+
+          logoutButton.style.display =
+            "block";
+
+
+          await syncAll();
+
+        }
+
+    });
+
+}
+
+
+window.addEventListener(
+  "load",
+  initGoogleAuth
+);
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+loginButton.addEventListener(
+  "click",
+  () => {
+
+    if (!tokenClient) {
+
+      alert(
+        "Google 登入元件仍在載入，請稍候。"
+      );
+
+      return;
+
+    }
+
+
+    tokenClient.requestAccessToken({
+      prompt: "consent"
+    });
+
+  }
+);
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+logoutButton.addEventListener(
+  "click",
+  () => {
+
+    if (!accessToken) {
+      return;
+    }
+
+
+    google.accounts.oauth2.revoke(
+      accessToken,
+      () => {
+
+        accessToken =
+          null;
+
+        taskListId =
+          null;
+
+        loginOverlay.style.display =
+          "flex";
+
+        logoutButton.style.display =
+          "none";
+
+
+        taskScroll.innerHTML =
+          `<div class="task-empty">
+             已登出
+           </div>`;
+
+
+        scheduleScroll.innerHTML =
+          `<div class="schedule-empty">
+             已登出
+           </div>`;
+
+
+        mailScroll.innerHTML =
+          `<div class="mail-empty">
+             已登出
+           </div>`;
+
+
+        taskCount.textContent =
+          "--";
+
+        mailCount.textContent =
+          "未讀";
+
+
+        taskUpdated.textContent =
+          "更新 --";
+
+        scheduleUpdated.textContent =
+          "更新 --";
+
+        mailUpdated.textContent =
+          "更新 --";
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================================
    GOOGLE API
-========================== */
+========================================================= */
+
+async function googleFetch(
+  url,
+  options = {}
+) {
+
+  if (!accessToken) {
+
+    throw new Error(
+      "尚未登入 Google"
+    );
+
+  }
 
 
-async function googleFetch(url,options={}){
+  const response =
+    await fetch(
+      url,
+      {
+        ...options,
+
+        headers: {
+          ...(options.headers || {}),
+
+          Authorization:
+            `Bearer ${accessToken}`,
+
+          "Content-Type":
+            "application/json"
+        }
+
+      }
+    );
 
 
-const res=
+  if (
+    response.status === 401
+  ) {
 
-await fetch(url,{
+    accessToken =
+      null;
 
-...options,
+    loginOverlay.style.display =
+      "flex";
 
-headers:{
+    throw new Error(
+      "Google 授權已過期"
+    );
 
-"Authorization":
-
-"Bearer "+accessToken,
-
-
-"Content-Type":
-
-"application/json"
-
-}
-
-});
+  }
 
 
+  if (!response.ok) {
 
-if(res.status===401){
-
-accessToken=null;
-
-loginBtn.textContent="重新登入";
-
-alert("Google 登入已過期");
-
-throw new Error("Token expired");
-
-}
+    const text =
+      await response.text();
 
 
-return res;
+    throw new Error(
+      `${response.status}: ${text}`
+    );
+
+  }
 
 
-}
-
-
-
-/* ==========================
-   TASK LOAD
-========================== */
-
-
-async function loadTasks(){
-
-
-if(!accessToken)return;
-
-
-try{
-
-
-const url=
-
-"https://tasks.googleapis.com/tasks/v1/lists/@default/tasks?showCompleted=false&showDeleted=false&maxResults=100";
-
-
-
-const res=
-
-await googleFetch(url);
-
-
-
-const data=
-
-await res.json();
-
-
-
-renderTasks(data.items||[]);
-
-
-
-taskUpdate.textContent=getTime();
-
-
-
-}catch(e){
-
-console.log(e);
+  return response.json();
 
 }
 
 
-}
+/* =========================================================
+   TASKS
+========================================================= */
+
+async function getDefaultTaskList() {
+
+  if (taskListId) {
+
+    return taskListId;
+
+  }
 
 
+  const data =
+    await googleFetch(
+      `${TASKS_API}/users/@me/lists?maxResults=100`
+    );
 
 
-
-function renderTasks(tasks){
-
-
-taskList.innerHTML="";
+  const lists =
+    data.items || [];
 
 
-
-if(tasks.length===0){
-
-taskList.innerHTML=
-
-`
-<div class="empty">
-沒有待辦事項
-</div>
-`;
-
-return;
-
-}
+  const defaultList =
+    lists.find(
+      item =>
+        item.id === "@default"
+    );
 
 
+  if (defaultList) {
 
-tasks.forEach(task=>{
+    taskListId =
+      defaultList.id;
 
+  } else if (
+    lists.length
+  ) {
 
-const div=
+    taskListId =
+      lists[0].id;
 
-document.createElement("div");
+  } else {
 
+    throw new Error(
+      "找不到 Google Tasks 清單"
+    );
 
-div.className="task-item";
-
-
-
-const box=
-
-document.createElement("input");
-
-
-box.type="checkbox";
-
-box.className="task-check";
+  }
 
 
-box.onclick=()=>{
-
-completeTask(task.id,div);
-
-};
-
-
-
-const title=
-
-document.createElement("div");
-
-
-title.className="task-title";
-
-title.textContent=task.title;
-
-
-
-div.appendChild(box);
-
-div.appendChild(title);
-
-
-taskList.appendChild(div);
-
-
-});
-
+  return taskListId;
 
 }
 
 
+function taskDateInfo(
+  due
+) {
+
+  if (!due) {
+    return null;
+  }
 
 
-async function completeTask(id,element){
+  const date =
+    new Date(due);
 
 
-
-element.style.opacity="0";
-
-
-setTimeout(()=>{
-
-element.remove();
-
-},250);
+  const today =
+    startOfToday();
 
 
+  const tomorrow =
+    startOfTomorrow();
 
-await googleFetch(
 
-"https://tasks.googleapis.com/tasks/v1/lists/@default/tasks/"+id,
+  const dateOnly =
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
 
-{
 
-method:"PATCH",
+  if (
+    dateOnly < today
+  ) {
 
-body:JSON.stringify({
+    return {
+      text: "逾期",
+      className: "overdue"
+    };
 
-status:"completed"
+  }
 
-})
+
+  if (
+    dateOnly.getTime() ===
+    today.getTime()
+  ) {
+
+    return {
+      text: "今日",
+      className: "today"
+    };
+
+  }
+
+
+  if (
+    dateOnly.getTime() ===
+    tomorrow.getTime()
+  ) {
+
+    return {
+      text: "明日",
+      className: "tomorrow"
+    };
+
+  }
+
+
+  return {
+    text:
+      formatDateMD(date),
+
+    className:
+      ""
+  };
 
 }
 
+
+function sortTasks(
+  tasks
+) {
+
+  return [
+    ...tasks
+  ].sort(
+    (a, b) => {
+
+      if (
+        !a.due &&
+        !b.due
+      ) {
+
+        return 0;
+
+      }
+
+
+      if (!a.due) {
+        return 1;
+      }
+
+
+      if (!b.due) {
+        return -1;
+      }
+
+
+      return (
+        new Date(a.due) -
+        new Date(b.due)
+      );
+
+    }
+  );
+
+}
+
+
+function renderTasks(
+  tasks
+) {
+
+  taskScroll.innerHTML =
+    "";
+
+
+  taskCount.textContent =
+    `${tasks.length} 項`;
+
+
+  if (
+    !tasks.length
+  ) {
+
+    taskScroll.innerHTML =
+      `<div class="task-empty">
+         🎉 沒有未完成 Tasks
+       </div>`;
+
+    return;
+
+  }
+
+
+  sortTasks(tasks)
+    .forEach(
+      task => {
+
+        const card =
+          document.createElement(
+            "div"
+          );
+
+        card.className =
+          "task-card";
+
+
+        const checkbox =
+          document.createElement(
+            "button"
+          );
+
+        checkbox.type =
+          "button";
+
+        checkbox.className =
+          "task-checkbox";
+
+
+        checkbox.addEventListener(
+          "click",
+          async () => {
+
+            checkbox.className =
+              "task-checkbox done";
+
+            card.className =
+              "task-card fading";
+
+
+            try {
+
+              await googleFetch(
+                `${TASKS_API}/lists/${encodeURIComponent(taskListId)}/tasks/${encodeURIComponent(task.id)}`,
+                {
+                  method:
+                    "PATCH",
+
+                  body:
+                    JSON.stringify({
+                      status:
+                        "completed"
+                    })
+
+                }
+              );
+
+            } catch (
+              error
+            ) {
+
+              console.error(
+                error
+              );
+
+              await syncTasks();
+
+              return;
+
+            }
+
+
+            setTimeout(
+              () => {
+
+                if (
+                  card.parentNode
+                ) {
+
+                  card.parentNode
+                    .removeChild(
+                      card
+                    );
+
+                }
+
+              },
+              250
+            );
+
+          }
+        );
+
+
+        const content =
+          document.createElement(
+            "div"
+          );
+
+        content.className =
+          "task-content";
+
+
+        const title =
+          document.createElement(
+            "div"
+          );
+
+        title.className =
+          "task-title";
+
+        title.textContent =
+          task.title ||
+          "(無標題)";
+
+
+        const info =
+          taskDateInfo(
+            task.due
+          );
+
+
+        content.appendChild(
+          title
+        );
+
+
+        if (info) {
+
+          const date =
+            document.createElement(
+              "div"
+            );
+
+          date.className =
+            info.className
+              ? `task-date ${info.className}`
+              : "task-date";
+
+          date.textContent =
+            info.text;
+
+          content.appendChild(
+            date
+          );
+
+        }
+
+
+        card.appendChild(
+          checkbox
+        );
+
+        card.appendChild(
+          content
+        );
+
+
+        taskScroll.appendChild(
+          card
+        );
+
+      }
+    );
+
+}
+
+
+async function syncTasks() {
+
+  try {
+
+    const listId =
+      await getDefaultTaskList();
+
+
+    const data =
+      await googleFetch(
+        `${TASKS_API}/lists/${encodeURIComponent(listId)}/tasks?showCompleted=false&showDeleted=false&maxResults=100`
+      );
+
+
+    renderTasks(
+      data.items || []
+    );
+
+
+    /*
+      只有成功讀到資料先更新時間
+    */
+
+    setPanelUpdated(
+      taskUpdated
+    );
+
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Tasks error:",
+      error
+    );
+
+
+    taskScroll.innerHTML =
+      `<div class="task-error">
+         Tasks 讀取失敗<br><br>
+         ${escapeHtml(
+           error.message
+         )}
+       </div>`;
+
+  }
+
+}
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+async function syncCalendar() {
+
+  try {
+
+    const today =
+      startOfToday();
+
+
+    const tomorrow =
+      startOfTomorrow();
+
+
+    const dayAfterTomorrow =
+      new Date(
+        tomorrow
+      );
+
+
+    dayAfterTomorrow.setDate(
+      dayAfterTomorrow.getDate() + 1
+    );
+
+
+    const params =
+      new URLSearchParams();
+
+
+    params.set(
+      "timeMin",
+      today.toISOString()
+    );
+
+
+    params.set(
+      "timeMax",
+      dayAfterTomorrow.toISOString()
+    );
+
+
+    params.set(
+      "showDeleted",
+      "false"
+    );
+
+
+    params.set(
+      "singleEvents",
+      "true"
+    );
+
+
+    params.set(
+      "orderBy",
+      "startTime"
+    );
+
+
+    params.set(
+      "maxResults",
+      "50"
+    );
+
+
+    const data =
+      await googleFetch(
+        `${CALENDAR_API}/calendars/primary/events?${params.toString()}`
+      );
+
+
+    renderSchedule(
+      data.items || []
+    );
+
+
+    setPanelUpdated(
+      scheduleUpdated
+    );
+
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Calendar error:",
+      error
+    );
+
+
+    scheduleScroll.innerHTML =
+      `<div class="schedule-empty">
+         Calendar 讀取失敗<br><br>
+         ${escapeHtml(
+           error.message
+         )}
+       </div>`;
+
+  }
+
+}
+
+
+/* =========================================================
+   CALENDAR HELPERS
+========================================================= */
+
+function eventStart(
+  event
+) {
+
+  if (
+    event.start &&
+    event.start.dateTime
+  ) {
+
+    return new Date(
+      event.start.dateTime
+    );
+
+  }
+
+
+  if (
+    event.start &&
+    event.start.date
+  ) {
+
+    const p =
+      event.start.date.split("-");
+
+
+    return new Date(
+      Number(p[0]),
+      Number(p[1]) - 1,
+      Number(p[2])
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+function eventEnd(
+  event
+) {
+
+  if (
+    event.end &&
+    event.end.dateTime
+  ) {
+
+    return new Date(
+      event.end.dateTime
+    );
+
+  }
+
+
+  if (
+    event.end &&
+    event.end.date
+  ) {
+
+    const p =
+      event.end.date.split("-");
+
+
+    return new Date(
+      Number(p[0]),
+      Number(p[1]) - 1,
+      Number(p[2])
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+function isAllDayEvent(
+  event
+) {
+
+  return Boolean(
+    event.start &&
+    event.start.date
+  );
+
+}
+
+
+function isEventNow(
+  event
+) {
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    return false;
+
+  }
+
+
+  const start =
+    eventStart(event);
+
+  const end =
+    eventEnd(event);
+
+
+  if (!start || !end) {
+    return false;
+  }
+
+
+  const now =
+    new Date();
+
+
+  return (
+    now >= start &&
+    now < end
+  );
+
+}
+
+
+function isEventPast(
+  event
+) {
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    return false;
+
+  }
+
+
+  const end =
+    eventEnd(event);
+
+
+  if (!end) {
+    return false;
+  }
+
+
+  return (
+    new Date() >= end
+  );
+
+}
+
+
+function minutesUntil(
+  date
+) {
+
+  return Math.round(
+    (
+      date.getTime() -
+      Date.now()
+    ) / 60000
+  );
+
+}
+
+
+function countdownText(
+  minutes
+) {
+
+  if (
+    minutes <= 0
+  ) {
+
+    return "";
+
+  }
+
+
+  if (
+    minutes < 60
+  ) {
+
+    return `${minutes} 分鐘後`;
+
+  }
+
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+
+  const mins =
+    minutes % 60;
+
+
+  if (!mins) {
+
+    return `${hours} 小時後`;
+
+  }
+
+
+  return (
+    `${hours} 小時 ${mins} 分鐘後`
+  );
+
+}
+
+
+/* =========================================================
+   RENDER SCHEDULE
+========================================================= */
+
+function renderSchedule(
+  events
+) {
+
+  scheduleScroll.innerHTML =
+    "";
+
+
+  const today =
+    startOfToday();
+
+
+  const tomorrow =
+    startOfTomorrow();
+
+
+  const dayAfterTomorrow =
+    new Date(
+      tomorrow
+    );
+
+
+  dayAfterTomorrow.setDate(
+    dayAfterTomorrow.getDate() + 1
+  );
+
+
+  scheduleDate.textContent =
+    formatScheduleDate(
+      today
+    );
+
+
+  const todayEvents =
+    events.filter(
+      event => {
+
+        const start =
+          eventStart(event);
+
+
+        if (!start) {
+          return false;
+        }
+
+
+        return (
+          start >= today &&
+          start < tomorrow
+        );
+
+      }
+    );
+
+
+  const tomorrowEvents =
+    events.filter(
+      event => {
+
+        const start =
+          eventStart(event);
+
+
+        if (!start) {
+          return false;
+        }
+
+
+        return (
+          start >= tomorrow &&
+          start < dayAfterTomorrow
+        );
+
+      }
+    );
+
+
+  if (
+    todayEvents.length === 0
+  ) {
+
+    scheduleScroll.innerHTML =
+      `<div class="schedule-empty">
+         今日沒有 Calendar 行程
+       </div>`;
+
+  } else {
+
+    const label =
+      document.createElement(
+        "div"
+      );
+
+    label.className =
+      "schedule-day-label";
+
+    label.textContent =
+      `今日 · ${formatScheduleDate(today)}`;
+
+
+    scheduleScroll.appendChild(
+      label
+    );
+
+
+    todayEvents.forEach(
+      (event, index) => {
+
+        scheduleScroll.appendChild(
+          createScheduleItem(
+            event,
+            todayEvents,
+            index
+          )
+        );
+
+      }
+    );
+
+  }
+
+
+  if (
+    tomorrowEvents.length
+  ) {
+
+    const label =
+      document.createElement(
+        "div"
+      );
+
+    label.className =
+      "schedule-day-label";
+
+    label.style.marginTop =
+      "14px";
+
+    label.textContent =
+      `明日 · ${formatScheduleDate(tomorrow)}`;
+
+
+    scheduleScroll.appendChild(
+      label
+    );
+
+
+    tomorrowEvents.forEach(
+      event => {
+
+        scheduleScroll.appendChild(
+          createScheduleItem(
+            event,
+            [],
+            -1
+          )
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CREATE SCHEDULE ITEM
+========================================================= */
+
+function createScheduleItem(
+  event,
+  todayEvents,
+  index
+) {
+
+  const item =
+    document.createElement(
+      "div"
+    );
+
+
+  let className =
+    "schedule-item";
+
+
+  const now =
+    isEventNow(event);
+
+
+  const past =
+    isEventPast(event);
+
+
+  let isNext =
+    false;
+
+
+  if (
+    todayEvents.length
+  ) {
+
+    const nextIndex =
+      todayEvents.findIndex(
+        e => {
+
+          const start =
+            eventStart(e);
+
+
+          return (
+            start &&
+            start > new Date()
+          );
+
+        }
+      );
+
+
+    isNext =
+      index === nextIndex;
+
+  }
+
+
+  if (now) {
+
+    className +=
+      " now";
+
+  } else if (past) {
+
+    className +=
+      " past";
+
+  } else if (isNext) {
+
+    className +=
+      " next";
+
+  }
+
+
+  item.className =
+    className;
+
+
+  const time =
+    document.createElement(
+      "div"
+    );
+
+  time.className =
+    "schedule-time";
+
+
+  if (
+    isAllDayEvent(event)
+  ) {
+
+    time.innerHTML =
+      `<span class="schedule-all-day">
+         全天
+       </span>`;
+
+  } else {
+
+    time.textContent =
+      formatTime(
+        eventStart(event)
+      );
+
+  }
+
+
+  const line =
+    document.createElement(
+      "div"
+    );
+
+  line.className =
+    "schedule-line";
+
+
+  const dot =
+    document.createElement(
+      "div"
+    );
+
+  dot.className =
+    "schedule-dot";
+
+
+  line.appendChild(
+    dot
+  );
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+  info.className =
+    "schedule-info";
+
+
+  const title =
+    document.createElement(
+      "div"
+    );
+
+  title.className =
+    "schedule-title";
+
+  title.textContent =
+    event.summary ||
+    "(無標題)";
+
+
+  info.appendChild(
+    title
+  );
+
+
+  if (
+    event.location
+  ) {
+
+    const location =
+      document.createElement(
+        "div"
+      );
+
+    location.className =
+      "schedule-location";
+
+    location.textContent =
+      event.location;
+
+
+    info.appendChild(
+      location
+    );
+
+  }
+
+
+  if (now) {
+
+    const nowText =
+      document.createElement(
+        "div"
+      );
+
+    nowText.className =
+      "schedule-next";
+
+    nowText.textContent =
+      "● NOW";
+
+
+    info.appendChild(
+      nowText
+    );
+
+  }
+
+
+  if (
+    isNext &&
+    !now &&
+    !isAllDayEvent(event)
+  ) {
+
+    const minutes =
+      minutesUntil(
+        eventStart(event)
+      );
+
+
+    const countdown =
+      countdownText(
+        minutes
+      );
+
+
+    if (countdown) {
+
+      const nextText =
+        document.createElement(
+          "div"
+        );
+
+      nextText.className =
+        "schedule-next";
+
+      nextText.textContent =
+        `→ ${countdown}`;
+
+
+      info.appendChild(
+        nextText
+      );
+
+    }
+
+  }
+
+
+  item.appendChild(
+    time
+  );
+
+  item.appendChild(
+    line
+  );
+
+  item.appendChild(
+    info
+  );
+
+
+  return item;
+
+}
+
+
+/* =========================================================
+   GMAIL
+========================================================= */
+
+async function syncMail() {
+
+  try {
+
+    const params =
+      new URLSearchParams();
+
+
+    params.set(
+      "maxResults",
+      "8"
+    );
+
+
+    params.set(
+      "q",
+      "in:inbox is:unread"
+    );
+
+
+    const data =
+      await googleFetch(
+        `${GMAIL_API}/users/me/messages?${params.toString()}`
+      );
+
+
+    const messages =
+      data.messages || [];
+
+
+    mailCount.textContent =
+      `${messages.length} 封`;
+
+
+    if (
+      !messages.length
+    ) {
+
+      mailScroll.innerHTML =
+        `<div class="mail-empty">
+           🎉 沒有未讀 Email
+         </div>`;
+
+      setPanelUpdated(
+        mailUpdated
+      );
+
+      return;
+
+    }
+
+
+    const details =
+      await Promise.all(
+        messages.map(
+          message =>
+            getMailDetail(
+              message.id
+            )
+        )
+      );
+
+
+    renderMail(
+      details
+    );
+
+
+    setPanelUpdated(
+      mailUpdated
+    );
+
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Gmail error:",
+      error
+    );
+
+
+    mailScroll.innerHTML =
+      `<div class="mail-empty">
+         Email 讀取失敗<br><br>
+         ${escapeHtml(
+           error.message
+         )}
+       </div>`;
+
+  }
+
+}
+
+
+async function getMailDetail(
+  id
+) {
+
+  const url =
+    `${GMAIL_API}/users/me/messages/` +
+    `${encodeURIComponent(id)}` +
+    `?format=metadata` +
+    `&metadataHeaders=From` +
+    `&metadataHeaders=Subject`;
+
+
+  const data =
+    await googleFetch(
+      url
+    );
+
+
+  const headers =
+    data.payload &&
+    data.payload.headers
+      ? data.payload.headers
+      : [];
+
+
+  const from =
+    headers.find(
+      h =>
+        h.name.toLowerCase() ===
+        "from"
+    );
+
+
+  const subject =
+    headers.find(
+      h =>
+        h.name.toLowerCase() ===
+        "subject"
+    );
+
+
+  return {
+
+    id,
+
+    threadId:
+      data.threadId,
+
+    from:
+      from
+        ? from.value
+        : "",
+
+    subject:
+      subject
+        ? subject.value
+        : "(無主旨)",
+
+    snippet:
+      data.snippet || "",
+
+    internalDate:
+      data.internalDate
+        ? Number(
+            data.internalDate
+          )
+        : 0
+
+  };
+
+}
+
+
+function cleanSender(
+  sender
+) {
+
+  if (!sender) {
+    return "";
+  }
+
+
+  const match =
+    sender.match(
+      /^(.+?)\s*<.*>$/
+    );
+
+
+  if (match) {
+
+    return match[1]
+      .replace(
+        /^"|"$/g,
+        ""
+      )
+      .trim();
+
+  }
+
+
+  return sender;
+
+}
+
+
+function formatMailTime(
+  timestamp
+) {
+
+  if (!timestamp) {
+    return "";
+  }
+
+
+  const date =
+    new Date(
+      timestamp
+    );
+
+
+  const now =
+    new Date();
+
+
+  if (
+    date.toDateString() ===
+    now.toDateString()
+  ) {
+
+    return formatTime(
+      date
+    );
+
+  }
+
+
+  return (
+    `${date.getMonth() + 1}/` +
+    `${date.getDate()}`
+  );
+
+}
+
+
+function renderMail(
+  messages
+) {
+
+  mailScroll.innerHTML =
+    "";
+
+
+  messages.forEach(
+    message => {
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className =
+        "mail-card";
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          const threadId =
+            message.threadId ||
+            message.id;
+
+
+          window.open(
+            `https://mail.google.com/mail/u/0/#inbox/${threadId}`,
+            "_blank"
+          );
+
+        }
+      );
+
+
+      const top =
+        document.createElement(
+          "div"
+        );
+
+      top.className =
+        "mail-top";
+
+
+      const sender =
+        document.createElement(
+          "div"
+        );
+
+      sender.className =
+        "mail-sender";
+
+      sender.textContent =
+        cleanSender(
+          message.from
+        );
+
+
+      const time =
+        document.createElement(
+          "div"
+        );
+
+      time.className =
+        "mail-time";
+
+      time.textContent =
+        formatMailTime(
+          message.internalDate
+        );
+
+
+      top.appendChild(
+        sender
+      );
+
+      top.appendChild(
+        time
+      );
+
+
+      const subject =
+        document.createElement(
+          "div"
+        );
+
+      subject.className =
+        "mail-subject";
+
+      subject.textContent =
+        message.subject;
+
+
+      const snippet =
+        document.createElement(
+          "div"
+        );
+
+      snippet.className =
+        "mail-snippet";
+
+      snippet.textContent =
+        message.snippet;
+
+
+      card.appendChild(
+        top
+      );
+
+      card.appendChild(
+        subject
+      );
+
+      card.appendChild(
+        snippet
+      );
+
+
+      mailScroll.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   WEATHER
+========================================================= */
+
+async function loadWeather() {
+
+  try {
+
+    const [
+      currentResponse,
+      forecastResponse,
+      warningResponse
+    ] =
+      await Promise.all([
+
+        fetch(
+          `${HKO_API}?dataType=rhrread&lang=tc`
+        ),
+
+        fetch(
+          `${HKO_API}?dataType=fnd&lang=tc`
+        ),
+
+        fetch(
+          `${HKO_API}?dataType=warnsum&lang=tc`
+        )
+
+      ]);
+
+
+    const current =
+      await currentResponse.json();
+
+
+    const forecast =
+      await forecastResponse.json();
+
+
+    const warnings =
+      await warningResponse.json();
+
+
+    renderCurrentWeather(
+      current
+    );
+
+
+    renderRainProbability(
+      forecast
+    );
+
+
+    renderWarnings(
+      warnings
+    );
+
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Weather error:",
+      error
+    );
+
+  }
+
+}
+
+
+function renderCurrentWeather(
+  data
+) {
+
+  try {
+
+    const temperatureData =
+      data.temperature &&
+      data.temperature.data
+        ? data.temperature.data
+        : [];
+
+
+    const hkoTemp =
+      temperatureData.find(
+        item =>
+          item.place ===
+          "香港天文台"
+      ) ||
+      temperatureData[0];
+
+
+    if (hkoTemp) {
+
+      document.getElementById(
+        "weatherTemp"
+      ).textContent =
+        `${hkoTemp.value}°C`;
+
+    }
+
+
+    const humidityData =
+      data.humidity &&
+      data.humidity.data
+        ? data.humidity.data
+        : [];
+
+
+    if (
+      humidityData[0]
+    ) {
+
+      document.getElementById(
+        "humidity"
+      ).textContent =
+        `${humidityData[0].value}%`;
+
+    }
+
+
+    const icon =
+      data.icon &&
+      data.icon.length
+        ? data.icon[0]
+        : null;
+
+
+    document.getElementById(
+      "weatherIcon"
+    ).textContent =
+      weatherIcon(
+        icon
+      );
+
+
+    document.getElementById(
+      "weatherText"
+    ).textContent =
+      getWeatherText(
+        data
+      );
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Weather parse error:",
+      error
+    );
+
+  }
+
+}
+
+
+function getWeatherText(
+  data
+) {
+
+  if (
+    data.weatherDesc &&
+    data.weatherDesc.length
+  ) {
+
+    return data.weatherDesc[0];
+
+  }
+
+
+  return "天氣";
+
+}
+
+
+function weatherIcon(
+  icon
+) {
+
+  const n =
+    Number(icon);
+
+
+  if (
+    Number.isNaN(n)
+  ) {
+
+    return "☁";
+
+  }
+
+
+  if (
+    n === 50
+  ) {
+
+    return "☀";
+
+  }
+
+
+  if (
+    n >= 60 &&
+    n <= 69
+  ) {
+
+    return "🌧";
+
+  }
+
+
+  if (
+    n >= 70 &&
+    n <= 79
+  ) {
+
+    return "🌦";
+
+  }
+
+
+  if (
+    n >= 80 &&
+    n <= 89
+  ) {
+
+    return "⛈";
+
+  }
+
+
+  return "☁";
+
+}
+
+
+/* =========================================================
+   RAIN
+========================================================= */
+
+function renderRainProbability(
+  data
+) {
+
+  const forecast =
+    data &&
+    data.weatherForecast
+      ? data.weatherForecast
+      : [];
+
+
+  if (
+    !forecast.length
+  ) {
+
+    document.getElementById(
+      "rainProbability"
+    ).textContent =
+      "--";
+
+    return;
+
+  }
+
+
+  const first =
+    forecast[0];
+
+
+  const value =
+    first.PSR ||
+    first.psr ||
+    first.rainProbability ||
+    first.rainProb ||
+    null;
+
+
+  document.getElementById(
+    "rainProbability"
+  ).textContent =
+    value !== null
+      ? String(value)
+      : "--";
+
+}
+
+
+/* =========================================================
+   WEATHER WARNINGS
+========================================================= */
+
+function renderWarnings(
+  data
+) {
+
+  const warnings = [];
+
+
+  if (
+    data &&
+    typeof data === "object"
+  ) {
+
+    Object.keys(data)
+      .forEach(
+        key => {
+
+          const item =
+            data[key];
+
+
+          if (
+            !item ||
+            typeof item !==
+            "object"
+          ) {
+
+            return;
+
+          }
+
+
+          const action =
+            String(
+              item.actionCode || ""
+            ).toUpperCase();
+
+
+          const code =
+            String(
+              item.code || key
+            ).toUpperCase();
+
+
+          if (
+            action === "CANCEL" ||
+            code === "CANCEL"
+          ) {
+
+            return;
+
+          }
+
+
+          if (
+            item.name
+          ) {
+
+            warnings.push(
+              item
+            );
+
+          }
+
+        }
+      );
+
+  }
+
+
+  const unique = [];
+
+  const seen =
+    new Set();
+
+
+  warnings.forEach(
+    item => {
+
+      const key =
+        item.code ||
+        item.name;
+
+
+      if (
+        !seen.has(key)
+      ) {
+
+        seen.add(key);
+
+        unique.push(
+          item
+        );
+
+      }
+
+    }
+  );
+
+
+  if (
+    !unique.length
+  ) {
+
+    warningBar.className =
+      "warning-bar";
+
+    warningText.textContent =
+      "";
+
+    return;
+
+  }
+
+
+  unique.sort(
+    (a, b) =>
+      warningPriority(b) -
+      warningPriority(a)
+  );
+
+
+  warningText.textContent =
+    unique
+      .map(
+        item =>
+          item.name
+      )
+      .join("　");
+
+
+  warningBar.className =
+    "warning-bar active";
+
+
+  const highest =
+    Math.max(
+      ...unique.map(
+        item =>
+          warningPriority(item)
+      )
+    );
+
+
+  if (
+    highest >= 90
+  ) {
+
+    warningBar.className =
+      "warning-bar active warning-extreme";
+
+    warningIcon.textContent =
+      "🚨";
+
+  } else if (
+    highest >= 60
+  ) {
+
+    warningBar.className =
+      "warning-bar active warning-high";
+
+    warningIcon.textContent =
+      "⚠️";
+
+  } else {
+
+    warningBar.className =
+      "warning-bar active warning-normal";
+
+    warningIcon.textContent =
+      "⚠️";
+
+  }
+
+}
+
+
+function warningPriority(
+  item
+) {
+
+  const code =
+    String(
+      item.code || ""
+    ).toUpperCase();
+
+
+  if (
+    code === "TC10"
+  ) {
+
+    return 100;
+
+  }
+
+
+  if (
+    code === "TC9"
+  ) {
+
+    return 95;
+
+  }
+
+
+  if (
+    code.includes("TC8")
+  ) {
+
+    return 90;
+
+  }
+
+
+  if (
+    code === "WRAINB"
+  ) {
+
+    return 88;
+
+  }
+
+
+  if (
+    code === "WRAINR"
+  ) {
+
+    return 80;
+
+  }
+
+
+  if (
+    code === "TWS" ||
+    code === "WTS"
+  ) {
+
+    return 65;
+
+  }
+
+
+  if (
+    code === "WMSGNL"
+  ) {
+
+    return 55;
+
+  }
+
+
+  if (
+    code === "WHOT" ||
+    code === "WCOLD"
+  ) {
+
+    return 45;
+
+  }
+
+
+  return 40;
+
+}
+
+
+/* =========================================================
+   AQHI
+========================================================= */
+
+async function loadAQHI() {
+
+  try {
+
+    const response =
+      await fetch(
+        AQHI_API
+      );
+
+
+    const data =
+      await response.json();
+
+
+    const value =
+      findAQHIValue(
+        data
+      );
+
+
+    const element =
+      document.getElementById(
+        "aqhi"
+      );
+
+
+    if (
+      value !== null
+    ) {
+
+      element.textContent =
+        String(value);
+
+    } else {
+
+      element.textContent =
+        "--";
+
+    }
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "AQHI error:",
+      error
+    );
+
+  }
+
+}
+
+
+function findAQHIValue(
+  data
+) {
+
+  let list = [];
+
+
+  if (
+    Array.isArray(data)
+  ) {
+
+    list =
+      data;
+
+  } else if (
+    data &&
+    Array.isArray(data.data)
+  ) {
+
+    list =
+      data.data;
+
+  } else if (
+    data &&
+    Array.isArray(data.records)
+  ) {
+
+    list =
+      data.records;
+
+  } else if (
+    data &&
+    Array.isArray(data.results)
+  ) {
+
+    list =
+      data.results;
+
+  }
+
+
+  const north =
+    list.find(
+      item => {
+
+        const text =
+          JSON.stringify(
+            item
+          ).toLowerCase();
+
+
+        return (
+          text.includes("北區") ||
+          text.includes("north")
+        );
+
+      }
+    );
+
+
+  const target =
+    north ||
+    list[0];
+
+
+  if (!target) {
+    return null;
+  }
+
+
+  const keys = [
+    "aqhi",
+    "AQHI",
+    "value",
+    "index"
+  ];
+
+
+  for (
+    const key of keys
+  ) {
+
+    if (
+      target[key] !==
+      undefined &&
+      target[key] !==
+      null
+    ) {
+
+      return target[key];
+
+    }
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   SYNC ALL
+========================================================= */
+
+async function syncAll() {
+
+  if (!accessToken) {
+    return;
+  }
+
+
+  syncButton.textContent =
+    "同步中…";
+
+
+  await Promise.allSettled([
+
+    syncTasks(),
+
+    syncCalendar(),
+
+    syncMail(),
+
+    loadWeather(),
+
+    loadAQHI()
+
+  ]);
+
+
+  syncButton.textContent =
+    "↻ 同步";
+
+}
+
+
+/* =========================================================
+   MANUAL SYNC
+========================================================= */
+
+syncButton.addEventListener(
+  "click",
+  async () => {
+
+    await syncAll();
+
+  }
 );
 
 
-}
+/* =========================================================
+   WORK OFF
+========================================================= */
 
+workButton.addEventListener(
+  "click",
+  () => {
 
+    workOff =
+      true;
 
-function startTaskSync(){
 
+    dashboard.style.display =
+      "none";
 
-if(taskTimer)
 
-clearInterval(taskTimer);
+    workOffMessage.className =
+      "work-off active";
 
 
-taskTimer=
+    workButton.style.display =
+      "none";
 
-setInterval(()=>{
 
-loadTasks();
+    continueButton.className =
+      "header-button continue-button active";
 
-},5000);
-
-
-}
-
-
-
-
-
-syncBtn.onclick=()=>{
-
-loadTasks();
-
-};
-
-
-
-
-
-/* ==========================
-   GOOGLE SHEET SCHEDULE
-========================== */
-
-
-async function loadSchedule(){
-
-
-try{
-
-
-const res=
-
-await fetch(SCHEDULE_URL);
-
-
-
-const csv=
-
-await res.text();
-
-
-
-const data=
-
-parseCSV(csv);
-
-
-
-renderSchedule(data);
-
-
-
-scheduleUpdate.textContent=getTime();
-
-
-
-}catch(e){
-
-console.log(e);
-
-}
-
-
-}
-
-
-
-
-function parseCSV(text){
-
-
-const lines=
-
-text.split("\n");
-
-
-const headers=
-
-lines.shift()
-.split(",");
-
-
-
-return lines.map(line=>{
-
-
-const values=line.split(",");
-
-let obj={};
-
-
-headers.forEach((h,i)=>{
-
-obj[h.trim()]=
-
-(values[i]||"").trim();
-
-});
-
-
-return obj;
-
-
-});
-
-
-}
-
-
-
-
-
-function todayName(){
-
-
-return [
-
-"Sun",
-
-"Mon",
-
-"Tue",
-
-"Wed",
-
-"Thu",
-
-"Fri",
-
-"Sat"
-
-][new Date().getDay()];
-
-
-}
-
-
-
-function toMinute(time){
-
-
-if(!time)return 9999;
-
-
-const p=time.split(":");
-
-
-return Number(p[0])*60+
-
-Number(p[1]);
-
-
-}
-
-
-
-
-
-function renderSchedule(data){
-
-
-const today=todayName();
-
-
-const now=
-
-new Date().getHours()*60+
-
-new Date().getMinutes();
-
-
-
-let list=
-
-data.filter(x=>
-
-x.Day===today
-
+  }
 );
 
 
+continueButton.addEventListener(
+  "click",
+  () => {
 
-list.sort((a,b)=>
+    workOff =
+      false;
 
-toMinute(a.Start)-toMinute(b.Start)
 
+    dashboard.style.display =
+      "grid";
+
+
+    workOffMessage.className =
+      "work-off";
+
+
+    workButton.style.display =
+      "block";
+
+
+    continueButton.className =
+      "header-button continue-button";
+
+  }
 );
 
 
-
-scheduleList.innerHTML="";
-
-
-
-if(list.length===0){
-
-scheduleList.innerHTML=
-
-`
-<div class="empty">
-今日沒有課堂
-</div>
-`;
-
-return;
-
-}
-
-
-
-list.forEach(item=>{
-
-
-const start=
-
-toMinute(item.Start);
-
-
-const end=
-
-toMinute(item.End);
-
-
-
-const active=
-
-now>=start && now<=end;
-
-
-const past=
-
-now>end;
-
-
-
-const div=
-
-document.createElement("div");
-
-
-div.className="schedule-item";
-
-
-
-if(active)
-
-div.classList.add("now");
-
-
-if(past)
-
-div.classList.add("past");
-
-
-
-let icon=
-
-item.Type==="PE"
-
-?"🏃"
-
-:
-
-item.Type==="CT"
-
-?"📘"
-
-:
-
-"📚";
-
-
-
-div.innerHTML=
-
-`
-
-<div class="schedule-time">
-
-${item.Start} - ${item.End}
-
-</div>
-
-
-<div class="schedule-main">
-
-${active?"🟢 NOW ":""}
-
-第${item.Period}節 ${item.Class}
-
-</div>
-
-
-<div class="schedule-detail">
-
-${icon} ${item.Type}
-
-<br>
-
-👤 ${item.Teacher}
-
-${item.Location?
-
-"<br>📍 "+item.Location:""}
-
-</div>
-
-`;
-
-
-
-scheduleList.appendChild(div);
-
-
-
-});
-
-
-}
-
-
-
-loadSchedule();
-
-
-
-setInterval(loadSchedule,300000);
-
-
-
-
-
-/* ==========================
+/* =========================================================
    FULLSCREEN
-========================== */
+========================================================= */
 
+fullscreenButton.addEventListener(
+  "click",
+  async () => {
 
-fullscreenBtn.onclick=()=>{
+    try {
 
+      if (
+        !document.fullscreenElement
+      ) {
 
-if(!document.fullscreenElement){
+        await document.documentElement
+          .requestFullscreen();
 
+      } else {
 
-document.documentElement.requestFullscreen();
+        await document.exitFullscreen();
 
+      }
 
-}else{
+    } catch (
+      error
+    ) {
 
+      console.error(
+        "Fullscreen error:",
+        error
+      );
 
-document.exitFullscreen();
+    }
 
-
-}
-
-
-};
-
-
-
-
-
-
-/* ==========================
-   WORK OFF MODE
-========================== */
-
-
-workBtn.onclick=()=>{
-
-
-document.querySelector(".dashboard")
-
-.style.display="none";
-
-
-workoff.classList.add("active");
-
-
-workBtn.style.display="none";
-
-
-resumeBtn.style.display="block";
-
-
-};
-
-
-
-resumeBtn.onclick=()=>{
-
-
-document.querySelector(".dashboard")
-
-.style.display="grid";
-
-
-workoff.classList.remove("active");
-
-
-workBtn.style.display="block";
-
-
-resumeBtn.style.display="none";
-
-
-};
-
-
-
-
-
-
-/* ==========================
-   TIME FORMAT
-========================== */
-
-
-function getTime(){
-
-
-const now=new Date();
-
-
-return now.toLocaleTimeString(
-
-"zh-HK",
-
-{
-
-hour:"2-digit",
-
-minute:"2-digit"
-
-}
-
+  }
 );
 
 
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value
+  )
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
 }
 
 
+/* =========================================================
+   AUTO REFRESH
+========================================================= */
 
+
+/*
+   Tasks
+   每 5 秒
+*/
+
+setInterval(
+  () => {
+
+    if (
+      accessToken
+    ) {
+
+      syncTasks();
+
+    }
+
+  },
+  TASK_INTERVAL
+);
+
+
+/*
+   Calendar
+   每 60 秒
+*/
+
+setInterval(
+  () => {
+
+    if (
+      accessToken
+    ) {
+
+      syncCalendar();
+
+    }
+
+  },
+  CALENDAR_INTERVAL
+);
+
+
+/*
+   Email
+   每 60 秒
+*/
+
+setInterval(
+  () => {
+
+    if (
+      accessToken
+    ) {
+
+      syncMail();
+
+    }
+
+  },
+  MAIL_INTERVAL
+);
+
+
+/*
+   Weather
+   每 5 分鐘
+*/
+
+setInterval(
+  () => {
+
+    loadWeather();
+
+    loadAQHI();
+
+  },
+  WEATHER_INTERVAL
+);
+
+
+/* =========================================================
+   INITIAL
+========================================================= */
+
+loadWeather();
+
+loadAQHI();
 
 </script>
 
-
 </body>
-
 </html>
