@@ -1330,132 +1330,32 @@ function renderScheduleDisplay() {
 }
 
 function renderCalendar(events) {
-  scheduleScroll.innerHTML = "";
+  scheduleScroll.innerHTML = "";
 
-  if (!events || !events.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 近期無預定行程</div>`;
-    return;
-  }
+  if (!events || !events.length) {
+    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
+    return;
+  }
 
-  const now = new Date();
-  const todayStart = startOfToday();
-  const tomorrow = startOfTomorrow();
-  const dayAfterTomorrow = startOfDayAfterTomorrow();
-  
-  // 計算大後天 00:00 的時間
-  const threeDaysLater = new Date(dayAfterTomorrow);
-  threeDaysLater.setDate(threeDaysLater.getDate() + 1);
+  const now = new Date();
+  const todayStart = startOfToday();
+  const tomorrow = startOfTomorrow();
+  const dayAfterTomorrow = startOfDayAfterTomorrow(); // 取得後天開始時間
 
-  const todayEvents = [];
-  const tomorrowEvents = [];
-  const afterTomorrowEvents = [];
+  const todayEvents = [];
+  const tomorrowEvents = [];
 
-  events.forEach(rawEvt => {
-    const evt = parseEventData(rawEvt);
-    if (!evt.start || isNaN(evt.start.getTime())) return;
+  events.forEach(rawEvt => {
+    const evt = parseEventData(rawEvt);
+    if (!evt.start || isNaN(evt.start.getTime())) return;
 
-    if (evt.start >= todayStart && evt.start < tomorrow) {
-      todayEvents.push(evt);
-    } else if (evt.start >= tomorrow && evt.start < dayAfterTomorrow) {
-      tomorrowEvents.push(evt);
-    } else if (evt.start >= dayAfterTomorrow && evt.start < threeDaysLater) {
-      afterTomorrowEvents.push(evt);
-    }
-  });
-
-  if (!todayEvents.length && !tomorrowEvents.length && !afterTomorrowEvents.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 近期無預定行程</div>`;
-    return;
-  }
-
-  let nextFound = false;
-
-  const renderGroup = (items, labelText) => {
-    if (!items.length) return;
-
-    const label = document.createElement("div");
-    label.className = "schedule-day-label";
-    label.textContent = labelText;
-    scheduleScroll.appendChild(label);
-
-    items.forEach(evt => {
-      const item = document.createElement("div");
-      item.className = "schedule-item";
-
-      let timeText = "";
-      let countdownText = "";
-
-      if (evt.isAllDay) {
-        timeText = "全天";
-      } else if (evt.start) {
-        timeText = formatTime(evt.start);
-        const end = evt.end || new Date(evt.start.getTime() + 60 * 60 * 1000);
-
-        if (now >= evt.start && now <= end) {
-          item.classList.add("now");
-          const remain = Math.max(1, Math.floor((end - now) / 60000));
-          countdownText = `進行中 (剩 ${remain} 分鐘)`;
-        } else if (now > end) {
-          item.classList.add("past");
-        } else if (now < evt.start) {
-          if (!nextFound) {
-            item.classList.add("next");
-            nextFound = true;
-          }
-          const diffMs = evt.start - now;
-          const totalMin = Math.floor(diffMs / 60000);
-          const h = Math.floor(totalMin / 60);
-          const m = totalMin % 60;
-          countdownText = h > 0 ? `重有 ${h}小時${m}分鐘` : `重有 ${m}分鐘`;
-        }
-      }
-
-      const timeDiv = document.createElement("div");
-      timeDiv.className = "schedule-time" + (evt.isAllDay ? " schedule-all-day" : "");
-      timeDiv.textContent = timeText;
-
-      const lineDiv = document.createElement("div");
-      lineDiv.className = "schedule-line";
-      const dot = document.createElement("div");
-      dot.className = "schedule-dot";
-      lineDiv.appendChild(dot);
-
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "schedule-info";
-
-      const titleDiv = document.createElement("div");
-      titleDiv.className = "schedule-title";
-      titleDiv.textContent = evt.title;
-
-      if (countdownText) {
-        const tag = document.createElement("span");
-        tag.className = "countdown-tag";
-        tag.textContent = countdownText;
-        titleDiv.appendChild(tag);
-      }
-
-      infoDiv.appendChild(titleDiv);
-
-      if (evt.location) {
-        const locDiv = document.createElement("div");
-        locDiv.className = "schedule-location";
-        locDiv.textContent = `📍 ${evt.location}`;
-        infoDiv.appendChild(locDiv);
-      }
-
-      item.appendChild(timeDiv);
-      item.appendChild(lineDiv);
-      item.appendChild(infoDiv);
-
-      scheduleScroll.appendChild(item);
-    });
-  };
-
-  // 依序渲染 今日、明日、後日
-  renderGroup(todayEvents, "今日");
-  renderGroup(tomorrowEvents, "明日");
-  renderGroup(afterTomorrowEvents, "後日");
-}
+    // 精準判斷：只有屬於「今天」和真正的「明天」才會放進列表
+    if (evt.start >= todayStart && evt.start < tomorrow) {
+      todayEvents.push(evt);
+    } else if (evt.start >= tomorrow && evt.start < dayAfterTomorrow) {
+      tomorrowEvents.push(evt);
+    }
+  });
 
   let nextFound = false;
 
