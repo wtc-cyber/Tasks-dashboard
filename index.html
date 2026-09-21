@@ -1265,6 +1265,15 @@ function renderTasks(tasks) {
     checkbox.addEventListener("click", () => {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
+
+      // 🌐 即時發送請求給 Google Apps Script，標記該 Task 為已完成
+      if (task.id) {
+        fetch(`${GAS_API_URL}?action=completeTask&taskId=${encodeURIComponent(task.id)}`)
+          .then(res => res.json())
+          .then(data => console.log("Task 完成狀態同步:", data))
+          .catch(err => console.error("Task 同步失敗:", err));
+      }
+
       setTimeout(() => {
         if (card.parentNode) card.parentNode.removeChild(card);
       }, 250);
@@ -1292,7 +1301,6 @@ function renderTasks(tasks) {
     taskScroll.appendChild(card);
   });
 }
-
 
 /* =========================================================
    SCHEDULE & GOOGLE SHEET CLASS DUAL RENDER
