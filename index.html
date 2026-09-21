@@ -1914,8 +1914,11 @@ function renderClassSchedule(rows) {
     return;
   }
 
-  // 今日星期定義
-  const todayIdx = new Date().getDay(); // 0: Sun, 1: Mon, 2: Tue...
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+  // 1. 定義今日星期關鍵字（過濾只顯示今天的課堂）
+  const todayIdx = now.getDay(); // 0:日, 1:一, 2:二, 3:三, 4:四, 5:五, 6:六
   const dayKeywords = [
     ["sun", "sunday", "星期日", "日"],
     ["mon", "monday", "星期一", "一"],
@@ -1926,27 +1929,19 @@ function renderClassSchedule(rows) {
     ["sat", "saturday", "星期六", "六"]
   ][todayIdx];
 
-  // 1. 自動定位「星期/Day」欄位索引
-  let dayColIdx = -1;
-
-  for (let r = 0; r < Math.min(rows.length, 10); r++) {
+  // 2. 自動定位「星期」欄位索引
+  let dayColIdx = 0;
+  for (let r = 0; r < Math.min(rows.length, 5); r++) {
     for (let c = 0; c < rows[r].length; c++) {
       const val = (rows[r][c] || "").toLowerCase().trim();
-      if (
-        ["mon", "tue", "wed", "thu", "fri", "sat", "sun", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"].includes(val) ||
-        val.includes("day") || val.includes("星期")
-      ) {
+      if (["mon","tue","wed","thu","fri","sat","sun","星期一","星期二","星期三","星期四","星期五","星期六","星期日"].includes(val)) {
         dayColIdx = c;
         break;
       }
     }
-    if (dayColIdx !== -1) break;
   }
 
-  // 預設若找不到則指向第 0 欄
-  if (dayColIdx === -1) dayColIdx = 0;
-
-  // 2. 篩選出屬於「今天」的課堂行
+  // 3. 篩選屬於「今天」的課堂
   const todayRows = rows.filter(row => {
     const cellVal = (row[dayColIdx] || "").toLowerCase().trim();
     return dayKeywords.some(kw => cellVal === kw || cellVal.includes(kw));
@@ -1957,43 +1952,71 @@ function renderClassSchedule(rows) {
     return;
   }
 
-  // 3. 逐行解析並呈現課堂
+  let visibleCount = 0;
+
   todayRows.forEach(row => {
-    // 排除 Day 欄位，分析其餘欄位內容
-    const remaining = row.filter((_, idx) => idx !== dayColIdx && (_ || "").trim() !== "");
+    const times = [];
+    const texts = [];
 
-    const timeCells = [];
-    const textCells = [];
+    // 分離時間與文字欄位
+    row.forEach((cell, idx) => {
+      if (idx === dayColIdx) return; // 跳過 Day 欄位
+      const clean = (cell || "").trim();
+      if (!clean) return;
 
-    // 區分時間欄位（含有冒號如 8:07）與非時間欄位（如科目名稱、地點）
-    remaining.forEach(cell => {
-      const clean = cell.trim();
       if (/^\d{1,2}:\d{2}/.test(clean)) {
-        timeCells.push(clean);
+        times.push(clean);
       } else {
-        textCells.push(clean);
+        texts.push(clean);
       }
     });
 
-    // 格式化時間 (開始時間 - 結束時間)
-    let timeText = "--:--";
-    if (timeCells.length >= 2) {
-      timeText = `${timeCells[0]} - ${timeCells[1]}`;
-    } else if (timeCells.length === 1) {
-      timeText = timeCells[0];
+    const startTimeStr = times[0] || "";
+    const endTimeStr = times[1] || "";
+
+    // 4. 完咗就唔再顯示：比對結束時間，如果過期直接 Skip 不渲染
+    if (endTimeStr) {
+      const [eH, eM] = endTimeStr.split(":").map(Number);
+      const endTotalMinutes = eH * 60 + eM;
+
+      if (currentMinutes >= endTotalMinutes) {
+        return; // 課堂已完結，隱藏
+      }
     }
 
-    // 格式化課堂名稱與地點
-    let titleText = textCells[0] || "(未指定科目)";
-    let locText = textCells[1] ? `📍 ${textCells[1]}` : "";
+    visibleCount++;
 
-    // 創建 DOM 卡片
+    // 時間顯示格式（例：8:07 - 8:40）
+    let timeDisplay = "--:--";
+    if (startTimeStr && endTimeStr) {
+      timeDisplay = `${startTimeStr} - ${endTimeStr}`;
+    } else if (startTimeStr) {
+      timeDisplay = startTimeStr;
+    }
+
+    // 科目與地點
+    const titleText = texts[0] || "(課堂科目)";
+    const locText = texts[1] ? `📍 ${texts[1]}` : "";
+
+    // 判斷是否正在上課中
+    let isNow = false;
+    if (startTimeStr && endTimeStr) {
+      const [sH, sM] = startTimeStr.split(":").map(Number);
+      const [eH, eM] = endTimeStr.split(":").map(Number);
+      const startMin = sH * 60 + sM;
+      const endMin = eH * 60 + eM;
+      if (currentMinutes >= startMin && currentMinutes < endMin) {
+        isNow = true;
+      }
+    }
+
+    // 建立 DOM 卡片
     const item = document.createElement("div");
-    item.className = "schedule-item";
+    item.className = "schedule-item" + (isNow ? " now" : "");
 
     const timeDiv = document.createElement("div");
     timeDiv.className = "schedule-time";
-    timeDiv.textContent = timeText;
+    timeDiv.textContent = timeDisplay;
 
     const lineDiv = document.createElement("div");
     lineDiv.className = "schedule-line";
@@ -2022,6 +2045,11 @@ function renderClassSchedule(rows) {
 
     scheduleScroll.appendChild(item);
   });
+
+  // 如果當天所有課堂都已經完結
+  if (visibleCount === 0) {
+    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日課堂已全部結束</div>`;
+  }
 }
 
 
