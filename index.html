@@ -1022,6 +1022,8 @@ button {
 
 <script>
 
+<script>
+
 /* =========================================================
    CONFIG & ENDPOINTS
 ========================================================= */
@@ -1037,18 +1039,13 @@ const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日�
 
 
 /* =========================================================
-   STATE
+   STATE & DOM
 ========================================================= */
 
 let workOff = false;
 let currentScheduleMode = "calendar"; // 'calendar' 或 'class'
 let cachedCalendarData = [];
 let cachedClassData = [];
-
-
-/* =========================================================
-   DOM ELEMENTS
-========================================================= */
 
 const syncButton = document.getElementById("syncButton");
 const workButton = document.getElementById("workButton");
@@ -1151,38 +1148,44 @@ function parseCSV(text) {
   return result;
 }
 
+// 萬能 Calendar 事件資料兼容解析器
+function parseEventData(evt) {
+  const title = evt.title || evt.summary || "(無主題)";
+  let startRaw = null;
+  let endRaw = null;
+  let isAllDay = false;
 
-/* =========================================================
-   WAKE LOCK & DOM CLEANUP
-========================================================= */
-
-async function requestWakeLock() {
-  try {
-    if ('wakeLock' in navigator) {
-      await navigator.wakeLock.request('screen');
-      console.log('💡 螢幕保持長亮啟動');
-    }
-  } catch (err) {
-    console.log('Wake Lock 啟動失敗:', err);
+  if (typeof evt.start === "object" && evt.start !== null) {
+    startRaw = evt.start.dateTime || evt.start.date;
+    if (!evt.start.dateTime && evt.start.date) isAllDay = true;
+  } else if (typeof evt.start === "string") {
+    startRaw = evt.start;
+  } else if (evt.startTime) {
+    startRaw = evt.startTime;
   }
-}
-requestWakeLock();
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") requestWakeLock();
-});
 
-// 每 3 小時清空舊 DOM 重新載入，避免長效記憶體洩漏
-setInterval(() => {
-  console.log("🧹 執行 3 小時記憶體清理與資料同步...");
-  taskScroll.innerHTML = '<div class="task-empty">更新中...</div>';
-  scheduleScroll.innerHTML = '<div class="schedule-empty">更新中...</div>';
-  mailScroll.innerHTML = '<div class="mail-empty">更新中...</div>';
-  syncAll();
-}, 3 * 60 * 60 * 1000);
+  if (typeof evt.end === "object" && evt.end !== null) {
+    endRaw = evt.end.dateTime || evt.end.date;
+  } else if (typeof evt.end === "string") {
+    endRaw = evt.end;
+  } else if (evt.endTime) {
+    endRaw = evt.endTime;
+  }
+
+  if (evt.isAllDay !== undefined) isAllDay = evt.isAllDay;
+
+  return {
+    title: title,
+    start: startRaw ? new Date(startRaw) : null,
+    end: endRaw ? new Date(endRaw) : null,
+    isAllDay: isAllDay,
+    location: evt.location || ""
+  };
+}
 
 
 /* =========================================================
-   GAS DATA FETCH (TASKS, CALENDAR, GMAIL)
+   GAS DATA FETCH
 ========================================================= */
 
 async function syncGasData() {
@@ -1192,15 +1195,14 @@ async function syncGasData() {
     if (!res.ok) throw new Error(`GAS HTTP 錯誤 ${res.status}`);
     const data = await res.json();
 
-    // 渲染 Tasks
+    // 渲染 Tasks 同 Mail
     renderTasks(data.tasks || []);
     setPanelUpdated(taskUpdated);
 
-    // 渲染 Gmail
     renderMail(data.gmail || []);
     setPanelUpdated(mailUpdated);
 
-    // 更新 Cached Calendar 並依目前模式渲染
+    // 快取日曆資料並觸發渲染
     cachedCalendarData = data.calendar || [];
     if (currentScheduleMode === "calendar") {
       renderScheduleDisplay();
@@ -1222,32 +1224,16 @@ async function syncGasData() {
 
 function taskDateInfo(due) {
   if (!due) return null;
-
   const date = new Date(due);
   const today = startOfToday();
   const tomorrow = startOfTomorrow();
   const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-  if (dateOnly < today) {
-    return { text: "逾期", className: "overdue" };
-  }
-  if (dateOnly.getTime() === today.getTime()) {
-    return { text: "今日", className: "today" };
-  }
-  if (dateOnly.getTime() === tomorrow.getTime()) {
-    return { text: "明日", className: "tomorrow" };
-  }
+  if (dateOnly < today) return { text: "逾期", className: "overdue" };
+  if (dateOnly.getTime() === today.getTime()) return { text: "今日", className: "today" };
+  if (dateOnly.getTime() === tomorrow.getTime()) return { text: "明日", className: "tomorrow" };
 
   return { text: formatDateMD(date), className: "" };
-}
-
-function sortTasks(tasks) {
-  return [...tasks].sort((a, b) => {
-    if (!a.due && !b.due) return 0;
-    if (!a.due) return 1;
-    if (!b.due) return -1;
-    return new Date(a.due) - new Date(b.due);
-  });
 }
 
 function renderTasks(tasks) {
@@ -1259,7 +1245,14 @@ function renderTasks(tasks) {
     return;
   }
 
-  sortTasks(tasks).forEach(task => {
+  const sorted = [...tasks].sort((a, b) => {
+    if (!a.due && !b.due) return 0;
+    if (!a.due) return 1;
+    if (!b.due) return -1;
+    return new Date(a.due) - new Date(b.due);
+  });
+
+  sorted.forEach(task => {
     const card = document.createElement("div");
     card.className = "task-card";
 
@@ -1270,11 +1263,8 @@ function renderTasks(tasks) {
     checkbox.addEventListener("click", () => {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
-
       setTimeout(() => {
-        if (card.parentNode) {
-          card.parentNode.removeChild(card);
-        }
+        if (card.parentNode) card.parentNode.removeChild(card);
       }, 250);
     });
 
@@ -1286,7 +1276,6 @@ function renderTasks(tasks) {
     title.textContent = task.title || "(無標題)";
 
     const info = taskDateInfo(task.due);
-
     content.appendChild(title);
 
     if (info) {
@@ -1298,14 +1287,13 @@ function renderTasks(tasks) {
 
     card.appendChild(checkbox);
     card.appendChild(content);
-
     taskScroll.appendChild(card);
   });
 }
 
 
 /* =========================================================
-   SCHEDULE & GOOGLE SHEET DUAL RENDER
+   SCHEDULE & GOOGLE SHEET CLASS DUAL RENDER
 ========================================================= */
 
 async function syncClassSchedule() {
@@ -1353,16 +1341,21 @@ function renderCalendar(events) {
   const todayEvents = [];
   const tomorrowEvents = [];
 
-  events.forEach(evt => {
-    const startStr = evt.start ? (evt.start.dateTime || evt.start.date) : null;
-    if (!startStr) return;
-    const start = new Date(startStr);
-    if (start < tomorrow) {
+  events.forEach(rawEvt => {
+    const evt = parseEventData(rawEvt);
+    if (!evt.start || isNaN(evt.start.getTime())) return;
+
+    if (evt.start < tomorrow) {
       todayEvents.push(evt);
     } else {
       tomorrowEvents.push(evt);
     }
   });
+
+  if (!todayEvents.length && !tomorrowEvents.length) {
+    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
+    return;
+  }
 
   let nextFound = false;
 
@@ -1378,29 +1371,27 @@ function renderCalendar(events) {
       const item = document.createElement("div");
       item.className = "schedule-item";
 
-      const isAllDay = evt.start && !evt.start.dateTime;
       let timeText = "";
       let countdownText = "";
 
-      if (isAllDay) {
+      if (evt.isAllDay) {
         timeText = "全天";
-      } else if (evt.start && evt.end) {
-        const start = new Date(evt.start.dateTime);
-        const end = new Date(evt.end.dateTime);
-        timeText = formatTime(start);
+      } else if (evt.start) {
+        timeText = formatTime(evt.start);
+        const end = evt.end || new Date(evt.start.getTime() + 60 * 60 * 1000);
 
-        if (now >= start && now <= end) {
+        if (now >= evt.start && now <= end) {
           item.classList.add("now");
           const remain = Math.max(1, Math.floor((end - now) / 60000));
           countdownText = `進行中 (剩 ${remain} 分鐘)`;
         } else if (now > end) {
           item.classList.add("past");
-        } else if (now < start) {
+        } else if (now < evt.start) {
           if (!nextFound) {
             item.classList.add("next");
             nextFound = true;
           }
-          const diffMs = start - now;
+          const diffMs = evt.start - now;
           const totalMin = Math.floor(diffMs / 60000);
           const h = Math.floor(totalMin / 60);
           const m = totalMin % 60;
@@ -1409,7 +1400,7 @@ function renderCalendar(events) {
       }
 
       const timeDiv = document.createElement("div");
-      timeDiv.className = "schedule-time" + (isAllDay ? " schedule-all-day" : "");
+      timeDiv.className = "schedule-time" + (evt.isAllDay ? " schedule-all-day" : "");
       timeDiv.textContent = timeText;
 
       const lineDiv = document.createElement("div");
@@ -1423,7 +1414,7 @@ function renderCalendar(events) {
 
       const titleDiv = document.createElement("div");
       titleDiv.className = "schedule-title";
-      titleDiv.textContent = evt.summary || "(無主題)";
+      titleDiv.textContent = evt.title;
 
       if (countdownText) {
         const tag = document.createElement("span");
@@ -1551,7 +1542,6 @@ function renderClassSchedule(rows) {
     }
 
     const timeDisplay = startTimeStr && endTimeStr ? `${startTimeStr} - ${endTimeStr}` : (startTimeStr || "--:--");
-
     const periodText = texts[0] || "";
     const classText = texts[1] || "";
     const extraLoc = texts[2] ? `📍 ${texts[2]}` : "";
@@ -1645,7 +1635,6 @@ function renderMail(mails) {
     let snippet = mail.snippet || "";
     let mailId = mail.id || "";
 
-    // 支援 GAS 整理過的資料，或原始 Gmail API payload
     if (mail.payload && mail.payload.headers) {
       const headers = mail.payload.headers || [];
       const getHeader = name => {
@@ -1752,9 +1741,7 @@ async function syncWeather() {
         document.getElementById("aqhi").textContent = central.aqhi || "--";
       }
     }
-  } catch (e) {
-    // 静默忽略
-  }
+  } catch (e) {}
 }
 
 function getWeatherEmoji(code) {
@@ -1774,7 +1761,7 @@ function getWeatherText(code) {
 
 
 /* =========================================================
-   CONTROL & SYNC ALL
+   CONTROL & TIMERS
 ========================================================= */
 
 async function syncAll() {
@@ -1785,9 +1772,7 @@ async function syncAll() {
   ]);
 }
 
-syncButton.addEventListener("click", () => {
-  syncAll();
-});
+syncButton.addEventListener("click", () => syncAll());
 
 workButton.addEventListener("click", () => {
   workOff = true;
@@ -1813,12 +1798,7 @@ fullscreenButton.addEventListener("click", () => {
   }
 });
 
-
-/* =========================================================
-   INTERVAL TIMERS & INITIALIZATION
-========================================================= */
-
-// 自動定期同步
+// 自動計時器
 setInterval(() => { if (!workOff) syncGasData(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { if (!workOff) syncClassSchedule(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { syncWeather(); }, WEATHER_INTERVAL);
@@ -1831,7 +1811,7 @@ setInterval(() => {
   }
 }, SCHEDULE_SWITCH_INTERVAL);
 
-// 首次加載觸發完整同步
+// 首次加載
 syncAll();
 
 </script>
