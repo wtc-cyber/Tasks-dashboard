@@ -1546,9 +1546,18 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") requestWakeLock();
 });
 
-// 2. 每 3 小時自動重新整理網頁，釋放舊手機（Mate 10）記憶體
-setTimeout(() => {
-  location.reload();
+// 2. 每 3 小時進行「無痕軟重載」（保持 Fullscreen 不退出，並清空 DOM 釋放記憶體）
+setInterval(() => {
+  console.log("🧹 執行 3 小時定期記憶體清理與重新同步...");
+  
+  // 1. 清空所有舊 DOM 內容
+  taskScroll.innerHTML = '<div class="task-empty">更新中...</div>';
+  scheduleScroll.innerHTML = '<div class="schedule-empty">更新中...</div>';
+  mailScroll.innerHTML = '<div class="mail-empty">更新中...</div>';
+
+  // 2. 重新觸發完整資料同步
+  syncAll();
+  
 }, 3 * 60 * 60 * 1000);
 
 
