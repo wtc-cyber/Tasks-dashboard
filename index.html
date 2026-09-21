@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
 
 <meta name="theme-color" content="#121212">
 <meta name="mobile-web-app-capable" content="yes">
@@ -16,54 +11,9 @@
 
 <title>WTC Work Dashboard</title>
 
-<script src="https://accounts.google.com/gsi/client"></script>
-
 <style>
-/* 調整 Schedule 標題與排版 */
-.schedule-title {
-  font-size: 1.05rem !important; /* 字體調至適中大小 */
-  font-weight: 600 !important;
-  display: flex !important;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  line-height: 1.4;
-}
-
-/* 節數 (Period) 醒目标籤 */
-.period-badge {
-  background: #3b82f6;
-  color: #ffffff;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 4px;
-}
-
-/* 班別 (Class) 標題 */
-.class-title {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #f8fafc;
-}
-
-/* 倒數時間標籤 */
-.countdown-tag {
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 2px 6px;
-  border-radius: 4px;
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
-  margin-left: auto; /* 自動推至右側或跟隨 */
-}
-
-.schedule-item.now .countdown-tag {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-}
 /* =========================================================
-   GLOBAL
+   GLOBAL & SCHEDULE CUSTOM STYLES
 ========================================================= */
 
 * {
@@ -102,9 +52,52 @@ button {
   font-family: inherit;
 }
 
+/* 調整 Schedule 標題與排版 */
+.schedule-title {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  line-height: 1.4;
+}
+
+/* 節數 (Period) 醒目标籤 */
+.period-badge {
+  background: #3b82f6;
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 4px;
+}
+
+/* 班別 (Class) 標題 */
+.class-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+/* 倒數時間標籤 */
+.countdown-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  margin-left: auto;
+}
+
+.schedule-item.now .countdown-tag {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+}
 
 /* =========================================================
-   APP
+   APP LAYOUT
 ========================================================= */
 
 .app {
@@ -119,7 +112,6 @@ button {
 
   background: #121212;
 }
-
 
 /* =========================================================
    HEADER
@@ -205,11 +197,6 @@ button {
   background: #3a3a3a;
 }
 
-.logout-button {
-  display: none;
-}
-
-
 /* =========================================================
    WEATHER
 ========================================================= */
@@ -257,11 +244,7 @@ button {
   font-weight: 600;
 }
 
-
-/* =========================================================
-   WEATHER WARNING
-========================================================= */
-
+/* Weather Warning Bar */
 .warning-bar {
   display: none;
 
@@ -304,7 +287,6 @@ button {
   text-overflow: ellipsis;
 }
 
-
 /* =========================================================
    DASHBOARD
 ========================================================= */
@@ -330,11 +312,6 @@ button {
 
   overflow: hidden;
 }
-
-
-/* =========================================================
-   PANEL
-========================================================= */
 
 .panel {
   min-width: 0;
@@ -412,7 +389,6 @@ button {
 
   overflow: hidden;
 }
-
 
 /* =========================================================
    TASKS
@@ -545,7 +521,6 @@ button {
   line-height: 1.5;
 }
 
-
 /* =========================================================
    SCHEDULE
 ========================================================= */
@@ -647,14 +622,6 @@ button {
   padding: 8px 9px 8px 4px;
 }
 
-.schedule-title {
-  font-size: 0.82rem;
-
-  line-height: 1.3;
-
-  word-break: break-word;
-}
-
 .schedule-location {
   margin-top: 3px;
 
@@ -715,7 +682,6 @@ button {
 
   font-size: 0.68rem;
 }
-
 
 /* =========================================================
    EMAIL
@@ -822,7 +788,6 @@ button {
   overflow: hidden;
 }
 
-
 /* =========================================================
    WORK OFF
 ========================================================= */
@@ -870,79 +835,6 @@ button {
   display: block;
 }
 
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.login-overlay {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 999;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  background: #121212;
-}
-
-.login-box {
-  width: min(360px, 85vw);
-
-  padding: 25px;
-
-  text-align: center;
-
-  background: #1c1c1c;
-
-  border: 1px solid #303030;
-
-  border-radius: 14px;
-}
-
-.login-title {
-  font-size: 1.15rem;
-
-  font-weight: 700;
-}
-
-.login-description {
-  margin-top: 8px;
-
-  color: #888888;
-
-  font-size: 0.76rem;
-
-  line-height: 1.5;
-}
-
-.login-button {
-  margin-top: 18px;
-
-  width: 100%;
-
-  height: 42px;
-
-  border: 0;
-
-  border-radius: 9px;
-
-  background: #ffffff;
-
-  color: #111111;
-
-  font-size: 0.85rem;
-
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -981,388 +873,147 @@ button {
 
 <body>
 
-
-<!-- LOGIN -->
-
-<div
-  id="loginOverlay"
-  class="login-overlay"
->
-
-  <div class="login-box">
-
-    <div class="login-title">
-      WTC Work Dashboard
-    </div>
-
-    <div class="login-description">
-      登入 Google 後即可同步<br>
-      Tasks、Calendar 及未讀 Email
-    </div>
-
-    <button
-      id="loginButton"
-      class="login-button"
-      type="button"
-    >
-      登入 Google
-    </button>
-
-  </div>
-
-</div>
-
-
-<!-- APP -->
+<!-- APP MAIN CONTAINER -->
 
 <div class="app">
 
-
   <!-- HEADER -->
-
   <header class="header">
 
     <div class="header-top">
 
       <div class="header-left">
-
         <div class="title">
           WTC Work Dashboard
         </div>
 
-        <div
-          id="clock"
-          class="clock"
-        >
+        <div id="clock" class="clock">
           --:--
         </div>
-
       </div>
 
-
       <div class="header-buttons">
-
-        <button
-          id="syncButton"
-          class="header-button"
-          type="button"
-        >
+        <button id="syncButton" class="header-button" type="button">
           ↻ 同步
         </button>
 
-        <button
-          id="workButton"
-          class="header-button"
-          type="button"
-        >
+        <button id="workButton" class="header-button" type="button">
           🌙 收工
         </button>
 
-        <button
-          id="continueButton"
-          class="header-button continue-button"
-          type="button"
-        >
+        <button id="continueButton" class="header-button continue-button" type="button">
           ☀️ 繼續工作
         </button>
 
-        <button
-          id="fullscreenButton"
-          class="header-button"
-          type="button"
-        >
+        <button id="fullscreenButton" class="header-button" type="button">
           ⛶
         </button>
-
-        <button
-          id="logoutButton"
-          class="header-button logout-button"
-          type="button"
-        >
-          登出
-        </button>
-
       </div>
 
     </div>
 
-
-    <!-- WEATHER -->
-
+    <!-- WEATHER BAR -->
     <div class="weather-area">
 
       <div class="weather-bar">
 
         <div class="weather-item">
-
           <span>🌡</span>
-
-          <span
-            id="weatherTemp"
-            class="weather-value"
-          >
-            --
-          </span>
-
+          <span id="weatherTemp" class="weather-value">--</span>
         </div>
 
-
         <div class="weather-item">
-
-          <span id="weatherIcon">
-            ☁
-          </span>
-
-          <span
-            id="weatherText"
-            class="weather-value"
-          >
-            天氣讀取中
-          </span>
-
+          <span id="weatherIcon">☁</span>
+          <span id="weatherText" class="weather-value">天氣讀取中</span>
         </div>
 
-
         <div class="weather-item">
-
           <span>💧</span>
-
-          <span
-            id="humidity"
-            class="weather-value"
-          >
-            --
-          </span>
-
+          <span id="humidity" class="weather-value">--</span>
         </div>
 
-
         <div class="weather-item">
-
           <span>☔</span>
-
-          <span
-            id="rainProbability"
-            class="weather-value"
-          >
-            --
-          </span>
-
+          <span id="rainProbability" class="weather-value">--</span>
         </div>
 
-
         <div class="weather-item">
-
           <span>AQHI</span>
-
-          <span
-            id="aqhi"
-            class="weather-value"
-          >
-            --
-          </span>
-
+          <span id="aqhi" class="weather-value">--</span>
         </div>
 
       </div>
 
-
-      <!-- WARNING -->
-
-      <div
-        id="warningBar"
-        class="warning-bar"
-      >
-
-        <span
-          id="warningIcon"
-          class="warning-icon"
-        >
-          ⚠️
-        </span>
-
-        <span
-          id="warningText"
-          class="warning-text"
-        >
-          --
-        </span>
-
+      <!-- WEATHER WARNING -->
+      <div id="warningBar" class="warning-bar">
+        <span id="warningIcon" class="warning-icon">⚠️</span>
+        <span id="warningText" class="warning-text">--</span>
       </div>
 
     </div>
 
   </header>
 
-
   <!-- WORK OFF MESSAGE -->
-
-  <div
-    id="workOffMessage"
-    class="work-off"
-  >
-
+  <div id="workOffMessage" class="work-off">
     <div class="work-off-message">
       我已收工，今日您辛苦了，祝您有個愉快的晚上。
     </div>
-
   </div>
 
-
-  <!-- DASHBOARD -->
-
-  <main
-    id="dashboard"
-    class="dashboard"
-  >
-
+  <!-- DASHBOARD PANELS -->
+  <main id="dashboard" class="dashboard">
 
     <!-- TASKS -->
-
     <section class="panel">
-
       <div class="panel-header">
-
-        <div class="panel-title">
-          Tasks
-        </div>
-
+        <div class="panel-title">Tasks</div>
         <div class="panel-meta">
-
-          <div
-            id="taskCount"
-            class="panel-count"
-          >
-            --
-          </div>
-
-          <div
-            id="taskUpdated"
-            class="panel-updated"
-          >
-            更新 --
-          </div>
-
+          <div id="taskCount" class="panel-count">--</div>
+          <div id="taskUpdated" class="panel-updated">更新 --</div>
         </div>
-
       </div>
-
 
       <div class="panel-body">
-
-        <div
-          id="taskScroll"
-          class="task-scroll"
-        >
-
-          <div class="task-empty">
-            尚未登入
-          </div>
-
+        <div id="taskScroll" class="task-scroll">
+          <div class="task-empty">資料載入中...</div>
         </div>
-
       </div>
-
     </section>
 
-
-    <!-- SCHEDULE -->
-
+    <!-- SCHEDULE (CALENDAR / CLASS DUAL) -->
     <section class="panel">
-
       <div class="panel-header">
-
-        <div class="panel-title">
-          今日 Schedule
-        </div>
-
+        <div class="panel-title">今日 Schedule</div>
         <div class="panel-meta">
-
-          <div
-            id="scheduleDate"
-            class="panel-count"
-          >
-            --
-          </div>
-
-          <div
-            id="scheduleUpdated"
-            class="panel-updated"
-          >
-            更新 --
-          </div>
-
+          <div id="scheduleDate" class="panel-count">--</div>
+          <div id="scheduleUpdated" class="panel-updated">更新 --</div>
         </div>
-
       </div>
-
 
       <div class="panel-body">
-
-        <div
-          id="scheduleScroll"
-          class="schedule-scroll"
-        >
-
-          <div class="schedule-empty">
-            尚未登入
-          </div>
-
+        <div id="scheduleScroll" class="schedule-scroll">
+          <div class="schedule-empty">資料載入中...</div>
         </div>
-
       </div>
-
     </section>
-
 
     <!-- EMAIL -->
-
     <section class="panel">
-
       <div class="panel-header">
-
-        <div class="panel-title">
-          Email
-        </div>
-
+        <div class="panel-title">Email</div>
         <div class="panel-meta">
-
-          <div
-            id="mailCount"
-            class="panel-count"
-          >
-            未讀
-          </div>
-
-          <div
-            id="mailUpdated"
-            class="panel-updated"
-          >
-            更新 --
-          </div>
-
+          <div id="mailCount" class="panel-count">未讀</div>
+          <div id="mailUpdated" class="panel-updated">更新 --</div>
         </div>
-
       </div>
-
 
       <div class="panel-body">
-
-        <div
-          id="mailScroll"
-          class="mail-scroll"
-        >
-
-          <div class="mail-empty">
-            尚未登入
-          </div>
-
+        <div id="mailScroll" class="mail-scroll">
+          <div class="mail-empty">資料載入中...</div>
         </div>
-
       </div>
-
     </section>
-
 
   </main>
 
@@ -1371,81 +1022,31 @@ button {
 
 <script>
 
+<script>
+
 /* =========================================================
-   CONFIG
+   CONFIG & ENDPOINTS
 ========================================================= */
 
-// 替換成你在 GAS 部署後獲得的 URL
 const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvtFOlq0Tom8Z__WDAbetsH6JR2HnFVEsSXkmaBm_5IhjSPKlt3zHhNSPteY74wUDiwA/exec";
-
-async function syncAllData() {
-  try {
-    console.log("正在從 GAS 獲取最新資料...");
-    const res = await fetch(GAS_API_URL);
-    const data = await res.json();
-    
-    console.log("日曆行程:", data.calendar);
-    console.log("代辦事項:", data.tasks);
-    console.log("未讀電郵:", data.gmail);
-
-    // 渲染你的畫面 HTML (Render functions)
-    renderCalendar(data.calendar);
-    renderTasks(data.tasks);
-    renderGmail(data.gmail);
-
-  } catch (err) {
-    console.error("更新資料失敗:", err);
-  }
-}
-
-// 每 15 分鐘自動刷新一次資料（永遠不會再有授權過期問題！）
-setInterval(syncAllData, 15 * 60 * 1000);
-syncAllData();
-
-const GOOGLE_SCOPE =
-  "https://www.googleapis.com/auth/tasks " +
-  "https://www.googleapis.com/auth/calendar.readonly " +
-  "https://www.googleapis.com/auth/gmail.readonly";
-
-// Google Sheet CSV 連結
 const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaBuir-NFhfq75miYTkRHi_HgoTy1bcmQWKL957yJj1VPKQlQN_5A1sONCTmMu2y3cP6WutcL/pub?output=csv";
-
-const TASKS_API = "https://tasks.googleapis.com/tasks/v1";
-const CALENDAR_API = "https://www.googleapis.com/calendar/v3";
-const GMAIL_API = "https://gmail.googleapis.com/gmail/v1";
 const HKO_API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 const AQHI_API = "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
-const TASK_INTERVAL = 5000;
-const CALENDAR_INTERVAL = 60000;
-const MAIL_INTERVAL = 60000;
-const WEATHER_INTERVAL = 300000;
-const SCHEDULE_SWITCH_INTERVAL = 10000; // 10秒自動切換
+const DATA_SYNC_INTERVAL = 5 * 60 * 1000;      // 每 5 分鐘自動從 GAS 更新
+const WEATHER_INTERVAL = 10 * 60 * 1000;       // 每 10 分鐘更新天氣
+const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日曆 / 課堂」視圖
 
 
 /* =========================================================
-   STATE
+   STATE & DOM
 ========================================================= */
 
-let accessToken = null;
-let tokenClient = null;
-let taskListId = null;
 let workOff = false;
-
-// Schedule 切換狀態 ('calendar' 或 'class')
-let currentScheduleMode = "calendar";
+let currentScheduleMode = "calendar"; // 'calendar' 或 'class'
 let cachedCalendarData = [];
 let cachedClassData = [];
-let autoRefreshTimer = null;
 
-
-/* =========================================================
-   DOM
-========================================================= */
-
-const loginOverlay = document.getElementById("loginOverlay");
-const loginButton = document.getElementById("loginButton");
-const logoutButton = document.getElementById("logoutButton");
 const syncButton = document.getElementById("syncButton");
 const workButton = document.getElementById("workButton");
 const continueButton = document.getElementById("continueButton");
@@ -1471,7 +1072,7 @@ const warningText = document.getElementById("warningText");
 
 
 /* =========================================================
-   UTILITY & HELPERS
+   HELPERS & UTILITIES
 ========================================================= */
 
 function escapeHtml(str) {
@@ -1495,7 +1096,6 @@ function formatTime(date) {
 function updateClock() {
   clock.textContent = formatTime(new Date());
 }
-
 setInterval(updateClock, 1000);
 updateClock();
 
@@ -1524,7 +1124,6 @@ function formatScheduleDate(date) {
   return `${date.getMonth() + 1}/${date.getDate()}（${weekdays[date.getDay()]}）`;
 }
 
-// 通用 CSV 解析器
 function parseCSV(text) {
   const lines = text.split(/\r\n|\n/);
   const result = [];
@@ -1549,246 +1148,92 @@ function parseCSV(text) {
   return result;
 }
 
+// 萬能 Calendar 事件資料兼容解析器
+function parseEventData(evt) {
+  const title = evt.title || evt.summary || "(無主題)";
+  let startRaw = null;
+  let endRaw = null;
+  let isAllDay = false;
+
+  if (typeof evt.start === "object" && evt.start !== null) {
+    startRaw = evt.start.dateTime || evt.start.date;
+    if (!evt.start.dateTime && evt.start.date) isAllDay = true;
+  } else if (typeof evt.start === "string") {
+    startRaw = evt.start;
+  } else if (evt.startTime) {
+    startRaw = evt.startTime;
+  }
+
+  if (typeof evt.end === "object" && evt.end !== null) {
+    endRaw = evt.end.dateTime || evt.end.date;
+  } else if (typeof evt.end === "string") {
+    endRaw = evt.end;
+  } else if (evt.endTime) {
+    endRaw = evt.endTime;
+  }
+
+  if (evt.isAllDay !== undefined) isAllDay = evt.isAllDay;
+
+  return {
+    title: title,
+    start: startRaw ? new Date(startRaw) : null,
+    end: endRaw ? new Date(endRaw) : null,
+    isAllDay: isAllDay,
+    location: evt.location || ""
+  };
+}
+
 
 /* =========================================================
-   WAKE LOCK & DISPLAY KEEP-ALIVE (常駐顯示優化)
+   GAS DATA FETCH
 ========================================================= */
 
-// 1. 自動保持螢幕長亮（防止手機鎖屏）
-async function requestWakeLock() {
+async function syncGasData() {
   try {
-    if ('wakeLock' in navigator) {
-      await navigator.wakeLock.request('screen');
-      console.log('💡 螢幕保持長亮啟動');
+    console.log("正在從 GAS 獲取最新資料...");
+    const res = await fetch(GAS_API_URL);
+    if (!res.ok) throw new Error(`GAS HTTP 錯誤 ${res.status}`);
+    const data = await res.json();
+
+    // 渲染 Tasks 同 Mail
+    renderTasks(data.tasks || []);
+    setPanelUpdated(taskUpdated);
+
+    renderMail(data.gmail || []);
+    setPanelUpdated(mailUpdated);
+
+    // 快取日曆資料並觸發渲染
+    cachedCalendarData = data.calendar || [];
+    if (currentScheduleMode === "calendar") {
+      renderScheduleDisplay();
     }
   } catch (err) {
-    console.log('Wake Lock 啟動失敗:', err);
-  }
-}
-requestWakeLock();
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") requestWakeLock();
-});
-
-// 2. 每 3 小時進行「無痕軟重載」（保持 Fullscreen 不退出，並清空 DOM 釋放記憶體）
-setInterval(() => {
-  console.log("🧹 執行 3 小時定期記憶體清理與重新同步...");
-  
-  // 1. 清空所有舊 DOM 內容
-  taskScroll.innerHTML = '<div class="task-empty">更新中...</div>';
-  scheduleScroll.innerHTML = '<div class="schedule-empty">更新中...</div>';
-  mailScroll.innerHTML = '<div class="mail-empty">更新中...</div>';
-
-  // 2. 重新觸發完整資料同步
-  syncAll();
-  
-}, 3 * 60 * 60 * 1000);
-
-
-/* =========================================================
-   GOOGLE AUTH & PERSISTENCE (含背景自動續期)
-========================================================= */
-
-function saveToken(tokenResp) {
-  accessToken = tokenResp.access_token;
-  const expiresAt = Date.now() + ((tokenResp.expires_in || 3600) - 60) * 1000;
-  
-  localStorage.setItem("google_access_token", accessToken);
-  localStorage.setItem("google_token_expires_at", expiresAt);
-
-  // 每次成功取得 Token 後，預約 50 分鐘後背景自動更新 Token
-  startAutoTokenRefresh();
-}
-
-function startAutoTokenRefresh() {
-  if (autoRefreshTimer) clearTimeout(autoRefreshTimer);
-  
-  // 50 分鐘後觸發背景靜默更新
-  autoRefreshTimer = setTimeout(() => {
-    console.log("⏰ 接近 1 小時，正在背景靜默更新 Google Token...");
-    refreshTokenSilently();
-  }, 50 * 60 * 1000);
-}
-
-function refreshTokenSilently() {
-  if (tokenClient) {
-    // prompt: '' 代表背景請求，不會彈出登入視窗
-    tokenClient.requestAccessToken({ prompt: "" });
-  }
-}
-
-function clearTokenStorage() {
-  accessToken = null;
-  taskListId = null;
-  if (autoRefreshTimer) clearTimeout(autoRefreshTimer);
-  localStorage.removeItem("google_access_token");
-  localStorage.removeItem("google_token_expires_at");
-}
-
-function loadSavedToken() {
-  const token = localStorage.getItem("google_access_token");
-  const expiresAt = localStorage.getItem("google_token_expires_at");
-
-  if (token && expiresAt && Date.now() < parseInt(expiresAt, 10)) {
-    accessToken = token;
-    loginOverlay.style.display = "none";
-    logoutButton.style.display = "block";
-    startAutoTokenRefresh();
-    syncAll();
-    return true;
-  }
-  return false;
-}
-
-function initGoogleAuth() {
-  if (!window.google || !google.accounts || !google.accounts.oauth2) {
-    console.error("Google Identity Services 尚未載入");
-    return;
-  }
-
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: GOOGLE_SCOPE,
-    callback: async response => {
-      if (response.error) {
-        console.error("Token 回應錯誤:", response.error);
-        if (!accessToken) {
-          loginOverlay.style.display = "flex";
-        }
-        return;
-      }
-
-      saveToken(response);
-      loginOverlay.style.display = "none";
-      logoutButton.style.display = "block";
-
-      await syncAll();
+    console.error("GAS 資料獲取失敗:", err);
+    taskScroll.innerHTML = `<div class="task-error">Tasks 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
+    mailScroll.innerHTML = `<div class="task-error">Email 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
+    if (currentScheduleMode === "calendar") {
+      scheduleScroll.innerHTML = `<div class="task-error">Schedule 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
     }
-  });
-
-  const hasValidToken = loadSavedToken();
-
-  if (!hasValidToken) {
-    refreshTokenSilently();
   }
-}
-
-window.addEventListener("load", initGoogleAuth);
-
-loginButton.addEventListener("click", () => {
-  if (!tokenClient) {
-    alert("Google 登入元件仍在載入，請稍候。");
-    return;
-  }
-  tokenClient.requestAccessToken({ prompt: "consent" });
-});
-
-logoutButton.addEventListener("click", () => {
-  if (!accessToken) return;
-
-  google.accounts.oauth2.revoke(accessToken, () => {
-    clearTokenStorage();
-
-    loginOverlay.style.display = "flex";
-    logoutButton.style.display = "none";
-
-    taskScroll.innerHTML = `<div class="task-empty">已登出</div>`;
-    scheduleScroll.innerHTML = `<div class="schedule-empty">已登出</div>`;
-    mailScroll.innerHTML = `<div class="mail-empty">已登出</div>`;
-
-    taskCount.textContent = "--";
-    mailCount.textContent = "未讀";
-
-    taskUpdated.textContent = "更新 --";
-    scheduleUpdated.textContent = "更新 --";
-    mailUpdated.textContent = "更新 --";
-  });
-});
-
-
-/* =========================================================
-   GOOGLE API FETCH
-========================================================= */
-
-async function googleFetch(url, options = {}) {
-  if (!accessToken) {
-    throw new Error("尚未登入 Google");
-  }
-
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...(options.headers || {}),
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json"
-    }
-  });
-
-  if (response.status === 401) {
-    console.warn("⚠️ Token 已過期，嘗試靜默刷新...");
-    refreshTokenSilently();
-    throw new Error("Google 授權過期，已自動請求刷新");
-  }
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`${response.status}: ${text}`);
-  }
-
-  return response.json();
 }
 
 
 /* =========================================================
-   TASKS
+   TASKS RENDER
 ========================================================= */
-
-async function getDefaultTaskList() {
-  if (taskListId) return taskListId;
-
-  const data = await googleFetch(`${TASKS_API}/users/@me/lists?maxResults=100`);
-  const lists = data.items || [];
-  const defaultList = lists.find(item => item.id === "@default");
-
-  if (defaultList) {
-    taskListId = defaultList.id;
-  } else if (lists.length) {
-    taskListId = lists[0].id;
-  } else {
-    throw new Error("找不到 Google Tasks 清單");
-  }
-
-  return taskListId;
-}
 
 function taskDateInfo(due) {
   if (!due) return null;
-
   const date = new Date(due);
   const today = startOfToday();
   const tomorrow = startOfTomorrow();
   const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-  if (dateOnly < today) {
-    return { text: "逾期", className: "overdue" };
-  }
-  if (dateOnly.getTime() === today.getTime()) {
-    return { text: "今日", className: "today" };
-  }
-  if (dateOnly.getTime() === tomorrow.getTime()) {
-    return { text: "明日", className: "tomorrow" };
-  }
+  if (dateOnly < today) return { text: "逾期", className: "overdue" };
+  if (dateOnly.getTime() === today.getTime()) return { text: "今日", className: "today" };
+  if (dateOnly.getTime() === tomorrow.getTime()) return { text: "明日", className: "tomorrow" };
 
   return { text: formatDateMD(date), className: "" };
-}
-
-function sortTasks(tasks) {
-  return [...tasks].sort((a, b) => {
-    if (!a.due && !b.due) return 0;
-    if (!a.due) return 1;
-    if (!b.due) return -1;
-    return new Date(a.due) - new Date(b.due);
-  });
 }
 
 function renderTasks(tasks) {
@@ -1800,7 +1245,14 @@ function renderTasks(tasks) {
     return;
   }
 
-  sortTasks(tasks).forEach(task => {
+  const sorted = [...tasks].sort((a, b) => {
+    if (!a.due && !b.due) return 0;
+    if (!a.due) return 1;
+    if (!b.due) return -1;
+    return new Date(a.due) - new Date(b.due);
+  });
+
+  sorted.forEach(task => {
     const card = document.createElement("div");
     card.className = "task-card";
 
@@ -1808,28 +1260,11 @@ function renderTasks(tasks) {
     checkbox.type = "button";
     checkbox.className = "task-checkbox";
 
-    checkbox.addEventListener("click", async () => {
+    checkbox.addEventListener("click", () => {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
-
-      try {
-        await googleFetch(
-          `${TASKS_API}/lists/${encodeURIComponent(taskListId)}/tasks/${encodeURIComponent(task.id)}`,
-          {
-            method: "PATCH",
-            body: JSON.stringify({ status: "completed" })
-          }
-        );
-      } catch (error) {
-        console.error(error);
-        await syncTasks();
-        return;
-      }
-
       setTimeout(() => {
-        if (card.parentNode) {
-          card.parentNode.removeChild(card);
-        }
+        if (card.parentNode) card.parentNode.removeChild(card);
       }, 250);
     });
 
@@ -1841,7 +1276,6 @@ function renderTasks(tasks) {
     title.textContent = task.title || "(無標題)";
 
     const info = taskDateInfo(task.due);
-
     content.appendChild(title);
 
     if (info) {
@@ -1853,58 +1287,14 @@ function renderTasks(tasks) {
 
     card.appendChild(checkbox);
     card.appendChild(content);
-
     taskScroll.appendChild(card);
   });
 }
 
-async function syncTasks() {
-  try {
-    const listId = await getDefaultTaskList();
-    const data = await googleFetch(
-      `${TASKS_API}/lists/${encodeURIComponent(listId)}/tasks?showCompleted=false&showDeleted=false&maxResults=100`
-    );
-
-    renderTasks(data.items || []);
-    setPanelUpdated(taskUpdated);
-  } catch (error) {
-    console.error("Tasks error:", error);
-    taskScroll.innerHTML = `<div class="task-error">Tasks 讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
-  }
-}
-
 
 /* =========================================================
-   CALENDAR & GOOGLE SHEET CLASS SCHEDULE (DUAL MODE)
+   SCHEDULE & GOOGLE SHEET CLASS DUAL RENDER
 ========================================================= */
-
-async function syncCalendar() {
-  try {
-    const today = startOfToday();
-    const tomorrow = startOfTomorrow();
-    const dayAfterTomorrow = new Date(tomorrow);
-    dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
-
-    const params = new URLSearchParams({
-      timeMin: today.toISOString(),
-      timeMax: dayAfterTomorrow.toISOString(),
-      singleEvents: "true",
-      orderBy: "startTime"
-    });
-
-    const data = await googleFetch(`${CALENDAR_API}/calendars/primary/events?${params.toString()}`);
-    cachedCalendarData = data.items || [];
-    
-    if (currentScheduleMode === "calendar") {
-      renderScheduleDisplay();
-    }
-  } catch (error) {
-    console.error("Calendar error:", error);
-    if (currentScheduleMode === "calendar") {
-      scheduleScroll.innerHTML = `<div class="task-error">Schedule 讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
-    }
-  }
-}
 
 async function syncClassSchedule() {
   try {
@@ -1926,7 +1316,7 @@ async function syncClassSchedule() {
 
 function renderScheduleDisplay() {
   const today = new Date();
-  
+
   if (currentScheduleMode === "calendar") {
     scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
     renderCalendar(cachedCalendarData);
@@ -1940,7 +1330,7 @@ function renderScheduleDisplay() {
 function renderCalendar(events) {
   scheduleScroll.innerHTML = "";
 
-  if (!events.length) {
+  if (!events || !events.length) {
     scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
     return;
   }
@@ -1951,15 +1341,21 @@ function renderCalendar(events) {
   const todayEvents = [];
   const tomorrowEvents = [];
 
-  events.forEach(evt => {
-    const startStr = evt.start.dateTime || evt.start.date;
-    const start = new Date(startStr);
-    if (start < tomorrow) {
+  events.forEach(rawEvt => {
+    const evt = parseEventData(rawEvt);
+    if (!evt.start || isNaN(evt.start.getTime())) return;
+
+    if (evt.start < tomorrow) {
       todayEvents.push(evt);
     } else {
       tomorrowEvents.push(evt);
     }
   });
+
+  if (!todayEvents.length && !tomorrowEvents.length) {
+    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
+    return;
+  }
 
   let nextFound = false;
 
@@ -1975,29 +1371,27 @@ function renderCalendar(events) {
       const item = document.createElement("div");
       item.className = "schedule-item";
 
-      const isAllDay = !evt.start.dateTime;
       let timeText = "";
       let countdownText = "";
 
-      if (isAllDay) {
+      if (evt.isAllDay) {
         timeText = "全天";
-      } else {
-        const start = new Date(evt.start.dateTime);
-        const end = new Date(evt.end.dateTime);
-        timeText = formatTime(start);
+      } else if (evt.start) {
+        timeText = formatTime(evt.start);
+        const end = evt.end || new Date(evt.start.getTime() + 60 * 60 * 1000);
 
-        if (now >= start && now <= end) {
+        if (now >= evt.start && now <= end) {
           item.classList.add("now");
           const remain = Math.max(1, Math.floor((end - now) / 60000));
           countdownText = `進行中 (剩 ${remain} 分鐘)`;
         } else if (now > end) {
           item.classList.add("past");
-        } else if (now < start) {
+        } else if (now < evt.start) {
           if (!nextFound) {
             item.classList.add("next");
             nextFound = true;
           }
-          const diffMs = start - now;
+          const diffMs = evt.start - now;
           const totalMin = Math.floor(diffMs / 60000);
           const h = Math.floor(totalMin / 60);
           const m = totalMin % 60;
@@ -2006,7 +1400,7 @@ function renderCalendar(events) {
       }
 
       const timeDiv = document.createElement("div");
-      timeDiv.className = "schedule-time" + (isAllDay ? " schedule-all-day" : "");
+      timeDiv.className = "schedule-time" + (evt.isAllDay ? " schedule-all-day" : "");
       timeDiv.textContent = timeText;
 
       const lineDiv = document.createElement("div");
@@ -2020,7 +1414,7 @@ function renderCalendar(events) {
 
       const titleDiv = document.createElement("div");
       titleDiv.className = "schedule-title";
-      titleDiv.textContent = evt.summary || "(無主題)";
+      titleDiv.textContent = evt.title;
 
       if (countdownText) {
         const tag = document.createElement("span");
@@ -2148,7 +1542,6 @@ function renderClassSchedule(rows) {
     }
 
     const timeDisplay = startTimeStr && endTimeStr ? `${startTimeStr} - ${endTimeStr}` : (startTimeStr || "--:--");
-
     const periodText = texts[0] || "";
     const classText = texts[1] || "";
     const extraLoc = texts[2] ? `📍 ${texts[2]}` : "";
@@ -2221,57 +1614,51 @@ function renderClassSchedule(rows) {
 
 
 /* =========================================================
-   EMAIL
+   EMAIL RENDER
 ========================================================= */
-
-async function syncMail() {
-  try {
-    const data = await googleFetch(`${GMAIL_API}/users/me/messages?q=is:unread&maxResults=15`);
-    const messages = data.messages || [];
-
-    mailCount.textContent = `${messages.length} 封`;
-
-    if (!messages.length) {
-      mailScroll.innerHTML = `<div class="mail-empty">🎉 沒有未讀 Email</div>`;
-      setPanelUpdated(mailUpdated);
-      return;
-    }
-
-    const details = await Promise.all(
-      messages.map(m =>
-        googleFetch(`${GMAIL_API}/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`)
-      )
-    );
-
-    renderMail(details);
-    setPanelUpdated(mailUpdated);
-  } catch (error) {
-    console.error("Mail error:", error);
-    mailScroll.innerHTML = `<div class="task-error">Email 讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
-  }
-}
 
 function renderMail(mails) {
   mailScroll.innerHTML = "";
 
-  mails.forEach(mail => {
-    const headers = mail.payload.headers || [];
-    const getHeader = name => {
-      const h = headers.find(item => item.name.toLowerCase() === name.toLowerCase());
-      return h ? h.value : "";
-    };
+  if (!mails || !mails.length) {
+    mailCount.textContent = "0 封";
+    mailScroll.innerHTML = `<div class="mail-empty">🎉 沒有未讀 Email</div>`;
+    return;
+  }
 
-    const rawFrom = getHeader("From");
-    const from = rawFrom.replace(/<.*>/, "").replace(/"/g, "").trim() || "未知發件人";
-    const subject = getHeader("Subject") || "(無主旨)";
-    const dateStr = getHeader("Date");
-    const date = dateStr ? new Date(dateStr) : new Date();
+  mailCount.textContent = `${mails.length} 封`;
+
+  mails.forEach(mail => {
+    let from = "未知發件人";
+    let subject = "(無主旨)";
+    let date = new Date();
+    let snippet = mail.snippet || "";
+    let mailId = mail.id || "";
+
+    if (mail.payload && mail.payload.headers) {
+      const headers = mail.payload.headers || [];
+      const getHeader = name => {
+        const h = headers.find(item => item.name.toLowerCase() === name.toLowerCase());
+        return h ? h.value : "";
+      };
+
+      const rawFrom = getHeader("From");
+      from = rawFrom.replace(/<.*>/, "").replace(/"/g, "").trim() || "未知發件人";
+      subject = getHeader("Subject") || "(無主旨)";
+      const dateStr = getHeader("Date");
+      if (dateStr) date = new Date(dateStr);
+    } else {
+      if (mail.from) from = mail.from.replace(/<.*>/, "").replace(/"/g, "").trim();
+      if (mail.subject) subject = mail.subject;
+      if (mail.date) date = new Date(mail.date);
+    }
 
     const card = document.createElement("div");
     card.className = "mail-card";
 
     card.addEventListener("click", () => {
-      window.open(`https://mail.google.com/mail/u/0/#inbox/${mail.id}`, "_blank");
+      const url = mailId ? `https://mail.google.com/mail/u/0/#inbox/${mailId}` : `https://mail.google.com/mail/u/0/#inbox`;
+      window.open(url, "_blank");
     });
 
     const top = document.createElement("div");
@@ -2292,13 +1679,13 @@ function renderMail(mails) {
     subj.className = "mail-subject";
     subj.textContent = subject;
 
-    const snippet = document.createElement("div");
-    snippet.className = "mail-snippet";
-    snippet.textContent = mail.snippet || "";
+    const snip = document.createElement("div");
+    snip.className = "mail-snippet";
+    snip.textContent = snippet;
 
     card.appendChild(top);
     card.appendChild(subj);
-    card.appendChild(snippet);
+    card.appendChild(snip);
 
     mailScroll.appendChild(card);
   });
@@ -2306,7 +1693,7 @@ function renderMail(mails) {
 
 
 /* =========================================================
-   WEATHER & AQHI
+   WEATHER & AQHI API
 ========================================================= */
 
 async function syncWeather() {
@@ -2354,9 +1741,7 @@ async function syncWeather() {
         document.getElementById("aqhi").textContent = central.aqhi || "--";
       }
     }
-  } catch (e) {
-    // Silently continue
-  }
+  } catch (e) {}
 }
 
 function getWeatherEmoji(code) {
@@ -2376,22 +1761,18 @@ function getWeatherText(code) {
 
 
 /* =========================================================
-   CONTROL & SYNC ALL
+   CONTROL & TIMERS
 ========================================================= */
 
 async function syncAll() {
   await Promise.allSettled([
-    syncTasks(),
-    syncCalendar(),
+    syncGasData(),
     syncClassSchedule(),
-    syncMail(),
     syncWeather()
   ]);
 }
 
-syncButton.addEventListener("click", () => {
-  syncAll();
-});
+syncButton.addEventListener("click", () => syncAll());
 
 workButton.addEventListener("click", () => {
   workOff = true;
@@ -2417,18 +1798,12 @@ fullscreenButton.addEventListener("click", () => {
   }
 });
 
-
-/* =========================================================
-   INTERVAL TIMERS & AUTOMATIC SWITCH
-========================================================= */
-
-setInterval(() => { if (accessToken && !workOff) syncTasks(); }, TASK_INTERVAL);
-setInterval(() => { if (accessToken && !workOff) syncCalendar(); }, CALENDAR_INTERVAL);
-setInterval(() => { if (!workOff) syncClassSchedule(); }, CALENDAR_INTERVAL);
-setInterval(() => { if (accessToken && !workOff) syncMail(); }, MAIL_INTERVAL);
+// 自動計時器
+setInterval(() => { if (!workOff) syncGasData(); }, DATA_SYNC_INTERVAL);
+setInterval(() => { if (!workOff) syncClassSchedule(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { syncWeather(); }, WEATHER_INTERVAL);
 
-// 10 秒自動切換 Schedule 視圖
+// 10 秒自動切換 Schedule 視圖 (日曆 ↔ 課堂)
 setInterval(() => {
   if (!workOff) {
     currentScheduleMode = (currentScheduleMode === "calendar") ? "class" : "calendar";
@@ -2436,9 +1811,8 @@ setInterval(() => {
   }
 }, SCHEDULE_SWITCH_INTERVAL);
 
-// 初始化加載
-syncWeather();
-syncClassSchedule();
+// 首次加載
+syncAll();
 
 </script>
 </body>
