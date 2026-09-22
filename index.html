@@ -1427,7 +1427,24 @@ function renderTasks(tasks) {
     taskScroll.appendChild(card);
   });
 }
+// 確保定義了 renderCalendar 函數
+function renderCalendar(events) {
+  const container = document.getElementById('calendar-container'); // 請確認你的 HTML 容器 ID
+  if (!container) return;
 
+  if (!events || events.length === 0) {
+    container.innerHTML = '<div class="empty-state">📅 近期沒有日程</div>';
+    return;
+  }
+
+  // 渲染日程資料
+  container.innerHTML = events.map(event => `
+    <div class="calendar-item">
+      <span class="event-time">${event.startTime || ''}</span>
+      <span class="event-title">${escapeHtml(event.title)}</span>
+    </div>
+  `).join('');
+}
 function renderScheduleDisplay() {
   const today = new Date();
   // 🌟 讀取手動切換設定
