@@ -1155,8 +1155,8 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaB
 const HKO_API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 const AQHI_API = "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
-const DATA_SYNC_INTERVAL = 1 * 60 * 1000;      // 每 1 分鐘自動從 GAS 更新
-const WEATHER_INTERVAL = 5 * 60 * 1000;       // 每 5 分鐘更新天氣
+const DATA_SYNC_INTERVAL = 1 * 60 * 1000;      // 每 1 分鐘自動從 GAS/Sheet 更新
+const WEATHER_INTERVAL = 5 * 60 * 1000;        // 每 5 分鐘更新天氣
 const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日曆 / 課堂」視圖
 
 
@@ -1216,13 +1216,13 @@ function formatTime(date) {
 }
 
 function updateClock() {
-  clock.textContent = formatTime(new Date());
+  if (clock) clock.textContent = formatTime(new Date());
 }
 setInterval(updateClock, 1000);
 updateClock();
 
 function setPanelUpdated(element, prefix = "更新") {
-  element.textContent = `${prefix} ${formatTime(new Date())}`;
+  if (element) element.textContent = `${prefix} ${formatTime(new Date())}`;
 }
 
 function startOfToday() {
@@ -1234,12 +1234,6 @@ function startOfToday() {
 function startOfTomorrow() {
   const d = startOfToday();
   d.setDate(d.getDate() + 1);
-  return d;
-}
-   // ➕ 新增這段：計算後天 00:00 的時間
-function startOfDayAfterTomorrow() {
-  const d = startOfToday();
-  d.setDate(d.getDate() + 2);
   return d;
 }
 
@@ -1276,7 +1270,6 @@ function parseCSV(text) {
   return result;
 }
 
-// 萬能 Calendar 事件資料兼容解析器
 function parseEventData(evt) {
   const title = evt.title || evt.summary || "(無主題)";
   let startRaw = null;
@@ -1313,7 +1306,7 @@ function parseEventData(evt) {
 
 
 /* =========================================================
-   GAS DATA FETCH
+   DATA FETCH (GAS & CLASS SCHEDULE)
 ========================================================= */
 
 async function syncGasData() {
@@ -1323,24 +1316,42 @@ async function syncGasData() {
     if (!res.ok) throw new Error(`GAS HTTP 錯誤 ${res.status}`);
     const data = await res.json();
 
-    // 渲染 Tasks 同 Mail
     renderTasks(data.tasks || []);
     setPanelUpdated(taskUpdated);
 
     renderMail(data.gmail || []);
     setPanelUpdated(mailUpdated);
 
-    // 快取日曆資料並觸發渲染
     cachedCalendarData = data.calendar || [];
     if (currentScheduleMode === "calendar") {
       renderScheduleDisplay();
     }
   } catch (err) {
     console.error("GAS 資料獲取失敗:", err);
-    taskScroll.innerHTML = `<div class="task-error">Tasks 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
-    mailScroll.innerHTML = `<div class="task-error">Email 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
-    if (currentScheduleMode === "calendar") {
+    if (taskScroll) taskScroll.innerHTML = `<div class="task-error">Tasks 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
+    if (mailScroll) mailScroll.innerHTML = `<div class="task-error">Email 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
+    if (currentScheduleMode === "calendar" && scheduleScroll) {
       scheduleScroll.innerHTML = `<div class="task-error">Schedule 讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
+    }
+  }
+}
+
+// 補回：從 Google Sheet CSV 讀取課表
+async function syncClassSchedule() {
+  try {
+    console.log("正在從 Google Sheet 獲取課表...");
+    const res = await fetch(SHEET_CSV_URL);
+    if (!res.ok) throw new Error(`CSV HTTP 錯誤 ${res.status}`);
+    const csvText = await res.text();
+    cachedClassData = parseCSV(csvText);
+
+    if (currentScheduleMode === "class") {
+      renderScheduleDisplay();
+    }
+  } catch (err) {
+    console.error("課表獲取失敗:", err);
+    if (currentScheduleMode === "class" && scheduleScroll) {
+      scheduleScroll.innerHTML = `<div class="task-error">課表讀取失敗<br><br>${escapeHtml(err.message)}</div>`;
     }
   }
 }
@@ -1365,8 +1376,9 @@ function taskDateInfo(due) {
 }
 
 function renderTasks(tasks) {
+  if (!taskScroll) return;
   taskScroll.innerHTML = "";
-  taskCount.textContent = `${tasks.length} 項`;
+  if (taskCount) taskCount.textContent = `${tasks.length} 項`;
 
   if (!tasks.length) {
     taskScroll.innerHTML = `<div class="task-empty">🎉 沒有未完成 Tasks</div>`;
@@ -1392,7 +1404,6 @@ function renderTasks(tasks) {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
 
-      // 🌐 即時發送請求給 Google Apps Script，標記該 Task 為已完成
       if (task.id) {
         fetch(`${GAS_API_URL}?action=completeTask&taskId=${encodeURIComponent(task.id)}`)
           .then(res => res.json())
@@ -1427,44 +1438,65 @@ function renderTasks(tasks) {
     taskScroll.appendChild(card);
   });
 }
-// 確保定義了 renderCalendar 函數
+
+
+/* =========================================================
+   SCHEDULE & CALENDAR RENDER
+========================================================= */
+
 function renderCalendar(events) {
-  const container = document.getElementById('calendar-container'); // 請確認你的 HTML 容器 ID
-  if (!container) return;
+  if (!scheduleScroll) return;
+  scheduleScroll.innerHTML = "";
 
   if (!events || events.length === 0) {
-    container.innerHTML = '<div class="empty-state">📅 近期沒有日程</div>';
+    scheduleScroll.innerHTML = '<div class="schedule-empty">📅 近期沒有行程</div>';
     return;
   }
 
-  // 渲染日程資料
-  container.innerHTML = events.map(event => `
-    <div class="calendar-item">
-      <span class="event-time">${event.startTime || ''}</span>
-      <span class="event-title">${escapeHtml(event.title)}</span>
-    </div>
-  `).join('');
+  events.forEach(rawEvt => {
+    const evt = parseEventData(rawEvt);
+    const item = document.createElement("div");
+    item.className = "schedule-item";
+
+    let timeText = "全天";
+    if (!evt.isAllDay && evt.start) {
+      timeText = formatTime(evt.start);
+      if (evt.end) timeText += ` - ${formatTime(evt.end)}`;
+    }
+
+    item.innerHTML = `
+      <div class="schedule-time">${timeText}</div>
+      <div class="schedule-line"><div class="schedule-dot"></div></div>
+      <div class="schedule-info">
+        <div class="schedule-title">
+          <span class="class-title">${escapeHtml(evt.title)}</span>
+        </div>
+        ${evt.location ? `<div class="schedule-location">📍 ${escapeHtml(evt.location)}</div>` : ''}
+      </div>
+    `;
+    scheduleScroll.appendChild(item);
+  });
 }
+
 function renderScheduleDisplay() {
   const today = new Date();
-  // 🌟 讀取手動切換設定
   const overrideMode = localStorage.getItem("schedule_override_day") || "auto";
 
   if (currentScheduleMode === "calendar") {
-    scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
+    if (scheduleDate) scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
     renderCalendar(cachedCalendarData);
   } else {
-    // 如果是調課模式，在標題加個提示標籤
     const isOverride = overrideMode !== "auto";
     const badge = isOverride ? " (調課模式)" : "";
     
-    scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}${badge}`;
+    if (scheduleDate) scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}${badge}`;
     renderClassSchedule(cachedClassData);
   }
   setPanelUpdated(scheduleUpdated, currentScheduleMode === "calendar" ? "日曆" : "課堂");
 }
 
 function renderClassSchedule(rows) {
+  if (!scheduleScroll) return;
   scheduleScroll.innerHTML = "";
 
   if (!rows || rows.length === 0) {
@@ -1475,7 +1507,6 @@ function renderClassSchedule(rows) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  // 🌟 關鍵修改：先讀取 localStorage 設定，若為 auto 才用真實星期
   const overrideMode = localStorage.getItem("schedule_override_day") || "auto";
   const todayIdx = (overrideMode === "auto") ? now.getDay() : parseInt(overrideMode);
 
@@ -1641,15 +1672,16 @@ function renderClassSchedule(rows) {
 ========================================================= */
 
 function renderMail(mails) {
+  if (!mailScroll) return;
   mailScroll.innerHTML = "";
 
   if (!mails || !mails.length) {
-    mailCount.textContent = "0 封";
+    if (mailCount) mailCount.textContent = "0 封";
     mailScroll.innerHTML = `<div class="mail-empty">🎉 沒有未讀 Email</div>`;
     return;
   }
 
-  mailCount.textContent = `${mails.length} 封`;
+  if (mailCount) mailCount.textContent = `${mails.length} 封`;
 
   mails.forEach(mail => {
     let from = "未知發件人";
@@ -1727,29 +1759,36 @@ async function syncWeather() {
 
     if (data.temperature && data.temperature.data) {
       const tempObj = data.temperature.data.find(d => d.place === "香港天文台") || data.temperature.data[0];
-      document.getElementById("weatherTemp").textContent = `${tempObj.value}°C`;
+      const el = document.getElementById("weatherTemp");
+      if (el) el.textContent = `${tempObj.value}°C`;
     }
 
     if (data.humidity && data.humidity.data) {
-      document.getElementById("humidity").textContent = `${data.humidity.data[0].value}%`;
+      const el = document.getElementById("humidity");
+      if (el) el.textContent = `${data.humidity.data[0].value}%`;
     }
 
     if (data.rainfall && data.rainfall.data) {
       const rf = data.rainfall.data.find(d => d.place === "油尖旺") || data.rainfall.data[0];
-      document.getElementById("rainProbability").textContent = `${rf.max || 0}mm`;
+      const el = document.getElementById("rainProbability");
+      if (el) el.textContent = `${rf.max || 0}mm`;
     }
 
     if (data.icon && data.icon.length) {
       const iconCode = data.icon[0];
-      document.getElementById("weatherIcon").textContent = getWeatherEmoji(iconCode);
-      document.getElementById("weatherText").textContent = getWeatherText(iconCode);
+      const iconEl = document.getElementById("weatherIcon");
+      const textEl = document.getElementById("weatherText");
+      if (iconEl) iconEl.textContent = getWeatherEmoji(iconCode);
+      if (textEl) textEl.textContent = getWeatherText(iconCode);
     }
 
-    if (data.warningMessage && data.warningMessage.length) {
-      warningBar.classList.add("active");
-      warningText.textContent = data.warningMessage.join(" | ");
-    } else {
-      warningBar.classList.remove("active");
+    if (warningBar && warningText) {
+      if (data.warningMessage && data.warningMessage.length) {
+        warningBar.classList.add("active");
+        warningText.textContent = data.warningMessage.join(" | ");
+      } else {
+        warningBar.classList.remove("active");
+      }
     }
   } catch (err) {
     console.error("Weather error:", err);
@@ -1761,7 +1800,8 @@ async function syncWeather() {
       const aqData = await aqRes.json();
       if (Array.isArray(aqData) && aqData.length) {
         const central = aqData.find(item => item.station === "中西區") || aqData[0];
-        document.getElementById("aqhi").textContent = central.aqhi || "--";
+        const el = document.getElementById("aqhi");
+        if (el) el.textContent = central.aqhi || "--";
       }
     }
   } catch (e) {}
@@ -1795,33 +1835,39 @@ async function syncAll() {
   ]);
 }
 
-syncButton.addEventListener("click", () => syncAll());
+if (syncButton) syncButton.addEventListener("click", () => syncAll());
 
-workButton.addEventListener("click", () => {
-  workOff = true;
-  dashboard.style.display = "none";
-  workOffMessage.classList.add("active");
-  workButton.style.display = "none";
-  continueButton.style.display = "block";
-});
+if (workButton) {
+  workButton.addEventListener("click", () => {
+    workOff = true;
+    if (dashboard) dashboard.style.display = "none";
+    if (workOffMessage) workOffMessage.classList.add("active");
+    workButton.style.display = "none";
+    if (continueButton) continueButton.style.display = "block";
+  });
+}
 
-continueButton.addEventListener("click", () => {
-  workOff = false;
-  dashboard.style.display = "grid";
-  workOffMessage.classList.remove("active");
-  workButton.style.display = "block";
-  continueButton.style.display = "none";
-});
+if (continueButton) {
+  continueButton.addEventListener("click", () => {
+    workOff = false;
+    if (dashboard) dashboard.style.display = "grid";
+    if (workOffMessage) workOffMessage.classList.remove("active");
+    if (workButton) workButton.style.display = "block";
+    continueButton.style.display = "none";
+  });
+}
 
-fullscreenButton.addEventListener("click", () => {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(err => console.error(err));
-  } else {
-    document.exitFullscreen().catch(err => console.error(err));
-  }
-});
+if (fullscreenButton) {
+  fullscreenButton.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => console.error(err));
+    } else {
+      document.exitFullscreen().catch(err => console.error(err));
+    }
+  });
+}
 
-// 自動計時器
+// 計時器設定
 setInterval(() => { if (!workOff) syncGasData(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { if (!workOff) syncClassSchedule(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { syncWeather(); }, WEATHER_INTERVAL);
@@ -1834,13 +1880,14 @@ setInterval(() => {
   }
 }, SCHEDULE_SWITCH_INTERVAL);
 
-// 首次加載
+// 首次載入執行
 syncAll();
+
+
 /* =========================================================
-   ⚙️ 課堂星期切換 Modal 控制邏輯 (對接 Google Sheet)
+   ⚙️ 課堂星期切換 Modal 控制邏輯
 ========================================================= */
 
-// DOM 元素綁定
 const settingsModal = document.getElementById("settings-modal");
 const btnSettings = document.getElementById("settings-btn");
 const btnCloseX = document.getElementById("close-modal-x");
@@ -1848,12 +1895,10 @@ const btnCancel = document.getElementById("cancel-settings-btn");
 const btnSave = document.getElementById("save-settings-btn");
 const daySelectInput = document.getElementById("cfg-schedule-day-mode");
 
-// 關閉選單
 const closeModal = () => {
   if (settingsModal) settingsModal.classList.add("hidden");
 };
 
-// 開啟設定選單 (自動帶入當前 LocalStorage 設定)
 if (btnSettings) {
   btnSettings.addEventListener("click", () => {
     const savedMode = localStorage.getItem("schedule_override_day") || "auto";
@@ -1865,18 +1910,16 @@ if (btnSettings) {
 if (btnCloseX) btnCloseX.addEventListener("click", closeModal);
 if (btnCancel) btnCancel.addEventListener("click", closeModal);
 
-// 點擊儲存：寫入 LocalStorage 並即時刷新真正的課堂畫面
 if (btnSave) {
   btnSave.addEventListener("click", () => {
     const selectedMode = daySelectInput ? daySelectInput.value : "auto";
     localStorage.setItem("schedule_override_day", selectedMode);
     
     closeModal();
-    
-    // 🌟 呼叫你原本真實的 Google Sheet 課堂刷新函式！
     renderScheduleDisplay();
   });
 }
+
 </script>
 </body>
 </html>
