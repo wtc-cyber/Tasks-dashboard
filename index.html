@@ -12,6 +12,7 @@
 <title>WTC Work Dashboard</title>
 
 <style>
+
 /* =========================================================
    GLOBAL & SCHEDULE CUSTOM STYLES
 ========================================================= */
@@ -864,12 +865,137 @@ button {
   }
 
 }
+   /* ⚙️ 浮動設定按鈕 */
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 999;
+  transition: transform 0.2s, background 0.2s;
+}
+.settings-btn:hover {
+  transform: rotate(45deg) scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Modal 背景遮罩 */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Modal 卡片外觀 */
+.modal-card {
+  background: #1e1e24;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  width: 85%;
+  max-width: 380px;
+  color: #fff;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h2 { font-size: 1.1rem; margin: 0; }
+.close-btn { background: none; border: none; color: #aaa; font-size: 1.5rem; cursor: pointer; }
+
+.modal-body { padding: 20px; }
+.setting-label { display: block; margin-bottom: 10px; font-size: 0.9rem; color: #ccc; }
+
+/* 下拉選單樣式 */
+.day-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: #2b2b36;
+  border: 1px solid #4ea8de;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.modal-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.btn-save {
+  background: #4ea8de; color: #fff; border: none;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold;
+}
+.btn-cancel {
+  background: #333; color: #ccc; border: none;
+  padding: 8px 16px; border-radius: 8px; cursor: pointer;
+}
 </style>
 </head>
 
 
 <body>
+   <!-- ⚙️ 設定按鈕 (點擊開啟切換面板) -->
+<button id="settings-btn" class="settings-btn" title="切換課堂模式">⚙️</button>
 
+<!-- ⚙️ 課堂模式切換 Modal -->
+<div id="settings-modal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>📚 切換顯示課堂</h2>
+      <button id="close-modal-x" class="close-btn">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="setting-section">
+        <label for="cfg-schedule-day-mode" class="setting-label">請選擇今日要顯示的課堂：</label>
+        <select id="cfg-schedule-day-mode" class="day-select">
+          <option value="auto">⚡ 自動（跟隨今日真實星期）</option>
+          <option value="1">📌 星期一課堂</option>
+          <option value="2">📌 星期二課堂</option>
+          <option value="3">📌 星期三課堂</option>
+          <option value="4">📌 星期四課堂</option>
+          <option value="5">📌 星期五課堂</option>
+          <option value="6">📌 星期六課堂</option>
+          <option value="0">📌 星期日課堂</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button id="save-settings-btn" class="btn-save">套用設定</button>
+      <button id="cancel-settings-btn" class="btn-cancel">取消</button>
+    </div>
+  </div>
+</div>
 <!-- APP MAIN CONTAINER -->
 
 <div class="app">
@@ -1828,7 +1954,91 @@ setInterval(() => {
 
 // 首次加載
 syncAll();
+/* =========================================================
+   📚 課堂星期切換邏輯
+========================================================= */
 
+// 1. 讀取或初始化本地設定
+function loadScheduleMode() {
+  return localStorage.getItem("schedule_override_day") || "auto";
+}
+
+let currentScheduleDayMode = loadScheduleMode();
+
+// DOM 元素綁定
+const settingsModal = document.getElementById("settings-modal");
+const btnSettings = document.getElementById("settings-btn");
+const btnCloseX = document.getElementById("close-modal-x");
+const btnCancel = document.getElementById("cancel-settings-btn");
+const btnSave = document.getElementById("save-settings-btn");
+const daySelectInput = document.getElementById("cfg-schedule-day-mode");
+
+// 開啟設定選單
+btnSettings.addEventListener("click", () => {
+  daySelectInput.value = currentScheduleDayMode;
+  settingsModal.classList.remove("hidden");
+});
+
+// 關閉選單
+const closeModal = () => settingsModal.classList.add("hidden");
+btnCloseX.addEventListener("click", closeModal);
+btnCancel.addEventListener("click", closeModal);
+
+// 點擊儲存
+btnSave.addEventListener("click", () => {
+  currentScheduleDayMode = daySelectInput.value;
+  localStorage.setItem("schedule_override_day", currentScheduleDayMode);
+  
+  closeModal();
+  renderTimetableDisplay(); // 儲存後立即更新畫面！
+});
+
+// 2. 渲染課堂表函式
+function renderTimetableDisplay() {
+  const scheduleScroll = document.getElementById("schedule-scroll"); // 你的 Schedule 容器 ID
+  if (!scheduleScroll) return;
+
+  const now = new Date();
+  const realDay = now.getDay(); // 當前真實星期 (0=週日, 1=週一...)
+
+  // 判斷要顯示「真實星期」還是「手動指定星期」
+  const targetDay = (currentScheduleDayMode === "auto")
+    ? realDay
+    : parseInt(currentScheduleDayMode);
+
+  const weekDayNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+  const displayDayName = weekDayNames[targetDay];
+  
+  // 取得對應星期的課堂內容 (請替換成你原本的每週課堂資料)
+  const timetableData = {
+    1: "09:00 數學 | 14:00 英文",
+    2: "10:00 物理 | 13:00 體育",
+    3: "09:00 中文 | 15:00 化學",
+    4: "11:00 歷史",
+    5: "09:00 通識 | 14:00 音樂",
+    6: "放假 / 自修",
+    0: "放假"
+  };
+
+  const todayClass = timetableData[targetDay] || "沒有課堂資料";
+  
+  // 如果是手動切換模式，加上黃色標籤提示
+  const isOverride = currentScheduleDayMode !== "auto";
+  const badgeHtml = isOverride 
+    ? `<span style="color:#ffb703; font-size:0.8rem; margin-left:6px;">(調課模式)</span>` 
+    : ``;
+
+  // 渲染到畫面
+  scheduleScroll.innerHTML = `
+    <div class="timetable-card">
+      <div class="timetable-title">📚 課堂表：${displayDayName} ${badgeHtml}</div>
+      <div class="timetable-detail">${escapeHtml(todayClass)}</div>
+    </div>
+  `;
+}
+
+// 初始化執行一次
+renderTimetableDisplay();
 </script>
 </body>
 </html>
