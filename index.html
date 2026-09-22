@@ -1428,161 +1428,23 @@ function renderTasks(tasks) {
   });
 }
 
-/* =========================================================
-   SCHEDULE & GOOGLE SHEET CLASS DUAL RENDER
-========================================================= */
-
-async function syncClassSchedule() {
-  try {
-    const res = await fetch(SHEET_CSV_URL);
-    if (!res.ok) throw new Error("無法讀取 Google Sheet CSV");
-    const text = await res.text();
-    cachedClassData = parseCSV(text);
-
-    if (currentScheduleMode === "class") {
-      renderScheduleDisplay();
-    }
-  } catch (error) {
-    console.error("Class Schedule error:", error);
-    if (currentScheduleMode === "class") {
-      scheduleScroll.innerHTML = `<div class="task-error">課堂表讀取失敗<br><br>${escapeHtml(error.message)}</div>`;
-    }
-  }
-}
-
 function renderScheduleDisplay() {
   const today = new Date();
+  // 🌟 讀取手動切換設定
+  const overrideMode = localStorage.getItem("schedule_override_day") || "auto";
 
   if (currentScheduleMode === "calendar") {
     scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
     renderCalendar(cachedCalendarData);
   } else {
-    scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}`;
+    // 如果是調課模式，在標題加個提示標籤
+    const isOverride = overrideMode !== "auto";
+    const badge = isOverride ? " (調課模式)" : "";
+    
+    scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}${badge}`;
     renderClassSchedule(cachedClassData);
   }
   setPanelUpdated(scheduleUpdated, currentScheduleMode === "calendar" ? "日曆" : "課堂");
-}
-
-function renderCalendar(events) {
-  scheduleScroll.innerHTML = "";
-
-  if (!events || !events.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無預定行程</div>`;
-    return;
-  }
-
-  const now = new Date();
-  const todayStart = startOfToday();
-  const tomorrow = startOfTomorrow();
-  const dayAfterTomorrow = startOfDayAfterTomorrow(); // 取得後天開始時間
-
-  const todayEvents = [];
-  const tomorrowEvents = [];
-
-  events.forEach(rawEvt => {
-    const evt = parseEventData(rawEvt);
-    if (!evt.start || isNaN(evt.start.getTime())) return;
-
-    // 精準判斷：只有屬於「今天」和真正的「明天」才會放進列表
-    if (evt.start >= todayStart && evt.start < tomorrow) {
-      todayEvents.push(evt);
-    } else if (evt.start >= tomorrow && evt.start < dayAfterTomorrow) {
-      tomorrowEvents.push(evt);
-    }
-  });
-
-  if (!todayEvents.length && !tomorrowEvents.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日及明日無預定行程</div>`;
-    return;
-  }
-
-  // 下方其餘程式碼保持不變...
-
-  let nextFound = false;
-
-  const renderGroup = (items, labelText) => {
-    if (!items.length) return;
-
-    const label = document.createElement("div");
-    label.className = "schedule-day-label";
-    label.textContent = labelText;
-    scheduleScroll.appendChild(label);
-
-    items.forEach(evt => {
-      const item = document.createElement("div");
-      item.className = "schedule-item";
-
-      let timeText = "";
-      let countdownText = "";
-
-      if (evt.isAllDay) {
-        timeText = "全天";
-      } else if (evt.start) {
-        timeText = formatTime(evt.start);
-        const end = evt.end || new Date(evt.start.getTime() + 60 * 60 * 1000);
-
-        if (now >= evt.start && now <= end) {
-          item.classList.add("now");
-          const remain = Math.max(1, Math.floor((end - now) / 60000));
-          countdownText = `進行中 (剩 ${remain} 分鐘)`;
-        } else if (now > end) {
-          item.classList.add("past");
-        } else if (now < evt.start) {
-          if (!nextFound) {
-            item.classList.add("next");
-            nextFound = true;
-          }
-          const diffMs = evt.start - now;
-          const totalMin = Math.floor(diffMs / 60000);
-          const h = Math.floor(totalMin / 60);
-          const m = totalMin % 60;
-          countdownText = h > 0 ? `重有 ${h}小時${m}分鐘` : `重有 ${m}分鐘`;
-        }
-      }
-
-      const timeDiv = document.createElement("div");
-      timeDiv.className = "schedule-time" + (evt.isAllDay ? " schedule-all-day" : "");
-      timeDiv.textContent = timeText;
-
-      const lineDiv = document.createElement("div");
-      lineDiv.className = "schedule-line";
-      const dot = document.createElement("div");
-      dot.className = "schedule-dot";
-      lineDiv.appendChild(dot);
-
-      const infoDiv = document.createElement("div");
-      infoDiv.className = "schedule-info";
-
-      const titleDiv = document.createElement("div");
-      titleDiv.className = "schedule-title";
-      titleDiv.textContent = evt.title;
-
-      if (countdownText) {
-        const tag = document.createElement("span");
-        tag.className = "countdown-tag";
-        tag.textContent = countdownText;
-        titleDiv.appendChild(tag);
-      }
-
-      infoDiv.appendChild(titleDiv);
-
-      if (evt.location) {
-        const locDiv = document.createElement("div");
-        locDiv.className = "schedule-location";
-        locDiv.textContent = `📍 ${evt.location}`;
-        infoDiv.appendChild(locDiv);
-      }
-
-      item.appendChild(timeDiv);
-      item.appendChild(lineDiv);
-      item.appendChild(infoDiv);
-
-      scheduleScroll.appendChild(item);
-    });
-  };
-
-  renderGroup(todayEvents, "今日");
-  renderGroup(tomorrowEvents, "明日");
 }
 
 function renderClassSchedule(rows) {
@@ -1596,7 +1458,10 @@ function renderClassSchedule(rows) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const todayIdx = now.getDay();
+  // 🌟 關鍵修改：先讀取 localStorage 設定，若為 auto 才用真實星期
+  const overrideMode = localStorage.getItem("schedule_override_day") || "auto";
+  const todayIdx = (overrideMode === "auto") ? now.getDay() : parseInt(overrideMode);
+
   const dayKeywords = [
     ["sun", "sunday", "星期日", "日"],
     ["mon", "monday", "星期一", "一"],
@@ -1955,15 +1820,8 @@ setInterval(() => {
 // 首次加載
 syncAll();
 /* =========================================================
-   📚 課堂星期切換邏輯
+   ⚙️ 課堂星期切換 Modal 控制邏輯 (對接 Google Sheet)
 ========================================================= */
-
-// 1. 讀取或初始化本地設定
-function loadScheduleMode() {
-  return localStorage.getItem("schedule_override_day") || "auto";
-}
-
-let currentScheduleDayMode = loadScheduleMode();
 
 // DOM 元素綁定
 const settingsModal = document.getElementById("settings-modal");
@@ -1973,72 +1831,35 @@ const btnCancel = document.getElementById("cancel-settings-btn");
 const btnSave = document.getElementById("save-settings-btn");
 const daySelectInput = document.getElementById("cfg-schedule-day-mode");
 
-// 開啟設定選單
-btnSettings.addEventListener("click", () => {
-  daySelectInput.value = currentScheduleDayMode;
-  settingsModal.classList.remove("hidden");
-});
-
 // 關閉選單
-const closeModal = () => settingsModal.classList.add("hidden");
-btnCloseX.addEventListener("click", closeModal);
-btnCancel.addEventListener("click", closeModal);
+const closeModal = () => {
+  if (settingsModal) settingsModal.classList.add("hidden");
+};
 
-// 點擊儲存
-btnSave.addEventListener("click", () => {
-  currentScheduleDayMode = daySelectInput.value;
-  localStorage.setItem("schedule_override_day", currentScheduleDayMode);
-  
-  closeModal();
-  renderTimetableDisplay(); // 儲存後立即更新畫面！
-});
-
-// 2. 渲染課堂表函式
-function renderTimetableDisplay() {
-  const scheduleScroll = document.getElementById("schedule-scroll"); // 你的 Schedule 容器 ID
-  if (!scheduleScroll) return;
-
-  const now = new Date();
-  const realDay = now.getDay(); // 當前真實星期 (0=週日, 1=週一...)
-
-  // 判斷要顯示「真實星期」還是「手動指定星期」
-  const targetDay = (currentScheduleDayMode === "auto")
-    ? realDay
-    : parseInt(currentScheduleDayMode);
-
-  const weekDayNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
-  const displayDayName = weekDayNames[targetDay];
-  
-  // 取得對應星期的課堂內容 (請替換成你原本的每週課堂資料)
-  const timetableData = {
-    1: "09:00 數學 | 14:00 英文",
-    2: "10:00 物理 | 13:00 體育",
-    3: "09:00 中文 | 15:00 化學",
-    4: "11:00 歷史",
-    5: "09:00 通識 | 14:00 音樂",
-    6: "放假 / 自修",
-    0: "放假"
-  };
-
-  const todayClass = timetableData[targetDay] || "沒有課堂資料";
-  
-  // 如果是手動切換模式，加上黃色標籤提示
-  const isOverride = currentScheduleDayMode !== "auto";
-  const badgeHtml = isOverride 
-    ? `<span style="color:#ffb703; font-size:0.8rem; margin-left:6px;">(調課模式)</span>` 
-    : ``;
-
-  // 渲染到畫面
-  scheduleScroll.innerHTML = `
-    <div class="timetable-card">
-      <div class="timetable-title">📚 課堂表：${displayDayName} ${badgeHtml}</div>
-      <div class="timetable-detail">${escapeHtml(todayClass)}</div>
-    </div>
-  `;
+// 開啟設定選單 (自動帶入當前 LocalStorage 設定)
+if (btnSettings) {
+  btnSettings.addEventListener("click", () => {
+    const savedMode = localStorage.getItem("schedule_override_day") || "auto";
+    if (daySelectInput) daySelectInput.value = savedMode;
+    if (settingsModal) settingsModal.classList.remove("hidden");
+  });
 }
 
-// 初始化執行一次
-renderTimetableDisplay();
+if (btnCloseX) btnCloseX.addEventListener("click", closeModal);
+if (btnCancel) btnCancel.addEventListener("click", closeModal);
+
+// 點擊儲存：寫入 LocalStorage 並即時刷新真正的課堂畫面
+if (btnSave) {
+  btnSave.addEventListener("click", () => {
+    const selectedMode = daySelectInput ? daySelectInput.value : "auto";
+    localStorage.setItem("schedule_override_day", selectedMode);
+    
+    closeModal();
+    
+    // 🌟 呼叫你原本真實的 Google Sheet 課堂刷新函式！
+    renderScheduleDisplay();
+  });
+}
 </script>
 </body>
 </html>
