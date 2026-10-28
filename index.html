@@ -928,15 +928,6 @@ const DATA_SYNC_INTERVAL = 2 * 60 * 1000;      // 每 2 分鐘自動從 GAS 更�
 const WEATHER_INTERVAL = 5 * 60 * 1000;        // 每 5 分鐘更新天氣
 const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日曆 / 課堂」視圖
 
-// API Key：只存在本機 localStorage，不寫入原始碼
-const KEY_STORAGE = "dash_key";
-let API_KEY = "";
-try { API_KEY = localStorage.getItem(KEY_STORAGE) || ""; } catch (e) {}
-if (!API_KEY) {
-  API_KEY = prompt("請輸入 Dashboard Key") || "";
-  try { localStorage.setItem(KEY_STORAGE, API_KEY); } catch (e) {}
-}
-
 
 /* =========================================================
    STATE & DOM
@@ -1126,18 +1117,11 @@ function setOverrideDay(val) {
 async function syncGasData() {
   try {
     console.log("正在從 GAS 獲取最新資料...");
-    const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(API_KEY)}`);
+    const res = await fetch(GAS_API_URL);
     if (!res.ok) throw new Error(`GAS HTTP 錯誤 ${res.status}`);
     const data = await res.json();
 
-    if (data.status === "error") {
-      // Key 錯誤 → 清除，下次載入重新輸入
-      if (data.message === "Unauthorized") {
-        try { localStorage.removeItem(KEY_STORAGE); } catch (e) {}
-        throw new Error("Key 錯誤，請重新載入頁面並輸入正確 Key");
-      }
-      throw new Error(data.message || "GAS 錯誤");
-    }
+    if (data.status === "error") throw new Error(data.message || "GAS 錯誤");
 
     renderTasks(data.tasks || []);
     setPanelUpdated(taskUpdated);
@@ -1208,7 +1192,7 @@ function renderTasks(tasks) {
 
       // 即時發送請求給 GAS，標記該 Task 為已完成
       if (task.id) {
-        fetch(`${GAS_API_URL}?key=${encodeURIComponent(API_KEY)}&action=completeTask&taskId=${encodeURIComponent(task.id)}`)
+        fetch(`${GAS_API_URL}?action=completeTask&taskId=${encodeURIComponent(task.id)}`)
           .then(res => res.json())
           .then(data => console.log("Task 完成狀態同步:", data))
           .catch(err => console.error("Task 同步失敗:", err));
