@@ -29,12 +29,9 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-
   overflow: hidden;
-
   background: #121212;
   color: #ffffff;
-
   font-family:
     -apple-system,
     BlinkMacSystemFont,
@@ -53,7 +50,6 @@ button {
   font-family: inherit;
 }
 
-/* 調整 Schedule 標題與排版 */
 .schedule-title {
   font-size: 1.05rem !important;
   font-weight: 600 !important;
@@ -64,7 +60,6 @@ button {
   line-height: 1.4;
 }
 
-/* 節數 (Period) 醒目标籤 */
 .period-badge {
   background: #3b82f6;
   color: #ffffff;
@@ -74,14 +69,12 @@ button {
   border-radius: 4px;
 }
 
-/* 班別 (Class) 標題 */
 .class-title {
   font-size: 1.05rem;
   font-weight: 700;
   color: #f8fafc;
 }
 
-/* 倒數時間標籤 */
 .countdown-tag {
   font-size: 0.8rem;
   font-weight: 500;
@@ -105,12 +98,9 @@ button {
   width: 100%;
   height: 100vh;
   height: 100dvh;
-
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
-
   background: #121212;
 }
 
@@ -120,77 +110,57 @@ button {
 
 .header {
   flex: 0 0 auto;
-
   min-height: 78px;
-
   padding: 8px 14px 7px;
-
   background: #121212;
-
   border-bottom: 1px solid #292929;
-
   overflow: hidden;
 }
 
 .header-top {
   height: 34px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 12px;
 }
 
 .header-left {
   min-width: 0;
-
   display: flex;
   align-items: center;
-
   gap: 14px;
 }
 
 .title {
   font-size: 1.25rem;
   font-weight: 700;
-
   white-space: nowrap;
 }
 
 .clock {
   font-size: 1.25rem;
   font-weight: 600;
-
   color: #bbbbbb;
-
   font-variant-numeric: tabular-nums;
-
   white-space: nowrap;
 }
 
 .header-buttons {
   display: flex;
   align-items: center;
-
   gap: 5px;
 }
 
 .header-button {
   height: 32px;
-
   padding: 0 10px;
-
   border: 0;
   border-radius: 8px;
-
   background: #292929;
   color: #ffffff;
-
   font-size: 0.75rem;
-
   cursor: pointer;
-
   white-space: nowrap;
 }
 
@@ -204,69 +174,46 @@ button {
 
 .weather-area {
   margin-top: 5px;
-
   display: flex;
   align-items: center;
-
   min-width: 0;
-
   overflow: hidden;
 }
 
 .weather-bar {
   height: 25px;
-
   display: flex;
   align-items: center;
-
   gap: 17px;
-
   min-width: 0;
-
   overflow: hidden;
-
   white-space: nowrap;
 }
 
 .weather-item {
   display: flex;
   align-items: center;
-
   gap: 4px;
-
   color: #999999;
-
   font-size: 0.77rem;
 }
 
 .weather-value {
   color: #ffffff;
-
   font-weight: 600;
 }
 
-/* Weather Warning Bar */
 .warning-bar {
   display: none;
-
   flex: 1;
-
   min-width: 0;
-
   margin-left: 18px;
-
   height: 25px;
-
   align-items: center;
-
   overflow: hidden;
-
   white-space: nowrap;
-
   color: #ffca5c;
-
   font-size: 0.72rem;
-
   font-weight: 600;
 }
 
@@ -276,15 +223,12 @@ button {
 
 .warning-icon {
   flex: 0 0 auto;
-
   margin-right: 5px;
 }
 
 .warning-text {
   min-width: 0;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
@@ -298,15 +242,8 @@ button {
   min-height: 0;
   width: 100%;
   padding: 10px 12px 12px;
-
   display: grid;
-
-  /* 將 Tasks 改為 15fr (15%)，Schedule 與 Email 各改為 42.5fr (42.5%) */
-  grid-template-columns:
-    30fr
-    38fr
-    34fr;
-
+  grid-template-columns: 30fr 38fr 34fr;
   gap: 10px;
   overflow: hidden;
 }
@@ -314,77 +251,60 @@ button {
 .panel {
   min-width: 0;
   min-height: 0;
-
   height: 100%;
-
   display: flex;
   flex-direction: column;
-
   background: #181818;
-
   border: 1px solid #292929;
-
   border-radius: 12px;
-
   overflow: hidden;
 }
 
 .panel-header {
   flex: 0 0 42px;
-
   height: 42px;
-
   padding: 0 12px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   background: #1d1d1d;
-
   border-bottom: 1px solid #292929;
-
   gap: 10px;
 }
 
 .panel-title {
   font-size: 0.95rem;
-
   font-weight: 700;
-
   white-space: nowrap;
 }
 
 .panel-meta {
   min-width: 0;
-
   display: flex;
   align-items: center;
-
   gap: 8px;
-
   white-space: nowrap;
 }
 
 .panel-count {
   color: #777777;
-
   font-size: 0.67rem;
+}
+
+.panel-count.override {
+  color: #ffb703;
+  font-weight: 600;
 }
 
 .panel-updated {
   color: #666666;
-
   font-size: 0.63rem;
-
   font-variant-numeric: tabular-nums;
 }
 
 .panel-body {
   flex: 1 1 auto;
-
   min-height: 0;
-
   overflow: hidden;
 }
 
@@ -394,38 +314,24 @@ button {
 
 .task-scroll {
   height: 100%;
-
   padding: 7px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: thin;
 }
 
 .task-card {
   width: 100%;
-
   min-height: 53px;
-
   margin-bottom: 6px;
-
   padding: 8px 10px;
-
   display: flex;
   align-items: center;
-
   gap: 10px;
-
   background: #202020;
-
   border: 1px solid #2b2b2b;
-
   border-radius: 9px;
-
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .task-card:last-child {
@@ -439,18 +345,12 @@ button {
 
 .task-checkbox {
   flex: 0 0 27px;
-
   width: 27px;
   height: 27px;
-
   padding: 0;
-
   border: 2px solid #777777;
-
   border-radius: 7px;
-
   background: transparent;
-
   cursor: pointer;
 }
 
@@ -461,61 +361,41 @@ button {
 
 .task-content {
   min-width: 0;
-
   flex: 1;
 }
 
 .task-title {
   font-size: 0.92rem;
-
   line-height: 1.3;
-
   word-break: break-word;
 }
 
 .task-date {
   margin-top: 3px;
-
   font-size: 0.67rem;
-
   color: #777777;
 }
 
-.task-date.overdue {
-  color: #ff7373;
-}
-
-.task-date.today {
-  color: #81c784;
-}
-
-.task-date.tomorrow {
-  color: #ffca5c;
-}
+.task-date.overdue { color: #ff7373; }
+.task-date.today { color: #81c784; }
+.task-date.tomorrow { color: #ffca5c; }
 
 .task-empty,
 .schedule-empty,
 .mail-empty {
   height: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #666666;
-
   font-size: 0.82rem;
-
   text-align: center;
 }
 
 .task-error {
   padding: 20px;
-
   color: #ff7373;
-
   font-size: 0.78rem;
-
   line-height: 1.5;
 }
 
@@ -525,142 +405,98 @@ button {
 
 .schedule-scroll {
   height: 100%;
-
   padding: 8px 9px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: thin;
 }
 
 .schedule-day-label {
   margin: 2px 4px 7px;
-
   color: #888888;
-
   font-size: 0.69rem;
-
   font-weight: 600;
 }
 
 .schedule-item {
   position: relative;
-
   min-height: 49px;
-
   margin-bottom: 5px;
-
   display: grid;
-
-  grid-template-columns:
-    54px
-    10px
-    1fr;
-
+  grid-template-columns: 54px 10px 1fr;
   align-items: stretch;
-
   background: #202020;
-
   border: 1px solid #292929;
-
   border-radius: 8px;
-
   overflow: hidden;
 }
 
 .schedule-time {
   padding: 10px 5px;
-
   display: flex;
   align-items: flex-start;
   justify-content: center;
-
   color: #999999;
-
   font-size: 0.72rem;
-
   font-variant-numeric: tabular-nums;
 }
 
 .schedule-line {
   position: relative;
-
   display: flex;
-
   justify-content: center;
 }
 
 .schedule-line::before {
   content: "";
-
   width: 2px;
-
   height: 100%;
-
   background: #3c3c3c;
 }
 
 .schedule-dot {
   position: absolute;
-
   top: 12px;
-
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
   background: #777777;
 }
 
 .schedule-info {
   min-width: 0;
-
   padding: 8px 9px 8px 4px;
 }
 
 .schedule-location {
   margin-top: 3px;
-
   color: #666666;
-
   font-size: 0.63rem;
-
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
 .schedule-item.now {
   background: #292929;
-
   border-color: #666666;
-
   min-height: 58px;
 }
 
 .schedule-item.now .schedule-time {
   color: #ffffff;
-
   font-weight: 700;
-
   font-size: 0.76rem;
 }
 
 .schedule-item.now .schedule-title {
   font-size: 0.88rem;
-
   font-weight: 700;
 }
 
 .schedule-item.now .schedule-dot {
   background: #ffffff;
-
-  box-shadow:
-    0 0 0 3px #444444;
+  box-shadow: 0 0 0 3px #444444;
 }
 
 .schedule-item.now .schedule-line::before {
@@ -677,7 +513,6 @@ button {
 
 .schedule-all-day {
   color: #aaaaaa;
-
   font-size: 0.68rem;
 }
 
@@ -687,28 +522,19 @@ button {
 
 .mail-scroll {
   height: 100%;
-
   padding: 7px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   scrollbar-width: thin;
 }
 
 .mail-card {
   width: 100%;
-
   margin-bottom: 6px;
-
   padding: 9px 10px;
-
   background: #202020;
-
   border: 1px solid #2b2b2b;
-
   border-radius: 8px;
-
   cursor: pointer;
 }
 
@@ -724,65 +550,43 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   gap: 7px;
 }
 
 .mail-sender {
   min-width: 0;
-
   flex: 1;
-
   color: #ffffff;
-
   font-size: 0.74rem;
-
   font-weight: 600;
-
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
 }
 
 .mail-time {
   flex: 0 0 auto;
-
   color: #666666;
-
   font-size: 0.6rem;
 }
 
 .mail-subject {
   margin-top: 4px;
-
   color: #dddddd;
-
   font-size: 0.76rem;
-
   font-weight: 600;
-
   line-height: 1.3;
-
   word-break: break-word;
 }
 
 .mail-snippet {
   margin-top: 4px;
-
   color: #777777;
-
   font-size: 0.65rem;
-
   line-height: 1.3;
-
   display: -webkit-box;
-
   -webkit-line-clamp: 2;
-
   -webkit-box-orient: vertical;
-
   overflow: hidden;
 }
 
@@ -792,16 +596,11 @@ button {
 
 .work-off {
   display: none;
-
   flex: 1 1 auto;
-
   min-height: 0;
-
   align-items: center;
   justify-content: center;
-
   text-align: center;
-
   padding: 30px;
 }
 
@@ -811,17 +610,9 @@ button {
 
 .work-off-message {
   color: #dddddd;
-
-  font-size: clamp(
-    1.8rem,
-    4vw,
-    3.2rem
-  );
-
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
   line-height: 1.5;
-
   font-weight: 500;
-
   letter-spacing: 0.04em;
 }
 
@@ -838,34 +629,24 @@ button {
 ========================================================= */
 
 @media (max-width: 800px) {
-
-  .title {
-    font-size: 1rem;
-  }
-
-  .clock {
-    font-size: 1rem;
-  }
-
+  .title { font-size: 1rem; }
+  .clock { font-size: 1rem; }
   .header-button {
     padding: 0 7px;
-
     font-size: 0.67rem;
   }
-
   .dashboard {
-    grid-template-columns:
-      30fr
-      38fr
-      32fr;
+    grid-template-columns: 30fr 38fr 32fr;
   }
-
   .panel-updated {
     font-size: 0.58rem;
   }
-
 }
-   /* ⚙️ 浮動設定按鈕 */
+
+/* =========================================================
+   SETTINGS BUTTON & MODAL
+========================================================= */
+
 .settings-btn {
   position: fixed;
   bottom: 20px;
@@ -886,8 +667,11 @@ button {
   transform: rotate(45deg) scale(1.1);
   background: rgba(255, 255, 255, 0.3);
 }
+.settings-btn.override {
+  background: rgba(255, 183, 3, 0.35);
+  border-color: #ffb703;
+}
 
-/* Modal 背景遮罩 */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -905,7 +689,6 @@ button {
   pointer-events: none;
 }
 
-/* Modal 卡片外觀 */
 .modal-card {
   background: #1e1e24;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -929,8 +712,8 @@ button {
 
 .modal-body { padding: 20px; }
 .setting-label { display: block; margin-bottom: 10px; font-size: 0.9rem; color: #ccc; }
+.setting-hint { margin-top: 10px; font-size: 0.75rem; color: #888; line-height: 1.5; }
 
-/* 下拉選單樣式 */
 .day-select {
   width: 100%;
   padding: 10px 12px;
@@ -963,7 +746,8 @@ button {
 
 
 <body>
-   <!-- ⚙️ 設定按鈕 (點擊開啟切換面板) -->
+
+<!-- ⚙️ 設定按鈕 -->
 <button id="settings-btn" class="settings-btn" title="切換課堂模式">⚙️</button>
 
 <!-- ⚙️ 課堂模式切換 Modal -->
@@ -973,7 +757,7 @@ button {
       <h2>📚 切換顯示課堂</h2>
       <button id="close-modal-x" class="close-btn">&times;</button>
     </div>
-    
+
     <div class="modal-body">
       <div class="setting-section">
         <label for="cfg-schedule-day-mode" class="setting-label">請選擇今日要顯示的課堂：</label>
@@ -987,6 +771,7 @@ button {
           <option value="6">📌 星期六課堂</option>
           <option value="0">📌 星期日課堂</option>
         </select>
+        <div class="setting-hint">此設定只限今日有效，明日自動回復「自動」。</div>
       </div>
     </div>
 
@@ -996,8 +781,8 @@ button {
     </div>
   </div>
 </div>
-<!-- APP MAIN CONTAINER -->
 
+<!-- APP MAIN CONTAINER -->
 <div class="app">
 
   <!-- HEADER -->
@@ -1006,31 +791,15 @@ button {
     <div class="header-top">
 
       <div class="header-left">
-        <div class="title">
-          WTC Work Dashboard
-        </div>
-
-        <div id="clock" class="clock">
-          --:--
-        </div>
+        <div class="title">WTC Work Dashboard</div>
+        <div id="clock" class="clock">--:--</div>
       </div>
 
       <div class="header-buttons">
-        <button id="syncButton" class="header-button" type="button">
-          ↻ 同步
-        </button>
-
-        <button id="workButton" class="header-button" type="button">
-          🌙 收工
-        </button>
-
-        <button id="continueButton" class="header-button continue-button" type="button">
-          ☀️ 繼續工作
-        </button>
-
-        <button id="fullscreenButton" class="header-button" type="button">
-          ⛶
-        </button>
+        <button id="syncButton" class="header-button" type="button">↻ 同步</button>
+        <button id="workButton" class="header-button" type="button">🌙 收工</button>
+        <button id="continueButton" class="header-button continue-button" type="button">☀️ 繼續工作</button>
+        <button id="fullscreenButton" class="header-button" type="button">⛶</button>
       </div>
 
     </div>
@@ -1155,9 +924,18 @@ const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTsQx-iaB
 const HKO_API = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
 const AQHI_API = "https://dashboard.data.gov.hk/api/aqhi-individual?format=json";
 
-const DATA_SYNC_INTERVAL = 1 * 60 * 1000;      // 每 1 分鐘自動從 GAS 更新
-const WEATHER_INTERVAL = 5 * 60 * 1000;       // 每 5 分鐘更新天氣
+const DATA_SYNC_INTERVAL = 2 * 60 * 1000;      // 每 2 分鐘自動從 GAS 更新
+const WEATHER_INTERVAL = 5 * 60 * 1000;        // 每 5 分鐘更新天氣
 const SCHEDULE_SWITCH_INTERVAL = 10000;        // 每 10 秒自動切換「日曆 / 課堂」視圖
+
+// API Key：只存在本機 localStorage，不寫入原始碼
+const KEY_STORAGE = "dash_key";
+let API_KEY = "";
+try { API_KEY = localStorage.getItem(KEY_STORAGE) || ""; } catch (e) {}
+if (!API_KEY) {
+  API_KEY = prompt("請輸入 Dashboard Key") || "";
+  try { localStorage.setItem(KEY_STORAGE, API_KEY); } catch (e) {}
+}
 
 
 /* =========================================================
@@ -1236,7 +1014,7 @@ function startOfTomorrow() {
   d.setDate(d.getDate() + 1);
   return d;
 }
-   // ➕ 新增這段：計算後天 00:00 的時間
+
 function startOfDayAfterTomorrow() {
   const d = startOfToday();
   d.setDate(d.getDate() + 2);
@@ -1313,24 +1091,60 @@ function parseEventData(evt) {
 
 
 /* =========================================================
+   📚 課堂星期切換（調課模式，當日有效，隔日自動回復）
+   ※ 必須放在 syncAll() 之前，因為 render 函式會用到
+========================================================= */
+
+const OVERRIDE_KEY = "schedule_override";
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+// 回傳 0–6；null = 跟隨真實星期。隔日自動失效
+function getOverrideDay() {
+  try {
+    const o = JSON.parse(localStorage.getItem(OVERRIDE_KEY) || "null");
+    if (o && o.date === todayKey() && o.day !== "auto") return parseInt(o.day, 10);
+  } catch (e) {}
+  return null;
+}
+
+function setOverrideDay(val) {
+  try {
+    if (val === "auto") localStorage.removeItem(OVERRIDE_KEY);
+    else localStorage.setItem(OVERRIDE_KEY, JSON.stringify({ day: val, date: todayKey() }));
+  } catch (e) {}
+}
+
+
+/* =========================================================
    GAS DATA FETCH
 ========================================================= */
 
 async function syncGasData() {
   try {
     console.log("正在從 GAS 獲取最新資料...");
-    const res = await fetch(GAS_API_URL);
+    const res = await fetch(`${GAS_API_URL}?key=${encodeURIComponent(API_KEY)}`);
     if (!res.ok) throw new Error(`GAS HTTP 錯誤 ${res.status}`);
     const data = await res.json();
 
-    // 渲染 Tasks 同 Mail
+    if (data.status === "error") {
+      // Key 錯誤 → 清除，下次載入重新輸入
+      if (data.message === "Unauthorized") {
+        try { localStorage.removeItem(KEY_STORAGE); } catch (e) {}
+        throw new Error("Key 錯誤，請重新載入頁面並輸入正確 Key");
+      }
+      throw new Error(data.message || "GAS 錯誤");
+    }
+
     renderTasks(data.tasks || []);
     setPanelUpdated(taskUpdated);
 
     renderMail(data.gmail || []);
     setPanelUpdated(mailUpdated);
 
-    // 快取日曆資料並觸發渲染
     cachedCalendarData = data.calendar || [];
     if (currentScheduleMode === "calendar") {
       renderScheduleDisplay();
@@ -1392,9 +1206,9 @@ function renderTasks(tasks) {
       checkbox.className = "task-checkbox done";
       card.className = "task-card fading";
 
-      // 🌐 即時發送請求給 Google Apps Script，標記該 Task 為已完成
+      // 即時發送請求給 GAS，標記該 Task 為已完成
       if (task.id) {
-        fetch(`${GAS_API_URL}?action=completeTask&taskId=${encodeURIComponent(task.id)}`)
+        fetch(`${GAS_API_URL}?key=${encodeURIComponent(API_KEY)}&action=completeTask&taskId=${encodeURIComponent(task.id)}`)
           .then(res => res.json())
           .then(data => console.log("Task 完成狀態同步:", data))
           .catch(err => console.error("Task 同步失敗:", err));
@@ -1434,7 +1248,7 @@ function renderTasks(tasks) {
 
 async function syncClassSchedule() {
   try {
-    const res = await fetch(SHEET_CSV_URL);
+    const res = await fetch(SHEET_CSV_URL + "&t=" + Date.now()); // 防 cache
     if (!res.ok) throw new Error("無法讀取 Google Sheet CSV");
     const text = await res.text();
     cachedClassData = parseCSV(text);
@@ -1452,12 +1266,24 @@ async function syncClassSchedule() {
 
 function renderScheduleDisplay() {
   const today = new Date();
+  const ov = getOverrideDay();
+  const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
+
+  // 設定按鈕：調課模式時變橙色提示
+  document.getElementById("settings-btn").classList.toggle("override", ov !== null);
 
   if (currentScheduleMode === "calendar") {
+    scheduleDate.classList.remove("override");
     scheduleDate.textContent = `📅 行程 | ${formatScheduleDate(today)}`;
     renderCalendar(cachedCalendarData);
   } else {
-    scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}`;
+    if (ov === null) {
+      scheduleDate.classList.remove("override");
+      scheduleDate.textContent = `📚 課堂 | ${formatScheduleDate(today)}`;
+    } else {
+      scheduleDate.classList.add("override");
+      scheduleDate.textContent = `🔄 調課 | 依星期${dayNames[ov]}課堂表`;
+    }
     renderClassSchedule(cachedClassData);
   }
   setPanelUpdated(scheduleUpdated, currentScheduleMode === "calendar" ? "日曆" : "課堂");
@@ -1474,7 +1300,7 @@ function renderCalendar(events) {
   const now = new Date();
   const todayStart = startOfToday();
   const tomorrow = startOfTomorrow();
-  const dayAfterTomorrow = startOfDayAfterTomorrow(); // 取得後天開始時間
+  const dayAfterTomorrow = startOfDayAfterTomorrow();
 
   const todayEvents = [];
   const tomorrowEvents = [];
@@ -1483,7 +1309,6 @@ function renderCalendar(events) {
     const evt = parseEventData(rawEvt);
     if (!evt.start || isNaN(evt.start.getTime())) return;
 
-    // 精準判斷：只有屬於「今天」和真正的「明天」才會放進列表
     if (evt.start >= todayStart && evt.start < tomorrow) {
       todayEvents.push(evt);
     } else if (evt.start >= tomorrow && evt.start < dayAfterTomorrow) {
@@ -1495,8 +1320,6 @@ function renderCalendar(events) {
     scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日及明日無預定行程</div>`;
     return;
   }
-
-  // 下方其餘程式碼保持不變...
 
   let nextFound = false;
 
@@ -1596,7 +1419,11 @@ function renderClassSchedule(rows) {
   const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-  const todayIdx = now.getDay();
+  // 調課模式：用指定星期，並停用「已完結隱藏」及倒數
+  const override = getOverrideDay();
+  const isOverride = override !== null;
+  const todayIdx = isOverride ? override : now.getDay();
+
   const dayKeywords = [
     ["sun", "sunday", "星期日", "日"],
     ["mon", "monday", "星期一", "一"],
@@ -1624,7 +1451,7 @@ function renderClassSchedule(rows) {
   });
 
   if (!todayRows.length) {
-    scheduleScroll.innerHTML = `<div class="schedule-empty">🎉 今日無課堂安排</div>`;
+    scheduleScroll.innerHTML = `<div class="schedule-empty">${isOverride ? "🎉 該日無課堂安排" : "🎉 今日無課堂安排"}</div>`;
     return;
   }
 
@@ -1649,7 +1476,8 @@ function renderClassSchedule(rows) {
     const startTimeStr = times[0] || "";
     const endTimeStr = times[1] || "";
 
-    if (endTimeStr) {
+    // 只有「真實今日」才隱藏已完結課堂
+    if (endTimeStr && !isOverride) {
       const [eH, eM] = endTimeStr.split(":").map(Number);
       const endTotalMinutes = eH * 60 + eM;
       if (currentMinutes >= endTotalMinutes) return;
@@ -1660,7 +1488,8 @@ function renderClassSchedule(rows) {
     let countdownText = "";
     let isNow = false;
 
-    if (startTimeStr) {
+    // 只有「真實今日」才計倒數 / 進行中
+    if (startTimeStr && !isOverride) {
       const [sH, sM] = startTimeStr.split(":").map(Number);
       const startMin = sH * 60 + sM;
       let endMin = startMin + 45;
@@ -1863,9 +1692,11 @@ async function syncWeather() {
       document.getElementById("weatherText").textContent = getWeatherText(iconCode);
     }
 
-    if (data.warningMessage && data.warningMessage.length) {
+    // warningMessage 可能係 string 或 array，統一處理
+    const wm = [].concat(data.warningMessage || []).filter(Boolean);
+    if (wm.length) {
       warningBar.classList.add("active");
-      warningText.textContent = data.warningMessage.join(" | ");
+      warningText.textContent = wm.join(" | ");
     } else {
       warningBar.classList.remove("active");
     }
@@ -1886,18 +1717,25 @@ async function syncWeather() {
 }
 
 function getWeatherEmoji(code) {
-  if (code >= 50 && code <= 54) return "☀️";
-  if (code >= 60 && code <= 65) return "☁️";
-  if (code >= 80 && code <= 85) return "🌧️";
+  if (code === 50) return "☀️";
+  if (code <= 52) return "🌤️";
+  if (code <= 54) return "🌦️";
+  if (code <= 61) return "☁️";
+  if (code <= 64) return "🌧️";
+  if (code === 65) return "⛈️";
+  if (code >= 70 && code <= 77) return "🌙";
+  if (code >= 83 && code <= 85) return "🌫️";
   return "🌤️";
 }
 
 function getWeatherText(code) {
   const map = {
-    50: "陽光充沛", 51: "大致天晴", 52: "天晴", 53: "大致天晴", 54: "短暫陽光",
-    60: "多雲", 61: "密雲", 62: "微雨", 63: "雨", 64: "大雨", 65: "狂風暴雨"
+    50: "陽光充沛", 51: "間有陽光", 52: "短暫陽光", 53: "間有陽光有驟雨", 54: "短暫陽光有驟雨",
+    60: "多雲", 61: "密雲", 62: "微雨", 63: "雨", 64: "大雨", 65: "雷暴",
+    80: "大風", 81: "乾燥", 82: "潮濕", 83: "霧", 84: "薄霧", 85: "煙霞",
+    90: "炎熱", 91: "溫暖", 92: "涼爽", 93: "寒冷"
   };
-  return map[code] || "多雲";
+  return map[code] || (code >= 70 && code <= 77 ? "天色良好" : "多雲");
 }
 
 
@@ -1939,9 +1777,9 @@ fullscreenButton.addEventListener("click", () => {
   }
 });
 
-// 自動計時器
-setInterval(() => { if (!workOff) syncGasData(); }, DATA_SYNC_INTERVAL);
-setInterval(() => { if (!workOff) syncClassSchedule(); }, DATA_SYNC_INTERVAL);
+// 自動計時器（分頁隱藏時略過 GAS / CSV 同步）
+setInterval(() => { if (!workOff && !document.hidden) syncGasData(); }, DATA_SYNC_INTERVAL);
+setInterval(() => { if (!workOff && !document.hidden) syncClassSchedule(); }, DATA_SYNC_INTERVAL);
 setInterval(() => { syncWeather(); }, WEATHER_INTERVAL);
 
 // 10 秒自動切換 Schedule 視圖 (日曆 ↔ 課堂)
@@ -1952,20 +1790,11 @@ setInterval(() => {
   }
 }, SCHEDULE_SWITCH_INTERVAL);
 
-// 首次加載
-syncAll();
+
 /* =========================================================
-   📚 課堂星期切換邏輯
+   ⚙️ 設定 Modal：切換課堂星期
 ========================================================= */
 
-// 1. 讀取或初始化本地設定
-function loadScheduleMode() {
-  return localStorage.getItem("schedule_override_day") || "auto";
-}
-
-let currentScheduleDayMode = loadScheduleMode();
-
-// DOM 元素綁定
 const settingsModal = document.getElementById("settings-modal");
 const btnSettings = document.getElementById("settings-btn");
 const btnCloseX = document.getElementById("close-modal-x");
@@ -1973,72 +1802,26 @@ const btnCancel = document.getElementById("cancel-settings-btn");
 const btnSave = document.getElementById("save-settings-btn");
 const daySelectInput = document.getElementById("cfg-schedule-day-mode");
 
-// 開啟設定選單
+const closeModal = () => settingsModal.classList.add("hidden");
+
 btnSettings.addEventListener("click", () => {
-  daySelectInput.value = currentScheduleDayMode;
+  const o = getOverrideDay();
+  daySelectInput.value = o === null ? "auto" : String(o);
   settingsModal.classList.remove("hidden");
 });
-
-// 關閉選單
-const closeModal = () => settingsModal.classList.add("hidden");
 btnCloseX.addEventListener("click", closeModal);
 btnCancel.addEventListener("click", closeModal);
+settingsModal.addEventListener("click", e => { if (e.target === settingsModal) closeModal(); });
 
-// 點擊儲存
 btnSave.addEventListener("click", () => {
-  currentScheduleDayMode = daySelectInput.value;
-  localStorage.setItem("schedule_override_day", currentScheduleDayMode);
-  
+  setOverrideDay(daySelectInput.value);
   closeModal();
-  renderTimetableDisplay(); // 儲存後立即更新畫面！
+  currentScheduleMode = "class";   // 儲存後即刻跳去課堂 view
+  renderScheduleDisplay();
 });
 
-// 2. 渲染課堂表函式
-function renderTimetableDisplay() {
-  const scheduleScroll = document.getElementById("schedule-scroll"); // 你的 Schedule 容器 ID
-  if (!scheduleScroll) return;
-
-  const now = new Date();
-  const realDay = now.getDay(); // 當前真實星期 (0=週日, 1=週一...)
-
-  // 判斷要顯示「真實星期」還是「手動指定星期」
-  const targetDay = (currentScheduleDayMode === "auto")
-    ? realDay
-    : parseInt(currentScheduleDayMode);
-
-  const weekDayNames = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
-  const displayDayName = weekDayNames[targetDay];
-  
-  // 取得對應星期的課堂內容 (請替換成你原本的每週課堂資料)
-  const timetableData = {
-    1: "09:00 數學 | 14:00 英文",
-    2: "10:00 物理 | 13:00 體育",
-    3: "09:00 中文 | 15:00 化學",
-    4: "11:00 歷史",
-    5: "09:00 通識 | 14:00 音樂",
-    6: "放假 / 自修",
-    0: "放假"
-  };
-
-  const todayClass = timetableData[targetDay] || "沒有課堂資料";
-  
-  // 如果是手動切換模式，加上黃色標籤提示
-  const isOverride = currentScheduleDayMode !== "auto";
-  const badgeHtml = isOverride 
-    ? `<span style="color:#ffb703; font-size:0.8rem; margin-left:6px;">(調課模式)</span>` 
-    : ``;
-
-  // 渲染到畫面
-  scheduleScroll.innerHTML = `
-    <div class="timetable-card">
-      <div class="timetable-title">📚 課堂表：${displayDayName} ${badgeHtml}</div>
-      <div class="timetable-detail">${escapeHtml(todayClass)}</div>
-    </div>
-  `;
-}
-
-// 初始化執行一次
-renderTimetableDisplay();
+// 首次加載（放最尾）
+syncAll();
 </script>
 </body>
 </html>
